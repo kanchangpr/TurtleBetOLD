@@ -1,0 +1,20 @@
+package com.jetbet.service;
+
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
+import com.jetbet.bean.SportsBean;
+import com.jetbet.betfair.entities.CompetitionResult;
+import com.jetbet.betfair.entities.EventResult;
+
+@Service
+public interface BetfairService {
+
+	List<SportsBean> getListOfSports(String applicationKey, String sessionToken, String userName);
+
+	List<EventResult> getListOfMatches(String applicationKey, String sessionToken, String userName);
+
+	List<CompetitionResult> getListOfSeries(String applicationKey, String sessionToken, String userName);
+
+}

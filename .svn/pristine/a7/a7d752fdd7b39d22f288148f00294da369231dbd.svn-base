@@ -1,0 +1,110 @@
+package com.jetbet.dao;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+
+import com.jetbet.bean.UserBean;
+import com.jetbet.dto.UserControlsDto;
+import com.jetbet.dto.UserRolesResponseDto;
+import com.jetbet.repository.UserRepository;
+import com.jetbet.util.ResourceConstants;
+
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+@Service
+public class UserDao {
+	
+	@Autowired
+	private UserRepository userRepository;
+	
+	@Autowired
+	private JdbcTemplate jdbcTemplate;
+	
+	
+	public List<UserBean> getResponse() {
+		return userRepository.findAll();
+	}
+
+//	public UserRoleBean addUserRole(@Valid UserRoleBean userRoleBean, String transactionId) {
+//		log.info("["+transactionId+"]*************************INSIDE addUserRole CLASS UserDao*************************");
+//		log.info("["+transactionId+"] Role: "+userRoleBean.getRole());
+//		log.info("["+transactionId+"] Role Desc: "+userRoleBean.getRoleDesc());
+//		log.info("["+transactionId+"] Created By: "+userRoleBean.getCreatedBy());
+//		return userRoleRepository.save(userRoleBean);
+//	}
+
+	public List<UserRolesResponseDto> getUserRoles(String role, String transactionId) {
+		log.info("["+transactionId+"]*************************INSIDE addUserRole CLASS UserDao*************************");
+		log.info("["+transactionId+"] Role: "+role);
+		String sql = "SELECT USER_ROLE FROM JETBET.JB_USER_ROLES WHERE USER_LEVEL > "
+				+ "(SELECT DISTINCT USER_LEVEL FROM JETBET.JB_USER_ROLES WHERE UPPER(USER_ROLE)= ? )";
+		return jdbcTemplate.query(
+	            sql, new Object[]{role.toUpperCase()},
+	            (rs, rowNum) ->
+	                    new UserRolesResponseDto(
+	                            rs.getString("user_Role")
+	                    )
+	    );
+	}
+
+	public List<UserRolesResponseDto> getParentList(String role, String transactionId) {
+		log.info("["+transactionId+"]*************************INSIDE addUserRole CLASS UserDao*************************");
+		log.info("["+transactionId+"] Role: "+role);
+		String sql = "SELECT USER_ID FROM JETBET.JB_USER_DETAILS WHERE USER_ROLE = (SELECT USER_ROLE FROM JETBET.JB_USER_ROLES WHERE USER_LEVEL< "
+				+ "(SELECT USER_LEVEL FROM JETBET.JB_USER_ROLES WHERE UPPER(USER_ROLE)= ? ) ORDER BY ID DESC LIMIT 1)";
+		return jdbcTemplate.query(
+	            sql, new Object[]{role.toUpperCase()},
+	            (rs, rowNum) ->
+	                    new UserRolesResponseDto(
+	                            rs.getString("USER_ID")
+	                    )
+	    );
+	}
+
+	public Boolean checkUserNameAvailability(String userName, String transactionId) {
+		log.info("["+transactionId+"]*************************INSIDE addUserRole CLASS UserDao*************************");
+		log.info("["+transactionId+"] userName: "+userName);
+		UserBean responseBean = userRepository.findByUserId(userName);
+		return (responseBean==null || responseBean.equals(null)) ? true : false;
+	}
+
+	public UserBean addUserDetails(UserBean userBean, String transactionId) {
+		log.info("["+transactionId+"]*************************INSIDE addUserRole CLASS UserDao*************************");
+		log.info("["+transactionId+"] USER_ID: "+userBean.getUserId());
+		log.info("["+transactionId+"] FULL_NAME: "+userBean.getFullName());
+		log.info("["+transactionId+"] USER_ROLE: "+userBean.getUserRole());
+		log.info("["+transactionId+"] PARENT: "+userBean.getParent());
+		log.info("["+transactionId+"] REMARKS: "+userBean.getRemarks());
+		log.info("["+transactionId+"] CREATED_BY: "+userBean.getCreatedBy());
+		return userRepository.save(userBean);
+	}
+
+	public String userControls(UserControlsDto userControlsDto, String transactionId) {
+		log.info("["+transactionId+"]*************************INSIDE userControls CLASS UserDao*************************");
+		log.info("["+transactionId+"] userId: "+userControlsDto.getUserId());
+		log.info("["+transactionId+"] Action: "+userControlsDto.getAction());
+		log.info("["+transactionId+"] userName: "+userControlsDto.getUserName());
+		String actString=userControlsDto.getAction().toUpperCase();
+		String userString=userControlsDto.getUserId().toUpperCase();
+		String updateByString=userControlsDto.getUserName().toUpperCase();
+		Map <String,String> actionMap = new HashMap<String,String>();
+		actionMap.put(ResourceConstants.LOCK_USER, "ISUSERLOCK='Y'");
+		actionMap.put(ResourceConstants.UNLOCK_USER, "ISUSERLOCK='N'");
+		actionMap.put(ResourceConstants.LOCK_BETTING, "ISBETTINGLOCK='Y'");
+		actionMap.put(ResourceConstants.UNLOCK_BETTING, "ISBETTINGLOCK='N'");
+		actionMap.put(ResourceConstants.OPEN_ACC, "ISACTIVE='Y'");
+		actionMap.put(ResourceConstants.CLOSE_ACC, "ISACTIVE='N'");
+		
+		String sqlString="UPDATE JETBET.JB_USER_DETAILS SET "+actionMap.get(actString)+" , LASTUPDATEDDATE=CURRENT_TIMESTAMP, LASTUPDATEBY=? WHERE USER_ID= ? OR PARENT= ? ";
+		int count=jdbcTemplate.update(sqlString, new Object[]{updateByString,userString,userString});
+		return count+" rows updated";
+	}
+
+}

@@ -1,0 +1,147 @@
+package com.jetbet.dao;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Service;
+
+import com.jetbet.bean.UserBean;
+import com.jetbet.dto.UserControlsDto;
+import com.jetbet.dto.UserResponseDto;
+import com.jetbet.dto.UserRolesResponseDto;
+import com.jetbet.repository.UserRepository;
+import com.jetbet.util.ResourceConstants;
+
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+@Service
+public class UserDao {
+	
+	@Autowired
+	private UserRepository userRepository;
+	
+	@Autowired
+	private JdbcTemplate jdbcTemplate;
+	
+	
+	public List<UserBean> getResponse() {
+		return userRepository.findAll();
+	}
+
+
+	public List<UserRolesResponseDto> getUserRoles(String role, String transactionId) {
+		log.info("["+transactionId+"]*************************INSIDE addUserRole CLASS UserDao*************************");
+		log.info("["+transactionId+"] Role: "+role);
+		String sql = "SELECT USER_ROLE FROM JETBET.JB_USER_ROLES WHERE USER_LEVEL > "
+				+ "(SELECT DISTINCT USER_LEVEL FROM JETBET.JB_USER_ROLES WHERE UPPER(USER_ROLE)= ? )";
+		return jdbcTemplate.query(
+	            sql, new Object[]{role.toUpperCase()},
+	            (rs, rowNum) ->
+	                    new UserRolesResponseDto(
+	                            rs.getString("user_Role")
+	                    )
+	    );
+	}
+
+	public List<UserRolesResponseDto> getParentList(String role, String transactionId) {
+		log.info("["+transactionId+"]*************************INSIDE addUserRole CLASS UserDao*************************");
+		log.info("["+transactionId+"] Role: "+role);
+		String sql = "SELECT USER_ID FROM JETBET.JB_USER_DETAILS WHERE USER_ROLE = (SELECT USER_ROLE FROM JETBET.JB_USER_ROLES WHERE USER_LEVEL< "
+				+ "(SELECT USER_LEVEL FROM JETBET.JB_USER_ROLES WHERE UPPER(USER_ROLE)= ? ) ORDER BY ID DESC LIMIT 1)";
+		return jdbcTemplate.query(
+	            sql, new Object[]{role.toUpperCase()},
+	            (rs, rowNum) ->
+	                    new UserRolesResponseDto(
+	                            rs.getString("USER_ID")
+	                    )
+	    );
+	}
+
+	public Boolean checkUserNameAvailability(String userName, String transactionId) {
+		log.info("["+transactionId+"]*************************INSIDE addUserRole CLASS UserDao*************************");
+		log.info("["+transactionId+"] userName: "+userName);
+		Long count = userRepository.countByUserId(userName);
+		log.info("count of existing User: "+count);
+		return (count==0) ? true : false;
+	}
+
+	public UserResponseDto addUserDetails(UserBean userBean, String transactionId) {
+		UserResponseDto userResponseDto= new UserResponseDto();
+		log.info("["+transactionId+"]*************************INSIDE addUserRole CLASS UserDao*************************");
+		log.info("["+transactionId+"] USER_ID: "+userBean.getUserId());
+		log.info("["+transactionId+"] FULL_NAME: "+userBean.getFullName());
+		log.info("["+transactionId+"] USER_ROLE: "+userBean.getUserRole());
+		log.info("["+transactionId+"] PARENT: "+userBean.getParent());
+		log.info("["+transactionId+"] REMARKS: "+userBean.getRemarks());
+		log.info("["+transactionId+"] CREATED_BY: "+userBean.getCreatedBy());
+		try {
+			Long count = userRepository.countByUserId(userBean.getUserId());
+			if(count == 0) {
+				UserBean userRes=userRepository.save(userBean);
+				if(userRes.getUserId()==userBean.getUserId()) {
+					userResponseDto.setStatus(ResourceConstants.SUCCESS);
+					userResponseDto.setErrorMsg(ResourceConstants.INSERTED);
+				}else {
+					userResponseDto.setStatus(ResourceConstants.FAILED);
+					userResponseDto.setErrorCode(ResourceConstants.ERR_002);;
+					userResponseDto.setErrorMsg(ResourceConstants.INSERTION_FAILED);
+				}
+			}else {
+				userResponseDto.setStatus(ResourceConstants.FAILED);
+				userResponseDto.setErrorCode(ResourceConstants.ERR_001);;
+				userResponseDto.setErrorMsg(ResourceConstants.EXIST);
+			}
+		}catch (Exception e) {
+			userResponseDto.setStatus(ResourceConstants.EXCEPTION);
+			userResponseDto.setErrorCode(ResourceConstants.ERR_EXCEPTION);;
+			userResponseDto.setErrorMsg(e.getMessage());
+			e.printStackTrace();
+		}
+		return userResponseDto;
+	}
+
+	public UserResponseDto userControls(UserControlsDto userControlsDto, String transactionId) {
+		UserResponseDto userResponseDto= new UserResponseDto();
+		log.info("["+transactionId+"]*************************INSIDE userControls CLASS UserDao*************************");
+		log.info("["+transactionId+"] userId: "+userControlsDto.getUserId());
+		log.info("["+transactionId+"] Action: "+userControlsDto.getAction());
+		log.info("["+transactionId+"] userName: "+userControlsDto.getUserName());
+		String actString=userControlsDto.getAction().toUpperCase();
+		String userString=userControlsDto.getUserId().toUpperCase();
+		String updateByString=userControlsDto.getUserName().toUpperCase();
+		try {
+			Map <String,String> actionMap = new HashMap<String,String>();
+			actionMap.put(ResourceConstants.LOCK_USER, "ISUSERLOCK='Y'");
+			actionMap.put(ResourceConstants.UNLOCK_USER, "ISUSERLOCK='N'");
+			actionMap.put(ResourceConstants.LOCK_BETTING, "ISBETTINGLOCK='Y'");
+			actionMap.put(ResourceConstants.UNLOCK_BETTING, "ISBETTINGLOCK='N'");
+			actionMap.put(ResourceConstants.OPEN_ACC, "ISACTIVE='Y'");
+			actionMap.put(ResourceConstants.CLOSE_ACC, "ISACTIVE='N'");
+			String sqlString="UPDATE JETBET.JB_USER_DETAILS SET "+actionMap.get(actString)+" , LASTUPDATEDDATE=CURRENT_TIMESTAMP, LASTUPDATEBY=? "
+					+ "WHERE USER_ID= ? OR PARENT = ?  OR PARENT IN  ( SELECT USER_ID FROM JETBET.JB_USER_DETAILS  WHERE PARENT=?)  ";
+			log.info("["+transactionId+"] sqlString: "+sqlString);
+			int count=jdbcTemplate.update(sqlString, new Object[]{updateByString,userString,userString,userString});
+			if(count==0) {
+				userResponseDto.setStatus(ResourceConstants.FAILED);
+				userResponseDto.setErrorCode(ResourceConstants.ERR_003);
+				userResponseDto.setErrorMsg(ResourceConstants.UPDATION_FAILED);
+			}else {
+				userResponseDto.setStatus(ResourceConstants.SUCCESS);
+				userResponseDto.setErrorMsg(ResourceConstants.UPDATED);
+			}
+		}catch (Exception e) {
+			userResponseDto.setStatus(ResourceConstants.EXCEPTION);
+			userResponseDto.setErrorCode(ResourceConstants.ERR_EXCEPTION);;
+			userResponseDto.setErrorMsg(e.getMessage());
+			e.printStackTrace();
+		}
+		return userResponseDto;
+	}
+	
+	
+	
+}

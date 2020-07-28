@@ -1,0 +1,40 @@
+package com.jetbet.util;
+
+import org.apache.commons.lang3.StringUtils;
+
+public class ResourceConstants {
+	public static final String USER_DETAILS="UserDetails";
+	
+	public static final String USER_ROLES="UserRoles/{role}";
+	
+	public static final String PARENT_LIST="ParentListByRole/{role}";
+	
+	public static final String USER_NAME_AVAILABILITY="UserNameAvailability/{userName}";
+	
+	public static final String USER_CONTROLS="UserControls";
+	
+	public static final String LIST_OF_SPORTSS="ListOfSports/{applicationKey}/{sessionToken}/{userName}";
+	
+	public static final String LIST_OF_SERIES="ListOfSeries/{applicationKey}/{sessionToken}/{userName}";
+	
+	public static final String LIST_OF_MATHCES="ListOfMatches/{applicationKey}/{sessionToken}/{userName}";
+	
+	
+	public static final String SUPERMASTER="superMaster";
+	public static final String MASTER="master";
+	public static final String USER="user";
+	
+	public static final String LOCK_USER="LOCKUSER";
+	public static final String UNLOCK_USER="UNLOCKUSER";
+	public static final String LOCK_BETTING="LOCKBETTING";
+	public static final String UNLOCK_BETTING="UNLOCKBETTING";
+	public static final String CLOSE_ACC="CLOSEACC";
+	public static final String OPEN_ACC="OPENACC";
+	
+	
+	
+	public static String checkNulString(String aString) {
+		return StringUtils.isBlank(aString) ? null : aString;
+	}
+	
+}

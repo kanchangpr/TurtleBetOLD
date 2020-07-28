@@ -1,0 +1,111 @@
+package com.jetbet.bean;
+
+import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+
+import org.hibernate.annotations.CreationTimestamp;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Data
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Entity
+@Table(name = "JB_USER_DETAILS")
+public class UserBean {
+	@Id
+	@SequenceGenerator(name = "mySeqGen", sequenceName = "jb_user_deatils_seq", schema = "JETBET")
+	@GeneratedValue(generator = "mySeqGen" ,strategy = GenerationType.SEQUENCE)
+	private Long id;
+	
+	@Column(name = "user_id")
+	private String userId;
+	
+	@Column(name = "full_name")
+	private String fullName;
+	
+	@Column(name = "password")
+	private String password;
+	
+	@Column(name = "user_Role")
+	private String userRole;
+	
+	@Column(name = "parent")
+	private String parent;
+	
+	@CreationTimestamp
+	@Column(name = "Reg_Date")
+	private Date regDate;
+	
+	@Column(name = "Partnership")
+	private int partnership;
+	
+	@Column(name = "Odds_Commission")
+	private int oddsCommission;
+	
+	@Column(name = "Session_Commission")
+	private int sessionCommission;
+	
+	@Column(name = "Bet_Delay")
+	private int betDelay;
+	
+	@Column(name = "Session_Delay")
+	private int sessionDelay;
+	
+	@Column(name = "User_Limit")
+	private int userLimit;
+	
+	@Column(name = "Max_Profit")
+	private int maxProfit;
+	
+	@Column(name = "Max_Loss")
+	private int maxLoss;
+	
+	@Column(name = "Odds_Max_Stake")
+	private int oddsMaxStake;
+	
+	@Column(name = "Going_In_Play_Stake")
+	private int goingInPlayStake;
+	
+	@Column(name = "Session_Max_Stake")
+	private int sessionMaxStake;
+	
+	@Column(name = "isactive")
+	private String isActive="Y";
+	
+	@Column(name = "isuserlock")
+	private String isUserLock="N";
+	
+	@Column(name = "isbettinglock")
+	private String isBettingLock="N";
+	
+	@Column(name = "remarks")
+	private String remarks;
+	
+	@CreationTimestamp
+	@Column(name = "lastupdateddate")
+	private Date lastUpdatedDate; 
+	
+	@Column(name = "lastupdateby")
+	private String lastUpdateBy;  
+	
+	@CreationTimestamp
+	@Column(name = "createddate")
+	private Date createdDate;   
+	
+	@Column(name = "createdby")
+	private String createdBy;
+}

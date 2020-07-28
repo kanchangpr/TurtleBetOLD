@@ -1,0 +1,33 @@
+package com.jetbet.util;
+
+import javax.validation.Valid;
+
+import com.jetbet.bean.UserBean;
+import com.jetbet.dto.UserDetailsRequestDto;
+
+public class JetbetMapper {
+	public static UserBean convertUserRoleDtoToUserRoleBean(@Valid UserDetailsRequestDto userRolesRequestDto) {
+		UserBean userBean=new UserBean();
+		userBean.setUserId(ResourceConstants.checkNulString(userRolesRequestDto.getUserId()).toUpperCase().trim());
+		userBean.setFullName(ResourceConstants.checkNulString(userRolesRequestDto.getFullName()).trim());
+		userBean.setPassword(ResourceConstants.checkNulString(userRolesRequestDto.getPassword()).trim());
+		userBean.setUserRole(ResourceConstants.checkNulString(userRolesRequestDto.getUserRole()).trim());
+		userBean.setParent(ResourceConstants.checkNulString(userRolesRequestDto.getParent()).trim());
+		userBean.setRemarks(ResourceConstants.checkNulString(userRolesRequestDto.getRemarks()).trim());
+		userBean.setCreatedBy(ResourceConstants.checkNulString(userRolesRequestDto.getUserName()).trim());
+		userBean.setPartnership(userRolesRequestDto.getPartnership());
+		userBean.setPartnership(userRolesRequestDto.getOddsCommission());
+		userBean.setPartnership(userRolesRequestDto.getSessionCommission());
+		userBean.setPartnership(userRolesRequestDto.getBetDelay());
+		userBean.setPartnership(userRolesRequestDto.getSessionDelay());
+		userBean.setPartnership(userRolesRequestDto.getUserLimit());
+		userBean.setPartnership(userRolesRequestDto.getMaxProfit());
+		userBean.setPartnership(userRolesRequestDto.getMaxLoss());
+		userBean.setPartnership(userRolesRequestDto.getOddsMaxStake());
+		userBean.setPartnership(userRolesRequestDto.getGoingInPlayStake());
+		userBean.setPartnership(userRolesRequestDto.getSessionMaxStake());
+		return userBean;
+		
+	}
+
+}

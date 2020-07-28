@@ -1,0 +1,59 @@
+package com.jetbet.serviceImpl;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.jetbet.bean.UserBean;
+import com.jetbet.dao.UserDao;
+import com.jetbet.dto.UserControlsDto;
+import com.jetbet.dto.UserResponseDto;
+import com.jetbet.dto.UserRolesResponseDto;
+import com.jetbet.service.UserService;
+
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+@Service
+public class UserServiceImpl implements UserService{
+
+	@Autowired
+	private UserDao userDao;
+	
+	@Override
+	public List<UserBean> getResponse() {
+		return userDao.getResponse();
+	}
+
+	@Override
+	public List<UserRolesResponseDto> getUserRoles(String role, String transactionId) {
+		log.info("["+transactionId+"]*************************INSIDE getUserRoles CLASS UserServiceImpl*************************");
+		return userDao.getUserRoles(role,transactionId);
+	}
+
+	@Override
+	public List<UserRolesResponseDto> getParentList(String role, String transactionId) {
+		log.info("["+transactionId+"]*************************INSIDE getParentList CLASS UserServiceImpl*************************");
+		return userDao.getParentList(role,transactionId);
+	}
+
+	@Override
+	public Boolean checkUserNameAvailability(String userName, String transactionId) {
+		log.info("["+transactionId+"]*************************INSIDE checkUserNameAvailability CLASS UserServiceImpl*************************");
+		return userDao.checkUserNameAvailability(userName,transactionId);
+	}
+
+	@Override
+	public UserResponseDto addUserDetails(UserBean userBean, String transactionId) {
+		log.info("["+transactionId+"]*************************INSIDE addUserDetails CLASS UserServiceImpl*************************");
+		return userDao.addUserDetails(userBean,transactionId);
+	}
+
+	@Override
+	public UserResponseDto userControls(UserControlsDto userControlsDto, String transactionId) {
+		log.info("["+transactionId+"]*************************INSIDE userControls CLASS UserServiceImpl*************************");
+		return userDao.userControls(userControlsDto,transactionId);
+	}
+
+}

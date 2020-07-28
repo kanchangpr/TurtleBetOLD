@@ -1,0 +1,23 @@
+package com.jetbet.service;
+
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
+import com.jetbet.bean.UserBean;
+import com.jetbet.dto.UserRolesResponseDto;
+
+@Service
+public interface UserService {
+
+	List<UserBean> getResponse();
+
+	List<UserRolesResponseDto> getUserRoles(String role, String transactionId);
+
+	List<UserRolesResponseDto> getParentList(String role, String transactionId);
+
+	Boolean checkUserNameAvailability(String userName, String transactionId);
+
+	UserBean addUserDetails(UserBean userBean, String transactionId);
+
+}
