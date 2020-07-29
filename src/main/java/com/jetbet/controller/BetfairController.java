@@ -38,7 +38,7 @@ public class BetfairController {
 		log.info("Time of Execution: "+datetimeformatter.format(LocalDateTime.now()));
 		
 		String applicationKey="5tsF8QHfEw3n4Kp8";
-		String sessionToken="XyS/BclYHo/fEccWpCL8Hd7Teciwn1jJ80ccdROY4nc=";
+		String sessionToken="PsszL+gNaXw+s7+MiHF7vk8HfFrz+oNeZaxO8l+GZGU=";
 		String userName="KANCHAN";
 		
 		String transactionId = "JB"+UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
@@ -54,7 +54,7 @@ public class BetfairController {
 	//@Scheduled(fixedDelay = 40000)
 	public void getListOfSeries() {
 		String applicationKey="5tsF8QHfEw3n4Kp8";
-		String sessionToken="XyS/BclYHo/fEccWpCL8Hd7Teciwn1jJ80ccdROY4nc=";
+		String sessionToken="PsszL+gNaXw+s7+MiHF7vk8HfFrz+oNeZaxO8l+GZGU=";
 		String userName="KANCHAN";
 		String transactionId = "JB"+UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
 		log.info("["+transactionId+"]*************************INSIDE getListOfEventType METHOD GET*************************");
@@ -65,7 +65,7 @@ public class BetfairController {
 	@RequestMapping(value=ResourceConstants.LIST_OF_MATHCES, method=RequestMethod.GET)
 	public ResponseEntity<List<MatchBean>> getListOfMatches() {
 		String applicationKey="5tsF8QHfEw3n4Kp8";
-		String sessionToken="XyS/BclYHo/fEccWpCL8Hd7Teciwn1jJ80ccdROY4nc=";
+		String sessionToken="PsszL+gNaXw+s7+MiHF7vk8HfFrz+oNeZaxO8l+GZGU=";
 		String userName="KANCHAN";
 		String transactionId = "JB"+UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
 		log.info("["+transactionId+"]*************************INSIDE getListOfEventType METHOD GET*************************");
@@ -76,12 +76,12 @@ public class BetfairController {
 	@RequestMapping(value=ResourceConstants.LIST_OF_ODDS, method=RequestMethod.GET)
 	public ResponseEntity<List<FancyBean>> getListOfOdds() {
 		String applicationKey="5tsF8QHfEw3n4Kp8";
-		String sessionToken="XyS/BclYHo/fEccWpCL8Hd7Teciwn1jJ80ccdROY4nc=";
+		String sessionToken="PsszL+gNaXw+s7+MiHF7vk8HfFrz+oNeZaxO8l+GZGU=";
 		String userName="KANCHAN";
 		String transactionId = "JB"+UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
 		log.info("["+transactionId+"]*************************INSIDE getListOfEventType METHOD GET*************************");
 		List<FancyBean> response=betfairService.getListOfOdds(applicationKey, sessionToken, userName, transactionId);
         return new ResponseEntity<List<FancyBean>> (response,HttpStatus.OK);
 	}
-
+	
 }
