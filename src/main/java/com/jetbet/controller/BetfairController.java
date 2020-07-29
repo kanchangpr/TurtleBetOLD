@@ -8,6 +8,7 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,6 +17,7 @@ import com.jetbet.bean.FancyBean;
 import com.jetbet.bean.MatchBean;
 import com.jetbet.bean.SeriesBean;
 import com.jetbet.bean.SportsBean;
+import com.jetbet.dto.SessionDetails;
 import com.jetbet.service.BetfairService;
 import com.jetbet.util.ResourceConstants;
 
@@ -30,42 +32,52 @@ public class BetfairController {
 	BetfairService betfairService;
 	
 	private static final DateTimeFormatter datetimeformatter=DateTimeFormatter.ofPattern("HH:mm:ss");
-	//@RequestMapping(value=ResourceConstants.LIST_OF_SPORTSS, method=RequestMethod.GET)
-	//public ResponseEntity<List<SportsBean>> getListOfSports(@PathVariable String applicationKey, String sessionToken, String userName) {
+	@RequestMapping(value=ResourceConstants.LIST_OF_SPORTSS, method=RequestMethod.GET)
+	public ResponseEntity<List<SportsBean>> getListOfSports() {
 	//@Scheduled(fixedDelay = 40000)
-	public void getListOfSports() {
+	//public void getListOfSports() {
 		
 		log.info("Time of Execution: "+datetimeformatter.format(LocalDateTime.now()));
+		ResponseEntity<SessionDetails> sessionDetails=getSessionToken();
+//		String applicationKey="5tsF8QHfEw3n4Kp8";
+//		String sessionToken="PsszL+gNaXw+s7+MiHF7vk8HfFrz+oNeZaxO8l+GZGU=";
+//		String userName="KANCHAN";
 		
-		String applicationKey="5tsF8QHfEw3n4Kp8";
-		String sessionToken="PsszL+gNaXw+s7+MiHF7vk8HfFrz+oNeZaxO8l+GZGU=";
+		String applicationKey=sessionDetails.getBody().getProduct();
+		String sessionToken=sessionDetails.getBody().getToken();
 		String userName="KANCHAN";
 		
 		String transactionId = "JB"+UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
 		log.info("["+transactionId+"]*************************INSIDE getListOfEventType METHOD GET*************************");
 		List<SportsBean> response=betfairService.getListOfSports(applicationKey, sessionToken, userName, transactionId);
-        //return new ResponseEntity<List<SportsBean>> (response,HttpStatus.OK);
+        return new ResponseEntity<List<SportsBean>> (response,HttpStatus.OK);
 	}
 	
-	//@RequestMapping(value=ResourceConstants.LIST_OF_SERIES, method=RequestMethod.GET)
-	
-	//public ResponseEntity<List<SeriesBean>> getListOfSeries(@PathVariable String applicationKey, String sessionToken, String userName) {
-	
+	@RequestMapping(value=ResourceConstants.LIST_OF_SERIES, method=RequestMethod.GET)
+	public ResponseEntity<List<SeriesBean>> getListOfSeries() {
 	//@Scheduled(fixedDelay = 40000)
-	public void getListOfSeries() {
-		String applicationKey="5tsF8QHfEw3n4Kp8";
-		String sessionToken="PsszL+gNaXw+s7+MiHF7vk8HfFrz+oNeZaxO8l+GZGU=";
+	//public void getListOfSeries() {
+//		String applicationKey="5tsF8QHfEw3n4Kp8";
+//		String sessionToken="PsszL+gNaXw+s7+MiHF7vk8HfFrz+oNeZaxO8l+GZGU=";
+//		String userName="KANCHAN";
+		ResponseEntity<SessionDetails> sessionDetails=getSessionToken();
+		String applicationKey=sessionDetails.getBody().getProduct();
+		String sessionToken=sessionDetails.getBody().getToken();
 		String userName="KANCHAN";
 		String transactionId = "JB"+UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
 		log.info("["+transactionId+"]*************************INSIDE getListOfEventType METHOD GET*************************");
 		List<SeriesBean> response=betfairService.getListOfSeries(applicationKey, sessionToken, userName, transactionId);
-       // return new ResponseEntity<List<SeriesBean>> (response,HttpStatus.OK);
+        return new ResponseEntity<List<SeriesBean>> (response,HttpStatus.OK);
 	}
 	
 	@RequestMapping(value=ResourceConstants.LIST_OF_MATHCES, method=RequestMethod.GET)
 	public ResponseEntity<List<MatchBean>> getListOfMatches() {
-		String applicationKey="5tsF8QHfEw3n4Kp8";
-		String sessionToken="PsszL+gNaXw+s7+MiHF7vk8HfFrz+oNeZaxO8l+GZGU=";
+//		String applicationKey="5tsF8QHfEw3n4Kp8";
+//		String sessionToken="PsszL+gNaXw+s7+MiHF7vk8HfFrz+oNeZaxO8l+GZGU=";
+//		String userName="KANCHAN";
+		ResponseEntity<SessionDetails> sessionDetails=getSessionToken();
+		String applicationKey=sessionDetails.getBody().getProduct();
+		String sessionToken=sessionDetails.getBody().getToken();
 		String userName="KANCHAN";
 		String transactionId = "JB"+UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
 		log.info("["+transactionId+"]*************************INSIDE getListOfEventType METHOD GET*************************");
@@ -75,13 +87,28 @@ public class BetfairController {
 	
 	@RequestMapping(value=ResourceConstants.LIST_OF_ODDS, method=RequestMethod.GET)
 	public ResponseEntity<List<FancyBean>> getListOfOdds() {
-		String applicationKey="5tsF8QHfEw3n4Kp8";
-		String sessionToken="PsszL+gNaXw+s7+MiHF7vk8HfFrz+oNeZaxO8l+GZGU=";
+//		String applicationKey="5tsF8QHfEw3n4Kp8";
+//		String sessionToken="PsszL+gNaXw+s7+MiHF7vk8HfFrz+oNeZaxO8l+GZGU=";
+//		String userName="KANCHAN";
+		ResponseEntity<SessionDetails> sessionDetails=getSessionToken();
+		String applicationKey=sessionDetails.getBody().getProduct();
+		String sessionToken=sessionDetails.getBody().getToken();
 		String userName="KANCHAN";
 		String transactionId = "JB"+UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
 		log.info("["+transactionId+"]*************************INSIDE getListOfEventType METHOD GET*************************");
 		List<FancyBean> response=betfairService.getListOfOdds(applicationKey, sessionToken, userName, transactionId);
         return new ResponseEntity<List<FancyBean>> (response,HttpStatus.OK);
+	}
+	
+	@RequestMapping(value=ResourceConstants.GET_SESSION_TOKEN, method=RequestMethod.POST)
+	public ResponseEntity<SessionDetails> getSessionToken() {
+		String userName="shiltonpereira@live.com";
+		String password="Wsxedc@123";
+		String transactionId = "JB"+UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
+		log.info("["+transactionId+"]*************************INSIDE getSessionToken METHOD GET*************************");
+		SessionDetails response=betfairService.getSessionToken(userName, password, transactionId);
+		log.info("response:: "+response);
+        return new ResponseEntity<SessionDetails> (response,HttpStatus.OK);
 	}
 	
 }

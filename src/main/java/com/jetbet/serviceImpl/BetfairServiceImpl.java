@@ -10,6 +10,7 @@ import com.jetbet.bean.MatchBean;
 import com.jetbet.bean.SeriesBean;
 import com.jetbet.bean.SportsBean;
 import com.jetbet.dao.BetfairDao;
+import com.jetbet.dto.SessionDetails;
 import com.jetbet.repository.SportsRepository;
 import com.jetbet.service.BetfairService;
 
@@ -40,6 +41,11 @@ public class BetfairServiceImpl implements BetfairService{
 	@Override
 	public List<FancyBean> getListOfOdds(String applicationKey, String sessionToken, String userName,String transactionId) {
 		return betfairDao.getListOfOdds(applicationKey, sessionToken,userName,transactionId);
+	}
+
+	@Override
+	public SessionDetails getSessionToken(String userName, String password, String transactionId) {
+		return betfairDao.getSessionToken(userName,password,transactionId);
 	}
 
 }

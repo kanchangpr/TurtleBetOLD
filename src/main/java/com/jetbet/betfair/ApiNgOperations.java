@@ -9,6 +9,7 @@ import com.jetbet.betfair.entities.EventTypeResult;
 import com.jetbet.betfair.entities.MarketFancyResult;
 import com.jetbet.betfair.entities.MarketFilter;
 import com.jetbet.betfair.exceptions.APINGException;
+import com.jetbet.dto.SessionDetails;
 
 
 public abstract class ApiNgOperations {
@@ -33,6 +34,8 @@ public abstract class ApiNgOperations {
 	public abstract List<EventResult> listEvents(MarketFilter filter, String appKey, String ssoId) throws APINGException;
 	
 	public abstract List<MarketFancyResult> listFancy(MarketFilter filter, String appKey, String ssoId) throws APINGException;
+
+	public abstract SessionDetails getSessionToken(String userName, String password, String transactionId) ;
 
 //	public abstract List<MarketBook> listMarketBook(List<String> marketIds, PriceProjection priceProjection, OrderProjection orderProjection,
 //						MatchProjection matchProjection, String currencyCode, String appKey, String ssoId) throws APINGException;

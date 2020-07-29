@@ -8,6 +8,7 @@ import com.jetbet.bean.FancyBean;
 import com.jetbet.bean.MatchBean;
 import com.jetbet.bean.SeriesBean;
 import com.jetbet.bean.SportsBean;
+import com.jetbet.dto.SessionDetails;
 
 @Service
 public interface BetfairService {
@@ -19,5 +20,7 @@ public interface BetfairService {
 	List<MatchBean> getListOfMatches(String applicationKey, String sessionToken, String userName, String transactionId);
 
 	List<FancyBean> getListOfOdds(String applicationKey, String sessionToken, String userName, String transactionId);
+
+	SessionDetails getSessionToken(String userName, String password, String transactionId);
 
 }

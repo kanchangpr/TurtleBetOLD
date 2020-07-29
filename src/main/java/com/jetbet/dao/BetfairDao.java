@@ -2,9 +2,7 @@ package com.jetbet.dao;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +20,7 @@ import com.jetbet.betfair.entities.EventTypeResult;
 import com.jetbet.betfair.entities.MarketFancyResult;
 import com.jetbet.betfair.entities.MarketFilter;
 import com.jetbet.betfair.exceptions.APINGException;
+import com.jetbet.dto.SessionDetails;
 import com.jetbet.repository.FancyRepository;
 import com.jetbet.repository.MatchRepository;
 import com.jetbet.repository.SeriesRepository;
@@ -312,6 +311,11 @@ public class BetfairDao {
 		}
 		log.info("responseBeanList:: "+responseBeanList);
 		return responseBeanList;
+	}
+
+	public SessionDetails getSessionToken(String userName, String password, String transactionId) {
+		SessionDetails response = rescriptOperations.getSessionToken(userName, password,transactionId);
+		return response;
 	}
 
 	

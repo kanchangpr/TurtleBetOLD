@@ -21,6 +21,8 @@ public class ResourceConstants {
 	
 	public static final String LIST_OF_ODDS="ListOfOdds";
 	
+	public static final String GET_SESSION_TOKEN="GetSessionToken";
+	
 	public static final String CHIPS_ALLOCATIONS="chipsAllocations";
 	public static final String CHIPS_BALANCE="chipsBalance/{userId}";
 	public static final String CHANGE_PASSWORD="changePassword";

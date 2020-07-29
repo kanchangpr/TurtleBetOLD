@@ -13,8 +13,12 @@ import com.jetbet.betfair.entities.MarketFilter;
 import com.jetbet.betfair.enums.ApiNgOperation;
 import com.jetbet.betfair.exceptions.APINGException;
 import com.jetbet.betfair.util.JsonConverter;
+import com.jetbet.dto.BetfailLoginRequestDto;
+import com.jetbet.dto.SessionDetails;
 
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class ApiNgRescriptOperations extends ApiNgOperations {
 
     private static ApiNgRescriptOperations instance = null;
@@ -77,6 +81,30 @@ public class ApiNgRescriptOperations extends ApiNgOperations {
 
     }
     
+    @Override
+	public SessionDetails getSessionToken(String userName, String password, String transactionId) {
+    	Map<String, Object> params = new HashMap<String, Object>();
+    	String requestString;
+    	List<SessionDetails> container = null;
+    	BetfailLoginRequestDto requestDto= new BetfailLoginRequestDto();
+        params.put(FILTER, requestDto);
+        params.put(LOCALE, locale);
+        
+        requestString =  JsonConverter.convertToJson(params);
+        
+        HttpUtil requester = new HttpUtil();
+        SessionDetails response = null;
+		try {
+			response = requester.sendPostRequestRescriptForLogin(requestString, ApiNgOperation.LOGIN.getOperationName());
+			log.info("response: "+response);
+			
+
+		} catch (APINGException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+      	return response;
+	}
 
     protected String makeRequest(String operation, Map<String, Object> params, String appKey, String ssoToken) throws APINGException {
         String requestString;
@@ -95,6 +123,8 @@ public class ApiNgRescriptOperations extends ApiNgOperations {
         else
             throw new APINGException();
     }
+
+	
 
 }
 
