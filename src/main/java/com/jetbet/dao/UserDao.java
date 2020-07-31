@@ -13,6 +13,9 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import com.jetbet.bean.ChipsBean;
+import com.jetbet.bean.MatchBean;
+import com.jetbet.bean.SeriesBean;
+import com.jetbet.bean.SportsBean;
 import com.jetbet.bean.UserBean;
 import com.jetbet.dto.ChangePasswordDto;
 import com.jetbet.dto.ChipsDto;
@@ -20,6 +23,9 @@ import com.jetbet.dto.UserControlsDto;
 import com.jetbet.dto.UserResponseDto;
 import com.jetbet.dto.UserRolesResponseDto;
 import com.jetbet.repository.ChipsRepository;
+import com.jetbet.repository.MatchRepository;
+import com.jetbet.repository.SeriesRepository;
+import com.jetbet.repository.SportsRepository;
 import com.jetbet.repository.UserRepository;
 import com.jetbet.util.QueryListConstant;
 import com.jetbet.util.ResourceConstants;
@@ -38,6 +44,15 @@ public class UserDao {
 	
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
+	
+	@Autowired
+	SportsRepository sportsRepository;
+	
+	@Autowired
+	SeriesRepository seriesRepository;
+	
+	@Autowired
+	MatchRepository matchRepository;
 	
 	
 	public List<UserBean> getResponse() {
@@ -370,6 +385,28 @@ public class UserDao {
 		}
 		return userResponseDto;
 	}
+	public List<SportsBean> activeSportsList(String transactionId) {
+		log.info("["+transactionId+"]*************************INSIDE sportsList CLASS UserDao*************************");
+		List<SportsBean> responseBeanList = new ArrayList<SportsBean>();
+		responseBeanList=sportsRepository.findByIsActive("Y");
+		log.info("["+transactionId+"] responseBeanList:  "+responseBeanList);
+		return responseBeanList;
+	}
 	
+	public List<SeriesBean> activeSeriesList(String transactionId) {
+		log.info("["+transactionId+"]*************************INSIDE seriesList CLASS UserDao*************************");
+		List<SeriesBean> responseBeanList = new ArrayList<SeriesBean>();
+		responseBeanList=seriesRepository.findByIsActive("Y");
+		log.info("["+transactionId+"] responseBeanList:  "+responseBeanList);
+		return responseBeanList;
+	}
+	
+	public List<MatchBean> activeMatchList(String transactionId) {
+		log.info("["+transactionId+"]*************************INSIDE matchList CLASS UserDao*************************");
+		List<MatchBean> responseBeanList = new ArrayList<MatchBean>();
+		responseBeanList=matchRepository.findByIsActive("Y");
+		log.info("["+transactionId+"] responseBeanList:  "+responseBeanList);
+		return responseBeanList;
+	}
 	
 }

@@ -13,7 +13,7 @@ public class ResourceConstants {
 	
 	public static final String USER_CONTROLS="UserControls";
 	
-	public static final String LIST_OF_SPORTSS="ListOfSports";
+	public static final String LIST_OF_SPORTS="ListOfSports";
 	
 	public static final String LIST_OF_SERIES="ListOfSeries";
 	
@@ -22,6 +22,8 @@ public class ResourceConstants {
 	public static final String LIST_OF_ODDS="ListOfOdds";
 	
 	public static final String GET_SESSION_TOKEN="GetSessionToken";
+	
+	public static final String SPORTS_CONTROL="SportsControl";
 	
 	public static final String CHIPS_ALLOCATIONS="chipsAllocations";
 	public static final String CHIPS_BALANCE="chipsBalance/{userId}";
@@ -79,6 +81,27 @@ public class ResourceConstants {
 	
 	public static final String DEPOSIT="DEPOSIT";
 	public static final String WITHDRAW="WITHDRAW";
+	
+	
+	public static final String SPORTS_PAGE="SPORTS_PAGE";
+	public static final String SERIES_PAGE="SERIES_PAGE";
+	public static final String MATCH_PAGE="MATCH_PAGE";
+	
+	public static final String SPORTS_TABLE="JETBET.JB_SPORTS_DETAILS";
+	public static final String SERIES_TABLE="JETBET.JB_SERIES_DETAILS";
+	public static final String MATCH_TABLE="JETBET.JB_MATCH_DETAILS";
+	
+	public static final String SPORTS_ID="SPORTS_ID";
+	public static final String SERIES_ID="SERIES_ID";
+	public static final String MATCH_ID="MATCH_ID";
+	
+	public static final String SPORTS_UPDATED_BY="SPORTS_UPDATED_BY";
+	public static final String SERIES_UPDATED_BY="SERIES_UPDATED_BY";
+	public static final String MATCH_UPDATED_BY="MATCH_UPDATED_BY";
+	
+	public static final String SPORTS_UPDATED_DATE  ="SPORTS_UPDATED_DATE  ";
+	public static final String SERIES_UPDATED_DATE  ="SERIES_UPDATED_DATE  ";
+	public static final String MATCH_UPDATED_DATE ="MATCH_UPDATED_DATE ";
 	
 	
 	

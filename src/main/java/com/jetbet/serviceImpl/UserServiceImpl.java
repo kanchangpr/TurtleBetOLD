@@ -7,6 +7,9 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.jetbet.bean.MatchBean;
+import com.jetbet.bean.SeriesBean;
+import com.jetbet.bean.SportsBean;
 import com.jetbet.bean.UserBean;
 import com.jetbet.dao.UserDao;
 import com.jetbet.dto.ChangePasswordDto;
@@ -76,6 +79,23 @@ public class UserServiceImpl implements UserService{
 	public UserResponseDto changePassword(ChangePasswordDto changePasswordDto, String transactionId) {
 		log.info("["+transactionId+"]*************************INSIDE changePassword CLASS UserServiceImpl*************************");
 		return userDao.changePassword(changePasswordDto,transactionId);
+	}
+	@Override
+	public List<SportsBean> activeSportsList(String transactionId) {
+		log.info("["+transactionId+"]*************************INSIDE sportsList CLASS AdminServiceImpl*************************");
+		return userDao.activeSportsList(transactionId);
+	}
+
+	@Override
+	public List<SeriesBean> activeSeriesList(String transactionId) {
+		log.info("["+transactionId+"]*************************INSIDE seriesList CLASS AdminServiceImpl*************************");
+		return userDao.activeSeriesList(transactionId);
+	}
+
+	@Override
+	public List<MatchBean> activeMatchList(String transactionId) {
+		log.info("["+transactionId+"]*************************INSIDE matchList CLASS AdminServiceImpl*************************");
+		return userDao.activeMatchList(transactionId);
 	}
 
 }

@@ -6,6 +6,9 @@ import javax.validation.Valid;
 
 import org.springframework.stereotype.Service;
 
+import com.jetbet.bean.MatchBean;
+import com.jetbet.bean.SeriesBean;
+import com.jetbet.bean.SportsBean;
 import com.jetbet.bean.UserBean;
 import com.jetbet.dto.ChangePasswordDto;
 import com.jetbet.dto.ChipsDto;
@@ -33,5 +36,11 @@ public interface UserService {
 	List<ChipsDto> chipsBalance(String userId, String transactionId);
 
 	UserResponseDto changePassword(@Valid ChangePasswordDto changePasswordDto, String transactionId);
+	
+	List<SportsBean> activeSportsList(String transactionId);
+
+	List<SeriesBean> activeSeriesList(String transactionId);
+
+	List<MatchBean> activeMatchList(String transactionId);
 
 }

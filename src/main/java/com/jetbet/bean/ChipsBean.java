@@ -12,6 +12,7 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import com.jetbet.dto.ChipsDto;
 
@@ -59,7 +60,7 @@ public class ChipsBean {
 	@Column(name = "updated_by")
 	private String updatedBy;
 	
-	@UpdateTimestamp
+	@LastModifiedDate
 	@Column(name = "updated_on")
 	private Date updatedDate;
 

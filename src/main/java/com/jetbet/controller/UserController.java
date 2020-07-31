@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.jetbet.bean.MatchBean;
+import com.jetbet.bean.SeriesBean;
+import com.jetbet.bean.SportsBean;
 import com.jetbet.bean.UserBean;
 import com.jetbet.dto.ChangePasswordDto;
 import com.jetbet.dto.ChipsDto;
@@ -29,7 +32,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
-@RequestMapping(value="/")
+@RequestMapping(value="/User")
 public class UserController {
 	
 	@Autowired
@@ -37,7 +40,7 @@ public class UserController {
 
 	@RequestMapping(value=ResourceConstants.USER_ROLES, method=RequestMethod.GET)
 	public ResponseEntity<List<UserRolesResponseDto>> getUserRoles(@PathVariable String role) {
-		String transactionId = "JB"+UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
+		String transactionId = "TB"+UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
 		log.info("["+transactionId+"]*************************INSIDE USER ROLE METHOD GET*************************");
 		List<UserRolesResponseDto> response = userService.getUserRoles(role,transactionId);
 		return new ResponseEntity<List<UserRolesResponseDto>>(response,HttpStatus.OK);
@@ -45,7 +48,7 @@ public class UserController {
 	
 	@RequestMapping(value=ResourceConstants.PARENT_LIST, method=RequestMethod.GET)
 	public ResponseEntity<List<UserRolesResponseDto>> getParentList(@PathVariable String role) {
-		String transactionId = "JB"+UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
+		String transactionId = "TB"+UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
 		log.info("["+transactionId+"]*************************INSIDE PARENT LIST METHOD GET*************************");
 		List<UserRolesResponseDto> response = userService.getParentList(role,transactionId);
 		return new ResponseEntity<List<UserRolesResponseDto>>(response,HttpStatus.OK);
@@ -53,16 +56,15 @@ public class UserController {
 	
 	@RequestMapping(value=ResourceConstants.USER_NAME_AVAILABILITY, method=RequestMethod.GET)
 	public ResponseEntity<Boolean> checkUserNameAvailability(@PathVariable String userName) {
-		String transactionId = "JB"+UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
+		String transactionId = "TB"+UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
 		log.info("["+transactionId+"]*************************INSIDE PARENT LIST METHOD POST*************************");
-		//Boolean response=true;
 		Boolean response = userService.checkUserNameAvailability(userName,transactionId);
 		return new ResponseEntity<Boolean>(response,HttpStatus.OK);
 	}
 	
 	@RequestMapping(value=ResourceConstants.USER_DETAILS, method=RequestMethod.POST)
 	public ResponseEntity<UserResponseDto> userRoles(@Valid @RequestBody UserDetailsRequestDto userDetailsRequestDto) {
-		String transactionId = "JB"+UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
+		String transactionId = "TB"+UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
 		log.info("["+transactionId+"]*************************INSIDE USER DETAILS METHOD POST*************************");
 		UserBean userBean = JetbetMapper.convertUserRoleDtoToUserRoleBean(userDetailsRequestDto);
 		UserResponseDto response = userService.addUserDetails(userBean,transactionId);
@@ -71,7 +73,7 @@ public class UserController {
 	
 	@RequestMapping(value=ResourceConstants.USER_CONTROLS, method=RequestMethod.PUT)
 	public ResponseEntity<UserResponseDto> userControls(@Valid @RequestBody UserControlsDto userControlsDto) {
-		String transactionId = "JB"+UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
+		String transactionId = "TB"+UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
 		log.info("["+transactionId+"]*************************INSIDE USER CONTROLS METHOD POST*************************");
 		UserResponseDto response = userService.userControls(userControlsDto,transactionId);
 		return new ResponseEntity<UserResponseDto>(response,HttpStatus.OK);
@@ -79,7 +81,7 @@ public class UserController {
 	
 	@RequestMapping(value=ResourceConstants.CHIPS_ALLOCATIONS, method=RequestMethod.POST)
 	public ResponseEntity<UserResponseDto> chipsAllocations(@Valid @RequestBody ChipsDto chipsDto) {
-		String transactionId = "JB"+UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
+		String transactionId = "TB"+UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
 		log.info("["+transactionId+"]*************************INSIDE chipsAllocations METHOD POST*************************");
 		UserResponseDto response = userService.chipsAllocations(chipsDto,transactionId);
 		return new ResponseEntity<UserResponseDto>(response,HttpStatus.OK);
@@ -87,7 +89,7 @@ public class UserController {
 	
 	@RequestMapping(value=ResourceConstants.CHIPS_BALANCE, method=RequestMethod.GET)
 	public ResponseEntity<List<ChipsDto>> chipsBalance(@PathVariable String userId) {
-		String transactionId = "JB"+UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
+		String transactionId = "TB"+UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
 		log.info("["+transactionId+"]*************************INSIDE chipsBalance METHOD POST*************************");
 		List<ChipsDto> response = userService.chipsBalance(userId.toUpperCase(),transactionId);
 		return new ResponseEntity<List<ChipsDto>>(response,HttpStatus.OK);
@@ -95,10 +97,35 @@ public class UserController {
 	
 	@RequestMapping(value=ResourceConstants.CHANGE_PASSWORD, method=RequestMethod.PUT)
 	public ResponseEntity<UserResponseDto> changePassword(@Valid @RequestBody ChangePasswordDto changePasswordDto) {
-		String transactionId = "JB"+UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
+		String transactionId = "TB"+UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
 		log.info("["+transactionId+"]*************************INSIDE chipsBalance METHOD POST*************************");
 		UserResponseDto response = userService.changePassword(changePasswordDto,transactionId);
 		return new ResponseEntity<UserResponseDto>(response,HttpStatus.OK);
 	}
+	
+	@RequestMapping(value=ResourceConstants.LIST_OF_SPORTS, method=RequestMethod.GET)
+	public ResponseEntity<List<SportsBean>> activeSportsList() {
+		String transactionId = "TB"+UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
+		log.info("["+transactionId+"]*************************INSIDE getListOfEventType METHOD GET*************************");
+		List<SportsBean> response=userService.activeSportsList(transactionId);
+        return new ResponseEntity<List<SportsBean>> (response,HttpStatus.OK);
+	}
+	
+	@RequestMapping(value=ResourceConstants.LIST_OF_SERIES, method=RequestMethod.GET)
+	public ResponseEntity<List<SeriesBean>> activeSeriesList() {
+		String transactionId = "TB"+UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
+		log.info("["+transactionId+"]*************************INSIDE getListOfEventType METHOD GET*************************");
+		List<SeriesBean> response=userService.activeSeriesList(transactionId);
+        return new ResponseEntity<List<SeriesBean>> (response,HttpStatus.OK);
+	}
+	
+	@RequestMapping(value=ResourceConstants.LIST_OF_MATHCES, method=RequestMethod.GET)
+	public ResponseEntity<List<MatchBean>> activeMatchList() {
+		String transactionId = "TB"+UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
+		log.info("["+transactionId+"]*************************INSIDE getListOfEventType METHOD GET*************************");
+		List<MatchBean> response=userService.activeMatchList(transactionId);
+        return new ResponseEntity<List<MatchBean>> (response,HttpStatus.OK);
+	}
+	
 	
 }

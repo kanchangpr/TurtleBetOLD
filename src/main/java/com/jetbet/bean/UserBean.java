@@ -12,6 +12,7 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -99,7 +100,7 @@ public class UserBean {
 	@Column(name = "remarks")
 	private String remarks;
 	
-	@UpdateTimestamp
+	@LastModifiedDate
 	@Column(name = "lastupdateddate")
 	private Date lastUpdatedDate; 
 	

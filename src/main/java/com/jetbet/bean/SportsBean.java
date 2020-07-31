@@ -8,7 +8,6 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import lombok.AllArgsConstructor;
@@ -26,7 +25,7 @@ import lombok.Setter;
 @Table(name = "JB_SPORTS_DETAILS")
 public class SportsBean {
 	@Id
-	@Column(name = "sports_type_id")
+	@Column(name = "sports_id")
 	private String sportsTypeId;
 	
 	@Column(name = "sports_name")

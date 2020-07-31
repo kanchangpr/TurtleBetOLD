@@ -32,7 +32,7 @@ public class BetfairController {
 	BetfairService betfairService;
 	
 	private static final DateTimeFormatter datetimeformatter=DateTimeFormatter.ofPattern("HH:mm:ss");
-	@RequestMapping(value=ResourceConstants.LIST_OF_SPORTSS, method=RequestMethod.GET)
+	@RequestMapping(value=ResourceConstants.LIST_OF_SPORTS, method=RequestMethod.GET)
 	public ResponseEntity<List<SportsBean>> getListOfSports() {
 	//@Scheduled(fixedDelay = 40000)
 	//public void getListOfSports() {
@@ -47,7 +47,7 @@ public class BetfairController {
 		String sessionToken=sessionDetails.getBody().getToken();
 		String userName="KANCHAN";
 		
-		String transactionId = "JB"+UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
+		String transactionId = "TB"+UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
 		log.info("["+transactionId+"]*************************INSIDE getListOfEventType METHOD GET*************************");
 		List<SportsBean> response=betfairService.getListOfSports(applicationKey, sessionToken, userName, transactionId);
         return new ResponseEntity<List<SportsBean>> (response,HttpStatus.OK);
@@ -64,7 +64,7 @@ public class BetfairController {
 		String applicationKey=sessionDetails.getBody().getProduct();
 		String sessionToken=sessionDetails.getBody().getToken();
 		String userName="KANCHAN";
-		String transactionId = "JB"+UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
+		String transactionId = "TB"+UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
 		log.info("["+transactionId+"]*************************INSIDE getListOfEventType METHOD GET*************************");
 		List<SeriesBean> response=betfairService.getListOfSeries(applicationKey, sessionToken, userName, transactionId);
         return new ResponseEntity<List<SeriesBean>> (response,HttpStatus.OK);
@@ -79,7 +79,7 @@ public class BetfairController {
 		String applicationKey=sessionDetails.getBody().getProduct();
 		String sessionToken=sessionDetails.getBody().getToken();
 		String userName="KANCHAN";
-		String transactionId = "JB"+UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
+		String transactionId = "TB"+UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
 		log.info("["+transactionId+"]*************************INSIDE getListOfEventType METHOD GET*************************");
 		List<MatchBean> response=betfairService.getListOfMatches(applicationKey, sessionToken, userName, transactionId);
         return new ResponseEntity<List<MatchBean>> (response,HttpStatus.OK);
@@ -94,7 +94,7 @@ public class BetfairController {
 		String applicationKey=sessionDetails.getBody().getProduct();
 		String sessionToken=sessionDetails.getBody().getToken();
 		String userName="KANCHAN";
-		String transactionId = "JB"+UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
+		String transactionId = "TB"+UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
 		log.info("["+transactionId+"]*************************INSIDE getListOfEventType METHOD GET*************************");
 		List<FancyBean> response=betfairService.getListOfOdds(applicationKey, sessionToken, userName, transactionId);
         return new ResponseEntity<List<FancyBean>> (response,HttpStatus.OK);
@@ -104,7 +104,7 @@ public class BetfairController {
 	public ResponseEntity<SessionDetails> getSessionToken() {
 		String userName="shiltonpereira@live.com";
 		String password="Wsxedc@123";
-		String transactionId = "JB"+UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
+		String transactionId = "TB"+UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
 		log.info("["+transactionId+"]*************************INSIDE getSessionToken METHOD GET*************************");
 		SessionDetails response=betfairService.getSessionToken(userName, password, transactionId);
 		log.info("response:: "+response);
