@@ -13,4 +13,6 @@ public interface SeriesRepository extends JpaRepository<SeriesBean, String>{
 	long countBySeriesId (String seriesId);
 	
 	List<SeriesBean> findBySportIdAndIsActive(String sportId,String isActive);
+	
+	List<SeriesBean> findBySportId(String sportId);
 }

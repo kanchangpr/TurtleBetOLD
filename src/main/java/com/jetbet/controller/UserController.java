@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.jetbet.bean.MatchBean;
@@ -112,18 +113,21 @@ public class UserController {
 	}
 	
 	@RequestMapping(value=ResourceConstants.LIST_OF_SERIES, method=RequestMethod.GET)
-	public ResponseEntity<List<SeriesBean>> activeSeriesList() {
+	public ResponseEntity<List<SeriesBean>> activeSeriesList(
+			@RequestParam (value="sportsId",required=false) String sportsId ) {
 		String transactionId = "TB"+UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
 		log.info("["+transactionId+"]*************************INSIDE getListOfEventType METHOD GET*************************");
-		List<SeriesBean> response=userService.activeSeriesList(transactionId);
+		List<SeriesBean> response=userService.activeSeriesList(sportsId,transactionId);
         return new ResponseEntity<List<SeriesBean>> (response,HttpStatus.OK);
 	}
 	
 	@RequestMapping(value=ResourceConstants.LIST_OF_MATHCES, method=RequestMethod.GET)
-	public ResponseEntity<List<MatchBean>> activeMatchList() {
+	public ResponseEntity<List<MatchBean>> activeMatchList(
+			@RequestParam (value="sportsId",required=false) String sportsId,
+			@RequestParam (value="seriesId",required=false) String seriesId) {
 		String transactionId = "TB"+UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
 		log.info("["+transactionId+"]*************************INSIDE getListOfEventType METHOD GET*************************");
-		List<MatchBean> response=userService.activeMatchList(transactionId);
+		List<MatchBean> response=userService.activeMatchList(sportsId,seriesId,transactionId);
         return new ResponseEntity<List<MatchBean>> (response,HttpStatus.OK);
 	}
 	

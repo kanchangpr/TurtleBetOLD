@@ -8,11 +8,15 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.annotation.JacksonInject.Value;
+import com.jetbet.bean.FancyBean;
 import com.jetbet.bean.MatchBean;
 import com.jetbet.bean.SeriesBean;
 import com.jetbet.bean.SportsBean;
@@ -51,19 +55,29 @@ public class AdminController {
 	}
 	
 	@RequestMapping(value=ResourceConstants.LIST_OF_SERIES, method=RequestMethod.GET)
-	public ResponseEntity<List<SeriesBean>> seriesList() {
+	public ResponseEntity<List<SeriesBean>> seriesList(@RequestParam (value="sportsId",required=false) String sportsId ) {
 		String transactionId = "TB"+UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
 		log.info("["+transactionId+"]*************************INSIDE getListOfEventType METHOD GET*************************");
-		List<SeriesBean> response=adminService.seriesList(transactionId);
+		List<SeriesBean> response=adminService.seriesList(sportsId,transactionId);
         return new ResponseEntity<List<SeriesBean>> (response,HttpStatus.OK);
 	}
 	
 	@RequestMapping(value=ResourceConstants.LIST_OF_MATHCES, method=RequestMethod.GET)
-	public ResponseEntity<List<MatchBean>> matchList() {
+	public ResponseEntity<List<MatchBean>> matchList(
+			@RequestParam (value="sportsId",required=false) String sportsId,
+			@RequestParam (value="seriesId",required=false) String seriesId) {
 		String transactionId = "TB"+UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
 		log.info("["+transactionId+"]*************************INSIDE getListOfEventType METHOD GET*************************");
-		List<MatchBean> response=adminService.matchList(transactionId);
+		List<MatchBean> response=adminService.matchList(sportsId,seriesId,transactionId);
         return new ResponseEntity<List<MatchBean>> (response,HttpStatus.OK);
+	}
+	
+	@RequestMapping(value=ResourceConstants.LIST_OF_ODDS, method=RequestMethod.GET)
+	public ResponseEntity<List<FancyBean>> fancyList() {
+		String transactionId = "TB"+UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
+		log.info("["+transactionId+"]*************************INSIDE getListOfEventType METHOD GET*************************");
+		List<FancyBean> response=adminService.fancyList(transactionId);
+        return new ResponseEntity<List<FancyBean>> (response,HttpStatus.OK);
 	}
 	
 	

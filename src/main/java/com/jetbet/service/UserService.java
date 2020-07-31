@@ -39,8 +39,8 @@ public interface UserService {
 	
 	List<SportsBean> activeSportsList(String transactionId);
 
-	List<SeriesBean> activeSeriesList(String transactionId);
+	List<SeriesBean> activeSeriesList(String sportsId , String transactionId);
 
-	List<MatchBean> activeMatchList(String transactionId);
+	List<MatchBean> activeMatchList(String sportsId ,String seriesId,String transactionId);
 
 }

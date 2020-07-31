@@ -71,6 +71,7 @@ public class BetfairDao {
 		} catch (APINGException apiExc) {
 			log.info("["+transactionId+"] "+apiExc.toString());
 		}
+		log.info("["+transactionId+"] sportsBeanResponseList:: "+sportsBeanResponseList);
 		return sportsBeanResponseList;
 	}
 
@@ -114,7 +115,7 @@ public class BetfairDao {
 		} catch (APINGException apiExc) {
 			log.info(apiExc.toString());
 		}
-		log.info("["+transactionId+"] seriesBeanList:: "+seriesBeanList);
+		log.info("["+transactionId+"] seriesBeanResponseList:: "+seriesBeanResponseList);
 		return seriesBeanResponseList;
 	}
 
@@ -178,6 +179,7 @@ public class BetfairDao {
 		} catch (APINGException apiExc) {
 			log.info(apiExc.toString());
 		}
+		log.info("["+transactionId+"] matchBeanResponseList:: "+matchBeanResponseList);
 		return matchBeanResponseList;
 	}
 
@@ -236,7 +238,7 @@ public class BetfairDao {
 		} catch (APINGException apiExc) {
 			log.info("["+transactionId+"] "+apiExc.toString());
 		}
-		return null;
+		return fancyBeanResponseList;
 	}
 
 

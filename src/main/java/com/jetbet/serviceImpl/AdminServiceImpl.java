@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.jetbet.bean.FancyBean;
 import com.jetbet.bean.MatchBean;
 import com.jetbet.bean.SeriesBean;
 import com.jetbet.bean.SportsBean;
@@ -35,15 +36,21 @@ public class AdminServiceImpl implements AdminService{
 	}
 
 	@Override
-	public List<SeriesBean> seriesList(String transactionId) {
+	public List<SeriesBean> seriesList(String sportsId,String transactionId) {
 		log.info("["+transactionId+"]*************************INSIDE seriesList CLASS AdminServiceImpl*************************");
-		return adminDao.seriesList(transactionId);
+		return adminDao.seriesList(sportsId,transactionId);
 	}
 
 	@Override
-	public List<MatchBean> matchList(String transactionId) {
+	public List<MatchBean> matchList(String sportsId,String seriesId,String transactionId) {
 		log.info("["+transactionId+"]*************************INSIDE matchList CLASS AdminServiceImpl*************************");
-		return adminDao.matchList(transactionId);
+		return adminDao.matchList(sportsId,seriesId,transactionId);
+	}
+
+	@Override
+	public List<FancyBean> fancyList(String transactionId) {
+		log.info("["+transactionId+"]*************************INSIDE fancyList CLASS AdminServiceImpl*************************");
+		return adminDao.fancyList(transactionId);
 	}
 
 }

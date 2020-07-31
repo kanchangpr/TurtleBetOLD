@@ -87,15 +87,15 @@ public class UserServiceImpl implements UserService{
 	}
 
 	@Override
-	public List<SeriesBean> activeSeriesList(String transactionId) {
+	public List<SeriesBean> activeSeriesList(String sportsId,String transactionId) {
 		log.info("["+transactionId+"]*************************INSIDE seriesList CLASS AdminServiceImpl*************************");
-		return userDao.activeSeriesList(transactionId);
+		return userDao.activeSeriesList(sportsId,transactionId);
 	}
 
 	@Override
-	public List<MatchBean> activeMatchList(String transactionId) {
+	public List<MatchBean> activeMatchList(String sportsId ,String seriesId,String transactionId) {
 		log.info("["+transactionId+"]*************************INSIDE matchList CLASS AdminServiceImpl*************************");
-		return userDao.activeMatchList(transactionId);
+		return userDao.activeMatchList(sportsId,seriesId,transactionId);
 	}
 
 }

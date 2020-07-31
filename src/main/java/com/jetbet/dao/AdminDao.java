@@ -1,14 +1,14 @@
 package com.jetbet.dao;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
+import com.jetbet.bean.FancyBean;
 import com.jetbet.bean.MatchBean;
 import com.jetbet.bean.SeriesBean;
 import com.jetbet.bean.SportsBean;
@@ -115,18 +115,41 @@ public class AdminDao {
 		return responseBeanList;
 	}
 	
-	public List<SeriesBean> seriesList(String transactionId) {
+	public List<SeriesBean> seriesList(String sportsId,String transactionId) {
 		log.info("["+transactionId+"]*************************INSIDE seriesList CLASS UserDao*************************");
+		log.info("["+transactionId+"]sportId:: "+sportsId);
 		List<SeriesBean> responseBeanList = new ArrayList<SeriesBean>();
-		responseBeanList=seriesRepository.findAll();
+		if(StringUtils.isBlank(sportsId)) {
+			responseBeanList=seriesRepository.findAll();
+		}else {
+			responseBeanList=seriesRepository.findBySportId(sportsId);
+		}
 		log.info("["+transactionId+"] responseBeanList:  "+responseBeanList);
 		return responseBeanList;
 	}
 	
-	public List<MatchBean> matchList(String transactionId) {
+	public List<MatchBean> matchList(String sportId,String seriesId,String transactionId) {
 		log.info("["+transactionId+"]*************************INSIDE matchList CLASS UserDao*************************");
+		log.info("["+transactionId+"]sportId:: "+sportId);
+		log.info("["+transactionId+"]seriesId:: "+seriesId);
 		List<MatchBean> responseBeanList = new ArrayList<MatchBean>();
-		responseBeanList=matchRepository.findAll();
+		if(!StringUtils.isBlank(sportId) && !StringUtils.isBlank(seriesId)) {
+			responseBeanList=matchRepository.findBySportIdAndSeriesId(sportId, seriesId);
+		}else if(!StringUtils.isBlank(sportId)) {
+			responseBeanList=matchRepository.findBySportId(sportId);
+		}else if(!StringUtils.isBlank(seriesId)) {
+			responseBeanList=matchRepository.findBySeriesId(seriesId);
+		} else if(StringUtils.isBlank(sportId) && StringUtils.isBlank(seriesId)) {
+			responseBeanList=matchRepository.findAll();
+		}
+		log.info("["+transactionId+"] responseBeanList:  "+responseBeanList);
+		return responseBeanList;
+	}
+
+	public List<FancyBean> fancyList(String transactionId) {
+		log.info("["+transactionId+"]*************************INSIDE fancyList CLASS UserDao*************************");
+		List<FancyBean> responseBeanList = new ArrayList<FancyBean>();
+		responseBeanList=fancyRepository.findAll();
 		log.info("["+transactionId+"] responseBeanList:  "+responseBeanList);
 		return responseBeanList;
 	}

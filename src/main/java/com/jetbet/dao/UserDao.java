@@ -8,6 +8,7 @@ import java.util.Map;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -393,18 +394,35 @@ public class UserDao {
 		return responseBeanList;
 	}
 	
-	public List<SeriesBean> activeSeriesList(String transactionId) {
+	public List<SeriesBean> activeSeriesList(String sportsId,String transactionId) {
 		log.info("["+transactionId+"]*************************INSIDE seriesList CLASS UserDao*************************");
+		log.info("["+transactionId+"]sportId:: "+sportsId);
+		String isActive="Y";
 		List<SeriesBean> responseBeanList = new ArrayList<SeriesBean>();
-		responseBeanList=seriesRepository.findByIsActive("Y");
+		if(StringUtils.isBlank(sportsId)) {
+			responseBeanList=seriesRepository.findByIsActive(isActive);
+		}else {
+			responseBeanList=seriesRepository.findBySportIdAndIsActive(sportsId, isActive);
+		}
 		log.info("["+transactionId+"] responseBeanList:  "+responseBeanList);
 		return responseBeanList;
 	}
 	
-	public List<MatchBean> activeMatchList(String transactionId) {
+	public List<MatchBean> activeMatchList(String sportId,String seriesId,String transactionId) {
 		log.info("["+transactionId+"]*************************INSIDE matchList CLASS UserDao*************************");
+		log.info("["+transactionId+"]sportId:: "+sportId);
+		log.info("["+transactionId+"]seriesId:: "+seriesId);
+		String isActive="Y";
 		List<MatchBean> responseBeanList = new ArrayList<MatchBean>();
-		responseBeanList=matchRepository.findByIsActive("Y");
+		if(!StringUtils.isBlank(sportId) && !StringUtils.isBlank(seriesId)) {
+			responseBeanList=matchRepository.findBySportIdAndSeriesIdAndIsActive(sportId, seriesId, isActive);
+		}else if(!StringUtils.isBlank(sportId)) {
+			responseBeanList=matchRepository.findBySportIdAndIsActive(sportId, isActive);
+		}else if(!StringUtils.isBlank(seriesId)) {
+			responseBeanList=matchRepository.findBySeriesIdAndIsActive(seriesId, isActive);
+		} else if(StringUtils.isBlank(sportId) && StringUtils.isBlank(seriesId)) {
+			responseBeanList=matchRepository.findByIsActive(isActive);
+		}
 		log.info("["+transactionId+"] responseBeanList:  "+responseBeanList);
 		return responseBeanList;
 	}
