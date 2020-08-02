@@ -15,16 +15,19 @@ import org.springframework.stereotype.Service;
 
 import com.jetbet.bean.ChipsBean;
 import com.jetbet.bean.MatchBean;
+import com.jetbet.bean.PartnershipBean;
 import com.jetbet.bean.SeriesBean;
 import com.jetbet.bean.SportsBean;
 import com.jetbet.bean.UserBean;
 import com.jetbet.dto.ChangePasswordDto;
 import com.jetbet.dto.ChipsDto;
 import com.jetbet.dto.UserControlsDto;
+import com.jetbet.dto.UserDetailsRequestDto;
 import com.jetbet.dto.UserResponseDto;
 import com.jetbet.dto.UserRolesResponseDto;
 import com.jetbet.repository.ChipsRepository;
 import com.jetbet.repository.MatchRepository;
+import com.jetbet.repository.PartnershipRepository;
 import com.jetbet.repository.SeriesRepository;
 import com.jetbet.repository.SportsRepository;
 import com.jetbet.repository.UserRepository;
@@ -47,13 +50,16 @@ public class UserDao {
 	private JdbcTemplate jdbcTemplate;
 	
 	@Autowired
-	SportsRepository sportsRepository;
+	private SportsRepository sportsRepository;
 	
 	@Autowired
-	SeriesRepository seriesRepository;
+	private SeriesRepository seriesRepository;
 	
 	@Autowired
-	MatchRepository matchRepository;
+	private MatchRepository matchRepository;
+	
+	@Autowired
+	private PartnershipRepository partnershipRepository;
 	
 	
 	public List<UserBean> getResponse() {
@@ -107,23 +113,87 @@ public class UserDao {
 		log.info("["+transactionId+"] PARENT: "+userBean.getParent());
 		log.info("["+transactionId+"] REMARKS: "+userBean.getRemarks());
 		log.info("["+transactionId+"] CREATED_BY: "+userBean.getCreatedBy());
+		
+		String userId=userBean.getUserId();
+		String userParent=userBean.getParent();
+		String userRole=userBean.getUserRole();
+		int partnership=userBean.getPartnership();
+		String createdBy=userBean.getCreatedBy();
+		PartnershipBean psBean= new PartnershipBean();
 		try {
-			userBean=userRepository.findByUserId(userBean.getParent());
-			Long parentCount = userRepository.countByUserId(userBean.getParent());
-			log.info("["+transactionId+"] User Limit: "+userBean.getUserLimit());
-			log.info("["+transactionId+"] Parent Count: "+parentCount);
-			if(userBean.getUserLimit()<parentCount) {
-				Long count = userRepository.countByUserId(userBean.getUserId());
-				if(count == 0) {
-					UserBean userRes=userRepository.save(userBean);
-					if(userRes.getUserId()==userBean.getUserId()) {
-						userResponseDto.setStatus(ResourceConstants.SUCCESS);
-						userResponseDto.setErrorMsg(ResourceConstants.INSERTED);
+			UserBean parentBean=userRepository.findFirst1ByUserId(userBean.getParent());
+			Long userCountofParent = userRepository.countByParent(userBean.getParent());
+			log.info("["+transactionId+"] Parent's User Limit: "+parentBean.getUserLimit());
+			log.info("["+transactionId+"] Parent's User Count: "+userCountofParent);
+			if(parentBean.getUserLimit()>userCountofParent) {
+				Long userCount = userRepository.countByUserId(userBean.getUserId());
+				final int totalStake=100;
+				int adminStake=0;
+				int supermasterStake=0;
+				int masterStake=0;
+				boolean isValid=true;
+				if(userCount == 0) {
+					
+					psBean.setUserId(userId);
+					psBean.setUserRole(userRole);
+					psBean.setParent(userParent);
+					psBean.setCreatedBy(createdBy);
+					
+					if(userRole.equalsIgnoreCase(ResourceConstants.SUPERMASTER)) {
+						adminStake=totalStake-partnership;
+						supermasterStake=partnership;
+						psBean.setMastrerStake(masterStake);
+						psBean.setSupermasterStake(supermasterStake);
+						psBean.setAdminStake(adminStake);
+						if(masterStake+supermasterStake+adminStake!=100) {
+							isValid=false;
+						}
+					}else if(userRole.equalsIgnoreCase(ResourceConstants.MASTER)) {
+						PartnershipBean psBeanObj= new PartnershipBean();
+						psBeanObj=partnershipRepository.findByUserId(userParent);
+						int admStake=psBeanObj.getAdminStake();
+						int smStake=psBeanObj.getSupermasterStake();
+						masterStake=partnership;
+						adminStake=admStake;
+						supermasterStake=smStake-masterStake;
+						psBean.setMastrerStake(masterStake);
+						psBean.setSupermasterStake(supermasterStake);
+						psBean.setAdminStake(adminStake);
+						if(masterStake+supermasterStake+adminStake!=100) {
+							isValid=false;
+						}
+					}
+					
+					log.info("["+transactionId+"] adminStake: "+adminStake);
+					log.info("["+transactionId+"] supermasterStake: "+supermasterStake);
+					log.info("["+transactionId+"] masterStake: "+masterStake);
+					
+					if(isValid) {
+						PartnershipBean psBeanRes= partnershipRepository.saveAndFlush(psBean);
+						if(psBeanRes.getUserId()==userBean.getUserId()) {
+							
+							userBean.setPartnership(psBeanRes.getId());
+							UserBean userRes=userRepository.save(userBean);
+							
+							if(userRes.getUserId()==userBean.getUserId()) {
+								userResponseDto.setStatus(ResourceConstants.SUCCESS);
+								userResponseDto.setErrorMsg(ResourceConstants.INSERTED);
+							}else {
+								userResponseDto.setStatus(ResourceConstants.FAILED);
+								userResponseDto.setErrorCode(ResourceConstants.ERR_002);
+								userResponseDto.setErrorMsg(ResourceConstants.INSERTION_FAILED);
+							}
+						}else {
+							userResponseDto.setStatus(ResourceConstants.FAILED);
+							userResponseDto.setErrorCode(ResourceConstants.ERR_002);
+							userResponseDto.setErrorMsg(ResourceConstants.INSERTION_FAILED);
+						}
 					}else {
 						userResponseDto.setStatus(ResourceConstants.FAILED);
-						userResponseDto.setErrorCode(ResourceConstants.ERR_002);
-						userResponseDto.setErrorMsg(ResourceConstants.INSERTION_FAILED);
+						userResponseDto.setErrorCode(ResourceConstants.ERR_011);
+						userResponseDto.setErrorMsg(ResourceConstants.PARTNERSHIP_INVALID);
 					}
+					
 				}else {
 					userResponseDto.setStatus(ResourceConstants.FAILED);
 					userResponseDto.setErrorCode(ResourceConstants.ERR_001);
@@ -236,11 +306,11 @@ public class UserDao {
 			depositWithdrawChips=chipsDto.getChips();
 			log.info("["+transactionId+"] depositWithdrawChipst: "+depositWithdrawChips);
 			
-			UserBean fromUserRes=userRepository.findByUserId(fromUser);
+			UserBean fromUserRes=userRepository.findFirst1ByUserId(fromUser);
 			currentChipsInFromUserAcc=fromUserRes.getChips();
 			log.info("["+transactionId+"] Chips in From User Account: "+currentChipsInFromUserAcc);
 			
-			UserBean toUserRes=userRepository.findByUserId(toUser);
+			UserBean toUserRes=userRepository.findFirst1ByUserId(toUser);
 			currentChipsInToUserAcc=toUserRes.getChips();
 			log.info("["+transactionId+"] Chips in To User Account: "+currentChipsInToUserAcc);
 			
@@ -348,6 +418,7 @@ public class UserDao {
 		return chipsList;
 	}
 
+	@Transactional
 	public UserResponseDto changePassword(ChangePasswordDto changePasswordDto, String transactionId) {
 		log.info("["+transactionId+"]*************************INSIDE changePassword CLASS UserDao*************************");
 		UserResponseDto userResponseDto = new UserResponseDto();
@@ -386,6 +457,8 @@ public class UserDao {
 		}
 		return userResponseDto;
 	}
+	
+	@Transactional
 	public List<SportsBean> activeSportsList(String transactionId) {
 		log.info("["+transactionId+"]*************************INSIDE sportsList CLASS UserDao*************************");
 		List<SportsBean> responseBeanList = new ArrayList<SportsBean>();
@@ -394,6 +467,7 @@ public class UserDao {
 		return responseBeanList;
 	}
 	
+	@Transactional
 	public List<SeriesBean> activeSeriesList(String sportsId,String transactionId) {
 		log.info("["+transactionId+"]*************************INSIDE seriesList CLASS UserDao*************************");
 		log.info("["+transactionId+"]sportId:: "+sportsId);
@@ -408,6 +482,7 @@ public class UserDao {
 		return responseBeanList;
 	}
 	
+	@Transactional
 	public List<MatchBean> activeMatchList(String sportId,String seriesId,String transactionId) {
 		log.info("["+transactionId+"]*************************INSIDE matchList CLASS UserDao*************************");
 		log.info("["+transactionId+"]sportId:: "+sportId);
@@ -425,6 +500,138 @@ public class UserDao {
 		}
 		log.info("["+transactionId+"] responseBeanList:  "+responseBeanList);
 		return responseBeanList;
+	}
+
+	public List<UserBean> getUserDetails(String parent, String userId, String transactionId) {
+		log.info("["+transactionId+"]*************************INSIDE getUserDetails CLASS UserDao*************************");
+		log.info("["+transactionId+"]parent:: "+parent);
+		log.info("["+transactionId+"]userId:: "+userId);
+		List<UserBean> responseBeans = new ArrayList<UserBean>();
+		if(!StringUtils.isBlank(parent)) {
+			responseBeans=userRepository.findByParent(parent.toUpperCase());
+		}else if(!StringUtils.isBlank(userId)) {
+			responseBeans=userRepository.findByUserId(userId.toUpperCase());
+		}else {
+			responseBeans=userRepository.findAll();
+		}
+		return responseBeans;
+	}
+
+	public PartnershipBean getPartnershipDetails(String userId, String transactionId) {
+		log.info("["+transactionId+"]*************************INSIDE getPartnershipDetails CLASS UserDao*************************");
+		log.info("["+transactionId+"]userId:: "+userId);
+		return partnershipRepository.findByUserId(userId.toUpperCase());
+	}
+
+	public PartnershipBean updatePartnershipDetails(PartnershipBean psBean, String transactionId) {
+		log.info("["+transactionId+"]*************************INSIDE updatePartnershipDetails CLASS UserDao*************************");
+		String userId=psBean.getUserId().toUpperCase();
+		String userRole=psBean.getUserRole();
+		int admStake=psBean.getAdminStake();
+		int smStake=psBean.getSupermasterStake();
+		int masStake=psBean.getMastrerStake();
+		PartnershipBean responseBean=null;
+		log.info("["+transactionId+"] userId:: "+userId);
+		log.info("["+transactionId+"] userRole:: "+userRole);
+		log.info("["+transactionId+"] admStake:: "+admStake);
+		log.info("["+transactionId+"] smStake:: "+smStake);
+		log.info("["+transactionId+"] masStake:: "+masStake);
+		
+		if(StringUtils.isBlank(psBean.getRemarks())) {
+			psBean.setRemarks("Partnership updated By "+psBean.getCreatedBy().toUpperCase());
+		}
+		
+		PartnershipBean psUpdBean = partnershipRepository.findByUserId(userId);
+		int totUpdStake= psUpdBean.getAdminStake()+smStake+masStake;
+		log.info("["+transactionId+"]totUpdStake:: "+totUpdStake);
+		if(totUpdStake==100) {
+			psUpdBean.setMastrerStake(masStake);
+			psUpdBean.setSupermasterStake(smStake);
+			psUpdBean.setLastUpdateBy(psBean.getCreatedBy().toUpperCase());
+			psUpdBean.setRemarks(psBean.getRemarks());
+			responseBean=partnershipRepository.save(psUpdBean);
+		}
+		log.info("["+transactionId+"]responseBean:: "+responseBean);
+		return responseBean;
+	}
+
+	public Map<Integer, Boolean> psPercentage(PartnershipBean psBean, String transactionId) {
+		log.info("["+transactionId+"]*************************INSIDE psPercentage CLASS UserDao*************************");
+		Map<Integer, Boolean> psPercRes= new HashMap<Integer, Boolean>();
+		
+		String userId=psBean.getUserId().toUpperCase();
+		String userRole=psBean.getUserRole();
+		int admStake=psBean.getAdminStake();
+		int smStake=psBean.getSupermasterStake();
+		int masStake=psBean.getMastrerStake();
+		log.info("["+transactionId+"] userId:: "+userId);
+		log.info("["+transactionId+"] userRole:: "+userRole);
+		log.info("["+transactionId+"] admStake:: "+admStake);
+		log.info("["+transactionId+"] smStake:: "+smStake);
+		log.info("["+transactionId+"] masStake:: "+masStake);
+		
+		PartnershipBean psUpdBean = partnershipRepository.findByUserId(userId);
+		int totUpdStake= psUpdBean.getAdminStake()+smStake+masStake;
+		log.info("["+transactionId+"]totUpdStake:: "+totUpdStake);
+		
+		if(totUpdStake==100) {
+			psPercRes.put(totUpdStake, true);
+		}else {
+			psPercRes.put(totUpdStake, false);
+		}
+		return psPercRes;
+	}
+
+	public UserBean updateUserDetails(@Valid UserDetailsRequestDto userDetailsRequestDto, String transactionId) {
+		log.info("["+transactionId+"]*************************INSIDE psPercentage CLASS UserDao*************************");
+		String userId=userDetailsRequestDto.getUserId().toUpperCase();
+		String fullName=userDetailsRequestDto.getFullName();
+		float oddsCommission=userDetailsRequestDto.getOddsCommission();
+		float sessionCommission=userDetailsRequestDto.getSessionCommission();
+		int betDelay=userDetailsRequestDto.getBetDelay();
+		int sessionDelay=userDetailsRequestDto.getSessionDelay();
+		long userLimit=userDetailsRequestDto.getUserLimit();
+		double maxProfit=userDetailsRequestDto.getMaxProfit();
+		double maxLoss=userDetailsRequestDto.getMaxLoss();
+		double oddsMaxStake=userDetailsRequestDto.getOddsMaxStake();
+		double goingInPlayStake=userDetailsRequestDto.getGoingInPlayStake();
+		double sessionMaxStake=userDetailsRequestDto.getSessionMaxStake();
+		String remarks= userDetailsRequestDto.getRemarks();
+		
+		log.info("["+transactionId+"] userId:: "+userId);
+		log.info("["+transactionId+"] fullName:: "+fullName);
+		log.info("["+transactionId+"] oddCommision:: "+oddsCommission);
+		log.info("["+transactionId+"] sessionCommision:: "+sessionCommission);
+		log.info("["+transactionId+"] betDelay:: "+betDelay);
+		log.info("["+transactionId+"] sessionDelay:: "+sessionDelay);
+		log.info("["+transactionId+"] userLimit:: "+userLimit);
+		log.info("["+transactionId+"] maxProfit:: "+maxProfit);
+		log.info("["+transactionId+"] maxLoss:: "+maxLoss);
+		log.info("["+transactionId+"] oddsMaxStake:: "+oddsMaxStake);
+		log.info("["+transactionId+"] goingInPlayStake:: "+goingInPlayStake);
+		log.info("["+transactionId+"] sessionMaxStake:: "+sessionMaxStake);
+		log.info("["+transactionId+"] remarks:: "+remarks);
+		
+		UserBean userUpdBean = userRepository.findFirst1ByUserId(userId);
+		if(userUpdBean!=null) {
+			log.info("["+transactionId+"] userUpdBean:: "+userUpdBean);
+			userUpdBean.setFullName(fullName);
+			userUpdBean.setOddsCommission(oddsCommission);
+			userUpdBean.setSessionCommission(sessionCommission);
+			userUpdBean.setBetDelay(betDelay);
+			userUpdBean.setSessionDelay(sessionDelay);
+			userUpdBean.setUserLimit(userLimit);
+			userUpdBean.setMaxProfit(maxProfit);
+			userUpdBean.setMaxLoss(maxLoss);
+			userUpdBean.setOddsMaxStake(oddsMaxStake);
+			userUpdBean.setGoingInPlayStake(goingInPlayStake);
+			userUpdBean.setSessionMaxStake(sessionMaxStake);
+			userUpdBean.setRemarks(remarks);
+			userUpdBean=userRepository.save(userUpdBean);
+		}
+		log.info("["+transactionId+"] userUpdBean:: "+userUpdBean);
+		
+		return userUpdBean;
 	}
 	
 }

@@ -1,6 +1,7 @@
 package com.jetbet.serviceImpl;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.validation.Valid;
 
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.jetbet.bean.MatchBean;
+import com.jetbet.bean.PartnershipBean;
 import com.jetbet.bean.SeriesBean;
 import com.jetbet.bean.SportsBean;
 import com.jetbet.bean.UserBean;
@@ -15,6 +17,7 @@ import com.jetbet.dao.UserDao;
 import com.jetbet.dto.ChangePasswordDto;
 import com.jetbet.dto.ChipsDto;
 import com.jetbet.dto.UserControlsDto;
+import com.jetbet.dto.UserDetailsRequestDto;
 import com.jetbet.dto.UserResponseDto;
 import com.jetbet.dto.UserRolesResponseDto;
 import com.jetbet.service.UserService;
@@ -82,20 +85,50 @@ public class UserServiceImpl implements UserService{
 	}
 	@Override
 	public List<SportsBean> activeSportsList(String transactionId) {
-		log.info("["+transactionId+"]*************************INSIDE sportsList CLASS AdminServiceImpl*************************");
+		log.info("["+transactionId+"]*************************INSIDE activeSportsList CLASS AdminServiceImpl*************************");
 		return userDao.activeSportsList(transactionId);
 	}
 
 	@Override
 	public List<SeriesBean> activeSeriesList(String sportsId,String transactionId) {
-		log.info("["+transactionId+"]*************************INSIDE seriesList CLASS AdminServiceImpl*************************");
+		log.info("["+transactionId+"]*************************INSIDE activeSeriesList CLASS AdminServiceImpl*************************");
 		return userDao.activeSeriesList(sportsId,transactionId);
 	}
 
 	@Override
 	public List<MatchBean> activeMatchList(String sportsId ,String seriesId,String transactionId) {
-		log.info("["+transactionId+"]*************************INSIDE matchList CLASS AdminServiceImpl*************************");
+		log.info("["+transactionId+"]*************************INSIDE activeMatchList CLASS AdminServiceImpl*************************");
 		return userDao.activeMatchList(sportsId,seriesId,transactionId);
+	}
+
+	@Override
+	public List<UserBean> getUserDetails(String parent, String userId, String transactionId) {
+		log.info("["+transactionId+"]*************************INSIDE getUserDetails CLASS AdminServiceImpl*************************");
+		return userDao.getUserDetails(parent,userId,transactionId);
+	}
+
+	@Override
+	public PartnershipBean getPartnershipDetails(String userId, String transactionId) {
+		log.info("["+transactionId+"]*************************INSIDE getPartnershipDetails CLASS AdminServiceImpl*************************");
+		return userDao.getPartnershipDetails(userId,transactionId);
+	}
+
+	@Override
+	public PartnershipBean updatePartnershipDetails(PartnershipBean psBean, String transactionId) {
+		log.info("["+transactionId+"]*************************INSIDE updatePartnershipDetails CLASS AdminServiceImpl*************************");
+		return userDao.updatePartnershipDetails(psBean,transactionId);
+	}
+
+	@Override
+	public Map<Integer, Boolean> psPercentage(PartnershipBean psBean, String transactionId) {
+		log.info("["+transactionId+"]*************************INSIDE updatePartnershipDetails CLASS AdminServiceImpl*************************");
+		return userDao.psPercentage(psBean,transactionId);
+	}
+
+	@Override
+	public UserBean updateUserDetails(@Valid UserDetailsRequestDto userDetailsRequestDto, String transactionId) {
+		log.info("["+transactionId+"]*************************INSIDE updateUserDetails CLASS AdminServiceImpl*************************");
+		return userDao.updateUserDetails(userDetailsRequestDto,transactionId);
 	}
 
 }

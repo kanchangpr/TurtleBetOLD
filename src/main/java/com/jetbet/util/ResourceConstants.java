@@ -5,9 +5,9 @@ import org.apache.commons.lang3.StringUtils;
 public class ResourceConstants {
 	public static final String USER_DETAILS="UserDetails";
 	
-	public static final String USER_ROLES="UserRoles/{role}";
+	public static final String USER_ROLES="UserRoles";
 	
-	public static final String PARENT_LIST="ParentListByRole/{role}";
+	public static final String PARENT_LIST="ParentListByRole";
 	
 	public static final String USER_NAME_AVAILABILITY="UserNameAvailability/{userName}";
 	
@@ -21,12 +21,16 @@ public class ResourceConstants {
 	
 	public static final String LIST_OF_ODDS="ListOfOdds";
 	
+	public static final String PARTNERSHIP="Partnership";
+	
+	public static final String PARTNERSHIP_PERCENTAGE="PartnershipPercentage";
+	
 	public static final String GET_SESSION_TOKEN="GetSessionToken";
 	
 	public static final String SPORTS_CONTROL="SportsControl";
 	
 	public static final String CHIPS_ALLOCATIONS="chipsAllocations";
-	public static final String CHIPS_BALANCE="chipsBalance/{userId}";
+	public static final String CHIPS_BALANCE="chipsBalance";
 	public static final String CHANGE_PASSWORD="changePassword";
 	
 	public static final String SUPERMASTER="superMaster";
@@ -66,6 +70,9 @@ public class ResourceConstants {
 	
 	public static final String ERR_010="ERR_10";
 	public static final String USER_NOT_EXIST="User Does not Exist!!";
+	
+	public static final String ERR_011="ERR_10";
+	public static final String PARTNERSHIP_INVALID="Partnership between all stakeholders is greater than 100!!";
 	
 	public static final String ERR_EXCEPTION="ERR_EXEPCTION";
 	public static final String INSERTED="Data Inserted Successfully";

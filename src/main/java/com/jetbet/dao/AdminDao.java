@@ -3,6 +3,8 @@ package com.jetbet.dao;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -41,6 +43,7 @@ public class AdminDao {
 	@Autowired
 	FancyRepository fancyRepository;
 	
+	@Transactional
 	public UserResponseDto sportsControl(SportsControl sportsControlReq, String transactionId) {
 		log.info("["+transactionId+"]*************************INSIDE addUserRole CLASS UserDao*************************");
 		UserResponseDto userResponseDto= new UserResponseDto();
@@ -107,6 +110,7 @@ public class AdminDao {
 		return userResponseDto;
 	}
 
+	@Transactional
 	public List<SportsBean> sportsList(String transactionId) {
 		log.info("["+transactionId+"]*************************INSIDE sportsList CLASS UserDao*************************");
 		List<SportsBean> responseBeanList = new ArrayList<SportsBean>();
@@ -128,6 +132,7 @@ public class AdminDao {
 		return responseBeanList;
 	}
 	
+	@Transactional
 	public List<MatchBean> matchList(String sportId,String seriesId,String transactionId) {
 		log.info("["+transactionId+"]*************************INSIDE matchList CLASS UserDao*************************");
 		log.info("["+transactionId+"]sportId:: "+sportId);
@@ -146,6 +151,7 @@ public class AdminDao {
 		return responseBeanList;
 	}
 
+	@Transactional
 	public List<FancyBean> fancyList(String transactionId) {
 		log.info("["+transactionId+"]*************************INSIDE fancyList CLASS UserDao*************************");
 		List<FancyBean> responseBeanList = new ArrayList<FancyBean>();

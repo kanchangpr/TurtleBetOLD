@@ -32,42 +32,42 @@ public class UserBean {
     @GeneratedValue(strategy = GenerationType.SEQUENCE,generator="jb_user_details_seq")
 	private Long id;
 	
-	@Column(name = "user_id")
+	@Column(name = "user_id" , updatable=false)
 	private String userId;
 	
 	@Column(name = "full_name")
 	private String fullName;
 	
-	@Column(name = "password")
+	@Column(name = "password" , updatable=false)
 	private String password;
 	
-	@Column(name = "user_Role")
+	@Column(name = "user_Role" , updatable=false)
 	private String userRole;
 	
-	@Column(name = "parent")
+	@Column(name = "parent" , updatable=false)
 	private String parent;
 	
 	@CreationTimestamp
-	@Column(name = "Reg_Date")
+	@Column(name = "Reg_Date" , updatable=false)
 	private Date regDate;
 	
-	@Column(name = "Partnership")
-	private double partnership;
+	@Column(name = "Partnership_id" , updatable=false)
+	private int partnership;
 	
 	@Column(name = "Odds_Commission")
-	private double oddsCommission;
+	private float oddsCommission;
 	
 	@Column(name = "Session_Commission")
-	private double sessionCommission;
+	private float sessionCommission;
 	
 	@Column(name = "Bet_Delay")
-	private double betDelay;
+	private int betDelay;
 	
 	@Column(name = "Session_Delay")
-	private double sessionDelay;
+	private int sessionDelay;
 	
 	@Column(name = "User_Limit")
-	private double userLimit;
+	private long userLimit;
 	
 	@Column(name = "Max_Profit")
 	private double maxProfit;
@@ -84,16 +84,16 @@ public class UserBean {
 	@Column(name = "Session_Max_Stake")
 	private double sessionMaxStake;
 	
-	@Column(name = "chips")
+	@Column(name = "chips" , updatable=false)
 	private double chips;
 	
-	@Column(name = "isactive")
+	@Column(name = "isactive" , updatable=false)
 	private String isActive="Y";
 	
-	@Column(name = "isuserlock")
+	@Column(name = "isuserlock" , updatable=false)
 	private String isUserLock="N";
 	
-	@Column(name = "isbettinglock")
+	@Column(name = "isbettinglock" , updatable=false)
 	private String isBettingLock="N";
 	
 	@Column(name = "remarks")
@@ -107,9 +107,10 @@ public class UserBean {
 	private String lastUpdateBy;  
 	
 	@CreationTimestamp
-	@Column(name = "createddate")
+	@Column(name = "createddate" , updatable=false)
 	private Date createdDate;   
 	
-	@Column(name = "createdby")
+	@Column(name = "createdby" , updatable=false)
 	private String createdBy;
+	
 }

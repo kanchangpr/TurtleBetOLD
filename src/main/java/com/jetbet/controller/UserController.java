@@ -2,13 +2,13 @@ package com.jetbet.controller;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.Map;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.jetbet.bean.MatchBean;
+import com.jetbet.bean.PartnershipBean;
 import com.jetbet.bean.SeriesBean;
 import com.jetbet.bean.SportsBean;
 import com.jetbet.bean.UserBean;
@@ -40,7 +41,7 @@ public class UserController {
 	private UserService userService;
 
 	@RequestMapping(value=ResourceConstants.USER_ROLES, method=RequestMethod.GET)
-	public ResponseEntity<List<UserRolesResponseDto>> getUserRoles(@PathVariable String role) {
+	public ResponseEntity<List<UserRolesResponseDto>> getUserRoles(@RequestParam(value="role" ,required=true) String role) {
 		String transactionId = "TB"+UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
 		log.info("["+transactionId+"]*************************INSIDE USER ROLE METHOD GET*************************");
 		List<UserRolesResponseDto> response = userService.getUserRoles(role,transactionId);
@@ -48,7 +49,7 @@ public class UserController {
 	}
 	
 	@RequestMapping(value=ResourceConstants.PARENT_LIST, method=RequestMethod.GET)
-	public ResponseEntity<List<UserRolesResponseDto>> getParentList(@PathVariable String role) {
+	public ResponseEntity<List<UserRolesResponseDto>> getParentList(@RequestParam(value="role" ,required=true) String role) {
 		String transactionId = "TB"+UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
 		log.info("["+transactionId+"]*************************INSIDE PARENT LIST METHOD GET*************************");
 		List<UserRolesResponseDto> response = userService.getParentList(role,transactionId);
@@ -56,7 +57,7 @@ public class UserController {
 	}
 	
 	@RequestMapping(value=ResourceConstants.USER_NAME_AVAILABILITY, method=RequestMethod.GET)
-	public ResponseEntity<Boolean> checkUserNameAvailability(@PathVariable String userName) {
+	public ResponseEntity<Boolean> checkUserNameAvailability(@RequestParam(value="userName" ,required=true) String userName) {
 		String transactionId = "TB"+UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
 		log.info("["+transactionId+"]*************************INSIDE PARENT LIST METHOD POST*************************");
 		Boolean response = userService.checkUserNameAvailability(userName,transactionId);
@@ -64,7 +65,7 @@ public class UserController {
 	}
 	
 	@RequestMapping(value=ResourceConstants.USER_DETAILS, method=RequestMethod.POST)
-	public ResponseEntity<UserResponseDto> userRoles(@Valid @RequestBody UserDetailsRequestDto userDetailsRequestDto) {
+	public ResponseEntity<UserResponseDto> addUserDetails(@Valid @RequestBody UserDetailsRequestDto userDetailsRequestDto) {
 		String transactionId = "TB"+UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
 		log.info("["+transactionId+"]*************************INSIDE USER DETAILS METHOD POST*************************");
 		UserBean userBean = JetbetMapper.convertUserRoleDtoToUserRoleBean(userDetailsRequestDto);
@@ -89,7 +90,7 @@ public class UserController {
 	}
 	
 	@RequestMapping(value=ResourceConstants.CHIPS_BALANCE, method=RequestMethod.GET)
-	public ResponseEntity<List<ChipsDto>> chipsBalance(@PathVariable String userId) {
+	public ResponseEntity<List<ChipsDto>> chipsBalance(@RequestParam(value="userId" ,required=true) String userId) {
 		String transactionId = "TB"+UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
 		log.info("["+transactionId+"]*************************INSIDE chipsBalance METHOD POST*************************");
 		List<ChipsDto> response = userService.chipsBalance(userId.toUpperCase(),transactionId);
@@ -132,4 +133,46 @@ public class UserController {
 	}
 	
 	
+	@RequestMapping(value=ResourceConstants.USER_DETAILS, method=RequestMethod.GET)
+	public ResponseEntity<List<UserBean>> getUserDetails(
+			@RequestParam(value="parent" ,required=false) String parent,
+			@RequestParam(value="userId" ,required=false) String userId) {
+		String transactionId = "TB"+UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
+		log.info("["+transactionId+"]*************************INSIDE GET USER DETAILS METHOD POST*************************");
+		List<UserBean> response = userService.getUserDetails(parent,userId,transactionId);
+		return new ResponseEntity<List<UserBean>>(response,HttpStatus.OK);
+	}
+	
+	@RequestMapping(value=ResourceConstants.PARTNERSHIP, method=RequestMethod.GET)
+	public ResponseEntity<PartnershipBean> getPartnershipDetails(
+			@RequestParam(value="userName" ,required=true) String userId) {
+		String transactionId = "TB"+UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
+		log.info("["+transactionId+"]*************************INSIDE getPartnershipDetails METHOD POST*************************");
+		PartnershipBean response = userService.getPartnershipDetails(userId,transactionId);
+		return new ResponseEntity<PartnershipBean>(response,HttpStatus.OK);
+	}
+	
+	@RequestMapping(value=ResourceConstants.PARTNERSHIP, method=RequestMethod.PUT)
+	public ResponseEntity<PartnershipBean> updatePartnershipDetails(@RequestBody PartnershipBean psBean) {
+		String transactionId = "TB"+UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
+		log.info("["+transactionId+"]*************************INSIDE getPartnershipDetails METHOD POST*************************");
+		PartnershipBean response = userService.updatePartnershipDetails(psBean,transactionId);
+		return new ResponseEntity<PartnershipBean>(response,HttpStatus.OK);
+	}
+	
+	@RequestMapping(value=ResourceConstants.PARTNERSHIP_PERCENTAGE, method=RequestMethod.POST)
+	public ResponseEntity<Map<Integer,Boolean>> psPercentage(@RequestBody PartnershipBean psBean) {
+		String transactionId = "TB"+UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
+		log.info("["+transactionId+"]*************************INSIDE getPartnershipDetails METHOD POST*************************");
+		Map<Integer,Boolean> response = userService.psPercentage(psBean,transactionId);
+		return new ResponseEntity<Map<Integer,Boolean>>(response,HttpStatus.OK);
+	}
+	
+	@RequestMapping(value=ResourceConstants.USER_DETAILS, method=RequestMethod.PUT)
+	public ResponseEntity<UserBean> updateUserDetails(@Valid @RequestBody UserDetailsRequestDto userDetailsRequestDto) {
+		String transactionId = "TB"+UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
+		log.info("["+transactionId+"]*************************INSIDE GET USER DETAILS METHOD POST*************************");
+		UserBean response = userService.updateUserDetails(userDetailsRequestDto,transactionId);
+		return new ResponseEntity<UserBean>(response,HttpStatus.OK);
+	}
 }

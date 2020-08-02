@@ -5,6 +5,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -48,6 +50,7 @@ public class BetfairDao {
 	private String applicationKey;
 	private String sessionToken;
 
+	@Transactional
 	public List<SportsBean> getlistOfEventType(String appKey, String ssoid, String userName, String transactionId) {
 		this.applicationKey = appKey;
 		this.sessionToken = ssoid;
@@ -75,6 +78,7 @@ public class BetfairDao {
 		return sportsBeanResponseList;
 	}
 
+	@Transactional
 	public List<SeriesBean> getlistOfComp(String appKey, String ssoid, String userName, String transactionId) {
 		this.applicationKey = appKey;
 		this.sessionToken = ssoid;
@@ -119,7 +123,7 @@ public class BetfairDao {
 		return seriesBeanResponseList;
 	}
 
-	
+	@Transactional
 	public List<MatchBean> getlistOfMatches(String appKey, String ssoid, String userName, String transactionId) {
 
 		this.applicationKey = appKey;
@@ -183,7 +187,7 @@ public class BetfairDao {
 		return matchBeanResponseList;
 	}
 
-	
+	@Transactional
 	public List<FancyBean> getListOfOdds(String appKey, String ssoid, String userName, String transactionId) {
 
 		this.applicationKey = appKey;
@@ -242,7 +246,7 @@ public class BetfairDao {
 	}
 
 
-
+	@Transactional
 	public List<SportsBean> storeListOfEventTypesInDB(List<SportsBean> sportsBeanList, String transactionId) {
 		List<SportsBean> responseBeanList = new ArrayList<SportsBean>();
 		for (SportsBean sportsBean : sportsBeanList) {
@@ -279,6 +283,7 @@ public class BetfairDao {
 		return responseBeanList;
 	}
 	
+	@Transactional
 	private List<MatchBean> storeListOfMatchDB(List<MatchBean> matchBeanList, String transactionId) {
 		List<MatchBean> responseBeanList = new ArrayList<MatchBean>();
 		for (MatchBean matchBean : matchBeanList) {
@@ -297,6 +302,7 @@ public class BetfairDao {
 		return responseBeanList;
 	}
 	
+	@Transactional
 	private List<FancyBean> storeListOfFancyDB(List<FancyBean> fancyBeanList, String transactionId) {
 		List<FancyBean> responseBeanList = new ArrayList<FancyBean>();
 		for (FancyBean fancyBean : fancyBeanList) {
@@ -315,6 +321,7 @@ public class BetfairDao {
 		return responseBeanList;
 	}
 
+	@Transactional
 	public SessionDetails getSessionToken(String userName, String password, String transactionId) {
 		SessionDetails response = rescriptOperations.getSessionToken(userName, password,transactionId);
 		return response;
