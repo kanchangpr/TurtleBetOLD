@@ -16,10 +16,12 @@ import com.jetbet.bean.SeriesBean;
 import com.jetbet.bean.SportsBean;
 import com.jetbet.dto.SportsControl;
 import com.jetbet.dto.UserResponseDto;
+import com.jetbet.dto.UserRolesResponseDto;
 import com.jetbet.repository.FancyRepository;
 import com.jetbet.repository.MatchRepository;
 import com.jetbet.repository.SeriesRepository;
 import com.jetbet.repository.SportsRepository;
+import com.jetbet.util.QueryListConstant;
 import com.jetbet.util.ResourceConstants;
 
 import lombok.extern.slf4j.Slf4j;
@@ -124,9 +126,41 @@ public class AdminDao {
 		log.info("["+transactionId+"]sportId:: "+sportsId);
 		List<SeriesBean> responseBeanList = new ArrayList<SeriesBean>();
 		if(StringUtils.isBlank(sportsId)) {
-			responseBeanList=seriesRepository.findAll();
+			String getUserRolesSql = QueryListConstant.GET_SERIES_LIST;
+			responseBeanList= jdbcTemplate.query(
+					getUserRolesSql,
+		            (rs, rowNum) ->
+		                    new SeriesBean(
+		                    		rs.getString("series_id"),
+		                    		rs.getString("series_name"),
+		                    		rs.getInt("series_market_count"),
+		                    		rs.getString("series_competition_region"),
+		                    		rs.getString("SPORTS_NAME"),
+		                    		rs.getString("is_active"),
+		                    		rs.getString("series_created_by"),
+		                    		rs.getDate("series_created_date"),
+		                    		rs.getString("series_updated_by"),
+		                    		rs.getDate("series_updated_date")
+		                    )
+		    );		
 		}else {
-			responseBeanList=seriesRepository.findBySportId(sportsId);
+			String getUserRolesSql = QueryListConstant.GET_SERIES_LIST_BY_SPORTS_ID;
+			responseBeanList= jdbcTemplate.query(
+					getUserRolesSql,new Object[]{sportsId},
+		            (rs, rowNum) ->
+		                    new SeriesBean(
+		                    		rs.getString("series_id"),
+		                    		rs.getString("series_name"),
+		                    		rs.getInt("series_market_count"),
+		                    		rs.getString("series_competition_region"),
+		                    		rs.getString("SPORTS_NAME"),
+		                    		rs.getString("is_active"),
+		                    		rs.getString("series_created_by"),
+		                    		rs.getDate("series_created_date"),
+		                    		rs.getString("series_updated_by"),
+		                    		rs.getDate("series_updated_date")
+		                    )
+		    );		
 		}
 		log.info("["+transactionId+"] responseBeanList:  "+responseBeanList);
 		return responseBeanList;
@@ -139,13 +173,93 @@ public class AdminDao {
 		log.info("["+transactionId+"]seriesId:: "+seriesId);
 		List<MatchBean> responseBeanList = new ArrayList<MatchBean>();
 		if(!StringUtils.isBlank(sportId) && !StringUtils.isBlank(seriesId)) {
-			responseBeanList=matchRepository.findBySportIdAndSeriesId(sportId, seriesId);
+			String getUserRolesSql = QueryListConstant.GET_MATCHES_LIST_BY_SPORTS_AND_SERIES_ID;
+			responseBeanList= jdbcTemplate.query(
+					getUserRolesSql,new Object[]{sportId,seriesId},
+		            (rs, rowNum) ->
+		                    new MatchBean(
+		                    		rs.getString("match_id"),
+		                    		rs.getString("match_name"),
+		                    		rs.getString("match_country_code"),
+		                    		rs.getString("match_time_zone"),
+		                    		rs.getString("match_venue"),
+		                    		rs.getDate("match_open_date"),
+		                    		rs.getInt("match_market_count"),
+		                    		rs.getString("series_name"),
+		                    		rs.getString("sports_name"),
+		                    		rs.getString("is_active"),
+		                    		rs.getString("match_created_by"),
+		                    		rs.getDate("match_created_date"),
+		                    		rs.getString("match_updated_by"),
+		                    		rs.getDate("match_updated_date")
+		                    )
+		    );		
 		}else if(!StringUtils.isBlank(sportId)) {
-			responseBeanList=matchRepository.findBySportId(sportId);
+			String getUserRolesSql = QueryListConstant.GET_MATCHES_LIST_BY_SPORTS_ID;
+			responseBeanList= jdbcTemplate.query(
+					getUserRolesSql,new Object[]{sportId},
+		            (rs, rowNum) ->
+		                    new MatchBean(
+		                    		rs.getString("match_id"),
+		                    		rs.getString("match_name"),
+		                    		rs.getString("match_country_code"),
+		                    		rs.getString("match_time_zone"),
+		                    		rs.getString("match_venue"),
+		                    		rs.getDate("match_open_date"),
+		                    		rs.getInt("match_market_count"),
+		                    		rs.getString("series_name"),
+		                    		rs.getString("sports_name"),
+		                    		rs.getString("is_active"),
+		                    		rs.getString("match_created_by"),
+		                    		rs.getDate("match_created_date"),
+		                    		rs.getString("match_updated_by"),
+		                    		rs.getDate("match_updated_date")
+		                    )
+		    );		
 		}else if(!StringUtils.isBlank(seriesId)) {
-			responseBeanList=matchRepository.findBySeriesId(seriesId);
+			String getUserRolesSql = QueryListConstant.GET_MATCHES_LIST_BY_SERIES_ID;
+			responseBeanList= jdbcTemplate.query(
+					getUserRolesSql,new Object[]{seriesId},
+		            (rs, rowNum) ->
+		                    new MatchBean(
+		                    		rs.getString("match_id"),
+		                    		rs.getString("match_name"),
+		                    		rs.getString("match_country_code"),
+		                    		rs.getString("match_time_zone"),
+		                    		rs.getString("match_venue"),
+		                    		rs.getDate("match_open_date"),
+		                    		rs.getInt("match_market_count"),
+		                    		rs.getString("series_name"),
+		                    		rs.getString("sports_name"),
+		                    		rs.getString("is_active"),
+		                    		rs.getString("match_created_by"),
+		                    		rs.getDate("match_created_date"),
+		                    		rs.getString("match_updated_by"),
+		                    		rs.getDate("match_updated_date")
+		                    )
+		    );		
 		} else if(StringUtils.isBlank(sportId) && StringUtils.isBlank(seriesId)) {
-			responseBeanList=matchRepository.findAll();
+			String getUserRolesSql = QueryListConstant.GET_MATCHES_LIST;
+			responseBeanList= jdbcTemplate.query(
+					getUserRolesSql,
+		            (rs, rowNum) ->
+		                    new MatchBean(
+		                    		rs.getString("match_id"),
+		                    		rs.getString("match_name"),
+		                    		rs.getString("match_country_code"),
+		                    		rs.getString("match_time_zone"),
+		                    		rs.getString("match_venue"),
+		                    		rs.getDate("match_open_date"),
+		                    		rs.getInt("match_market_count"),
+		                    		rs.getString("series_name"),
+		                    		rs.getString("sports_name"),
+		                    		rs.getString("is_active"),
+		                    		rs.getString("match_created_by"),
+		                    		rs.getDate("match_created_date"),
+		                    		rs.getString("match_updated_by"),
+		                    		rs.getDate("match_updated_date")
+		                    )
+		    );		
 		}
 		log.info("["+transactionId+"] responseBeanList:  "+responseBeanList);
 		return responseBeanList;
