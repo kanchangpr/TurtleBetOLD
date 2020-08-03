@@ -82,8 +82,8 @@ public class HttpUtil {
         try {
         	String uri = String.format("https://%s/api/login?username=%s&password=%s",
                     "identitysso.betfair.com",
-                    URLEncoder.encode("dannybillqwe@yandex.com", StandardCharsets.UTF_8.name()),
-                    URLEncoder.encode("Nitinqwe1", StandardCharsets.UTF_8.name()));
+                    URLEncoder.encode("shiltonpereira@live.com", StandardCharsets.UTF_8.name()),
+                    URLEncoder.encode("Wsxedc@123", StandardCharsets.UTF_8.name()));
         	
         	 Client client = Client.create();
              //client.setConnectTimeout((int) (getTimeout.getSeconds() * 1000));
@@ -91,7 +91,7 @@ public class HttpUtil {
 
              ClientResponse clientResponse = webResource
                      .accept("application/json")
-                     .header("X-Application", "pULrrs5uJ2CUBeMY")
+                     .header("X-Application", "5tsF8QHfEw3n4Kp8")
                      .header("Content-Type", "application/x-www-form-urlencoded")
                      .post(ClientResponse.class);
 
