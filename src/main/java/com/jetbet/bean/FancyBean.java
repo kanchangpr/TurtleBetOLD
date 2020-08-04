@@ -5,6 +5,7 @@ import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.CreationTimestamp;
@@ -26,6 +27,7 @@ import lombok.Setter;
 public class FancyBean {
 	
 	@Id
+	@OrderBy
 	@Column(name = "market_type")
 	private String marketType;
 	

@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OrderBy;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -33,6 +34,7 @@ public class PartnershipBean {
     @GeneratedValue(strategy = GenerationType.SEQUENCE,generator="jb_partnership_details_seq")
 	private int id;
 	
+	@OrderBy
 	@Column(name = "user_id", updatable=false)
 	private String userId;
 	

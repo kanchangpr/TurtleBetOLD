@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OrderBy;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -32,6 +33,7 @@ public class UserBean {
     @GeneratedValue(strategy = GenerationType.SEQUENCE,generator="jb_user_details_seq")
 	private Long id;
 	
+	@OrderBy
 	@Column(name = "user_id" , updatable=false)
 	private String userId;
 	

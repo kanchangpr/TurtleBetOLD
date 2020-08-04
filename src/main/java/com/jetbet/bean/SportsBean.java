@@ -5,6 +5,7 @@ import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.CreationTimestamp;
@@ -25,6 +26,7 @@ import lombok.Setter;
 @Table(name = "JB_SPORTS_DETAILS")
 public class SportsBean {
 	@Id
+	@OrderBy
 	@Column(name = "sports_id")
 	private String sportsTypeId;
 	
