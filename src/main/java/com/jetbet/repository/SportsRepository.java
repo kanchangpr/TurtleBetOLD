@@ -8,7 +8,7 @@ import com.jetbet.bean.SportsBean;
 
 public interface SportsRepository extends JpaRepository<SportsBean, String>{
 	
-	List<SportsBean> findByIsActive(String isActive);
+	List<SportsBean> findByIsActiveOrderBySportsName(String isActive);
 	
 	long countBySportsTypeId (String sportsTypeId);
 	

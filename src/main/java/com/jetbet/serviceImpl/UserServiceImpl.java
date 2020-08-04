@@ -8,6 +8,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.jetbet.bean.ChipsBean;
 import com.jetbet.bean.MatchBean;
 import com.jetbet.bean.PartnershipBean;
 import com.jetbet.bean.SeriesBean;
@@ -129,6 +130,12 @@ public class UserServiceImpl implements UserService{
 	public UserBean updateUserDetails(@Valid UserDetailsRequestDto userDetailsRequestDto, String transactionId) {
 		log.info("["+transactionId+"]*************************INSIDE updateUserDetails CLASS AdminServiceImpl*************************");
 		return userDao.updateUserDetails(userDetailsRequestDto,transactionId);
+	}
+
+	@Override
+	public List<ChipsBean> getChipsHistory(String userId, String transactionId) {
+		log.info("["+transactionId+"]*************************INSIDE getChipsHistory CLASS AdminServiceImpl*************************");
+		return userDao.getChipsHistory(userId,transactionId);
 	}
 
 }

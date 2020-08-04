@@ -33,7 +33,6 @@ public class UserBean {
     @GeneratedValue(strategy = GenerationType.SEQUENCE,generator="jb_user_details_seq")
 	private Long id;
 	
-	@OrderBy
 	@Column(name = "user_id" , updatable=false)
 	private String userId;
 	

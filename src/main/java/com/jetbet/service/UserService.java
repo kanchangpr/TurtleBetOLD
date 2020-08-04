@@ -7,6 +7,7 @@ import javax.validation.Valid;
 
 import org.springframework.stereotype.Service;
 
+import com.jetbet.bean.ChipsBean;
 import com.jetbet.bean.MatchBean;
 import com.jetbet.bean.PartnershipBean;
 import com.jetbet.bean.SeriesBean;
@@ -55,5 +56,7 @@ public interface UserService {
 	Map<Integer, Boolean> psPercentage(PartnershipBean psBean, String transactionId);
 
 	UserBean updateUserDetails(@Valid UserDetailsRequestDto userDetailsRequestDto, String transactionId);
+
+	List<ChipsBean> getChipsHistory(String userId, String transactionId);
 
 }

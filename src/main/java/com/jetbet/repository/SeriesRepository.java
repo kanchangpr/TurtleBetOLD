@@ -8,11 +8,11 @@ import com.jetbet.bean.SeriesBean;
 
 public interface SeriesRepository extends JpaRepository<SeriesBean, String>{
 	
-	List<SeriesBean> findByIsActive(String isActive);
+	List<SeriesBean> findByIsActiveOrderBySportId(String isActive);
 	
 	long countBySeriesId (String seriesId);
 	
-	List<SeriesBean> findBySportIdAndIsActive(String sportId,String isActive);
+	List<SeriesBean> findBySportIdAndIsActiveOrderBySportId(String sportId,String isActive);
 	
-	List<SeriesBean> findBySportId(String sportId);
+	List<SeriesBean> findBySportIdOrderBySportId(String sportId);
 }

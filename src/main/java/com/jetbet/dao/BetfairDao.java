@@ -88,7 +88,7 @@ public class BetfairDao {
 		List<SeriesBean> seriesBeanResponseList = new ArrayList<SeriesBean>();
 		try {
 			
-			List<SportsBean> sportsBeansList = sportsRepository.findByIsActive("Y");
+			List<SportsBean> sportsBeansList = sportsRepository.findByIsActiveOrderBySportsName("Y");
 			for (SportsBean sportsBean : sportsBeansList) {
 				log.info("["+transactionId+"] ****************INSIDE OUTER FOR*********");
 				
@@ -133,7 +133,7 @@ public class BetfairDao {
 		final List<MatchBean> matchBeanList = new ArrayList<MatchBean>();
 		List<MatchBean> matchBeanResponseList = new ArrayList<MatchBean>();
 		try {
-			List<SportsBean> sportsBeansList = sportsRepository.findByIsActive("Y");
+			List<SportsBean> sportsBeansList = sportsRepository.findByIsActiveOrderBySportsName("Y");
 			for (SportsBean sportsBean : sportsBeansList) {
 				log.info("[" + transactionId + "] ***********INSIDE SPORTS LOOP*********");
 
@@ -144,7 +144,7 @@ public class BetfairDao {
 				eventTypeIdSet.add(eventTypeIdString);
 				marketFilter.setEventTypeIds(eventTypeIdSet);
 
-				List<SeriesBean> seriesBeanList = seriesRepository.findBySportIdAndIsActive(eventTypeIdString,"Y");
+				List<SeriesBean> seriesBeanList = seriesRepository.findBySportIdAndIsActiveOrderBySportId(eventTypeIdString,"Y");
 
 				for (SeriesBean seriesBean : seriesBeanList) {
 					log.info("[" + transactionId + "] ***********INSIDE SERIES LOOP*********");
@@ -197,7 +197,7 @@ public class BetfairDao {
 		final List<FancyBean> fancyBeanList = new ArrayList<FancyBean>();
 		List<FancyBean> fancyBeanResponseList = new ArrayList<FancyBean>();
 		try {
-			List<SportsBean> sportsBeansList = sportsRepository.findByIsActive("Y");
+			List<SportsBean> sportsBeansList = sportsRepository.findByIsActiveOrderBySportsName("Y");
 			for (SportsBean sportsBean : sportsBeansList) {
 				log.info("[" + transactionId + "] ***********INSIDE SPORTS LOOP*********");
 
@@ -208,7 +208,7 @@ public class BetfairDao {
 				eventTypeIdSet.add(eventTypeIdString);
 				marketFilter.setEventTypeIds(eventTypeIdSet);
 
-				List<SeriesBean> seriesBeanList = seriesRepository.findBySportIdAndIsActive(eventTypeIdString,"Y");
+				List<SeriesBean> seriesBeanList = seriesRepository.findBySportIdAndIsActiveOrderBySportId(eventTypeIdString,"Y");
 
 				for (SeriesBean seriesBean : seriesBeanList) {
 					log.info("[" + transactionId + "] ***********INSIDE SERIES LOOP*********");

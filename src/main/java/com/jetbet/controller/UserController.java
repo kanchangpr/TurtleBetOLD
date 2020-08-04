@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.jetbet.bean.ChipsBean;
 import com.jetbet.bean.MatchBean;
 import com.jetbet.bean.PartnershipBean;
 import com.jetbet.bean.SeriesBean;
@@ -176,5 +177,13 @@ public class UserController {
 		log.info("["+transactionId+"]*************************INSIDE GET USER DETAILS METHOD POST*************************");
 		UserBean response = userService.updateUserDetails(userDetailsRequestDto,transactionId);
 		return new ResponseEntity<UserBean>(response,HttpStatus.OK);
+	}
+	
+	@RequestMapping(value=ResourceConstants.CHIPS_HISTORY, method=RequestMethod.GET)
+	public ResponseEntity<List<ChipsBean>> getChipsHistory(@RequestParam(value="userId" ,required=true) String userId) {
+		String transactionId = "TB"+UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
+		log.info("["+transactionId+"]*************************INSIDE USER ROLE METHOD GET*************************");
+		List<ChipsBean> response = userService.getChipsHistory(userId,transactionId);
+		return new ResponseEntity<List<ChipsBean>>(response,HttpStatus.OK);
 	}
 }

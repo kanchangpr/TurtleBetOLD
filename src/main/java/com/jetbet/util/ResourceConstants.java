@@ -31,6 +31,7 @@ public class ResourceConstants {
 	
 	public static final String CHIPS_ALLOCATIONS="chipsAllocations";
 	public static final String CHIPS_BALANCE="chipsBalance";
+	public static final String CHIPS_HISTORY="chipsHistory";
 	public static final String CHANGE_PASSWORD="changePassword";
 	
 	public static final String SUPERMASTER="superMaster";

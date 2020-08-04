@@ -122,7 +122,7 @@ public class UserDao {
 		String createdBy=userBean.getCreatedBy();
 		PartnershipBean psBean= new PartnershipBean();
 		try {
-			UserBean parentBean=userRepository.findFirst1ByUserId(userBean.getParent());
+			UserBean parentBean=userRepository.findFirst1ByUserIdOrderByFullName(userBean.getParent());
 			Long userCountofParent = userRepository.countByParent(userBean.getParent());
 			log.info("["+transactionId+"] Parent's User Limit: "+parentBean.getUserLimit());
 			log.info("["+transactionId+"] Parent's User Count: "+userCountofParent);
@@ -307,11 +307,11 @@ public class UserDao {
 			depositWithdrawChips=chipsDto.getChips();
 			log.info("["+transactionId+"] depositWithdrawChipst: "+depositWithdrawChips);
 			
-			UserBean fromUserRes=userRepository.findFirst1ByUserId(fromUser);
+			UserBean fromUserRes=userRepository.findFirst1ByUserIdOrderByFullName(fromUser);
 			currentChipsInFromUserAcc=fromUserRes.getChips();
 			log.info("["+transactionId+"] Chips in From User Account: "+currentChipsInFromUserAcc);
 			
-			UserBean toUserRes=userRepository.findFirst1ByUserId(toUser);
+			UserBean toUserRes=userRepository.findFirst1ByUserIdOrderByFullName(toUser);
 			currentChipsInToUserAcc=toUserRes.getChips();
 			log.info("["+transactionId+"] Chips in To User Account: "+currentChipsInToUserAcc);
 			
@@ -463,7 +463,7 @@ public class UserDao {
 	public List<SportsBean> activeSportsList(String transactionId) {
 		log.info("["+transactionId+"]*************************INSIDE sportsList CLASS UserDao*************************");
 		List<SportsBean> responseBeanList = new ArrayList<SportsBean>();
-		responseBeanList=sportsRepository.findByIsActive("Y");
+		responseBeanList=sportsRepository.findByIsActiveOrderBySportsName("Y");
 		log.info("["+transactionId+"] responseBeanList:  "+responseBeanList);
 		return responseBeanList;
 	}
@@ -475,9 +475,9 @@ public class UserDao {
 		String isActive="Y";
 		List<SeriesBean> responseBeanList = new ArrayList<SeriesBean>();
 		if(StringUtils.isBlank(sportsId)) {
-			responseBeanList=seriesRepository.findByIsActive(isActive);
+			responseBeanList=seriesRepository.findByIsActiveOrderBySportId(isActive);
 		}else {
-			responseBeanList=seriesRepository.findBySportIdAndIsActive(sportsId, isActive);
+			responseBeanList=seriesRepository.findBySportIdAndIsActiveOrderBySportId(sportsId, isActive);
 		}
 		log.info("["+transactionId+"] responseBeanList:  "+responseBeanList);
 		return responseBeanList;
@@ -509,9 +509,9 @@ public class UserDao {
 		log.info("["+transactionId+"]userId:: "+userId);
 		List<UserBean> responseBeans = new ArrayList<UserBean>();
 		if(!StringUtils.isBlank(parent)) {
-			responseBeans=userRepository.findByParent(parent.toUpperCase());
+			responseBeans=userRepository.findByParentOrderByFullName(parent.toUpperCase());
 		}else if(!StringUtils.isBlank(userId)) {
-			responseBeans=userRepository.findByUserId(userId.toUpperCase());
+			responseBeans=userRepository.findByUserIdOrderByFullName(userId.toUpperCase());
 		}else {
 			responseBeans=userRepository.findAll();
 		}
@@ -613,7 +613,7 @@ public class UserDao {
 		log.info("["+transactionId+"] sessionMaxStake:: "+sessionMaxStake);
 		log.info("["+transactionId+"] remarks:: "+remarks);
 		
-		UserBean userUpdBean = userRepository.findFirst1ByUserId(userId);
+		UserBean userUpdBean = userRepository.findFirst1ByUserIdOrderByFullName(userId);
 		if(userUpdBean!=null) {
 			log.info("["+transactionId+"] userUpdBean:: "+userUpdBean);
 			userUpdBean.setFullName(fullName);
@@ -633,6 +633,13 @@ public class UserDao {
 		log.info("["+transactionId+"] userUpdBean:: "+userUpdBean);
 		
 		return userUpdBean;
+	}
+
+	public List<ChipsBean> getChipsHistory(String userId, String transactionId) {
+		log.info("["+transactionId+"]*************************INSIDE getChipsHistory CLASS UserDao*************************");
+		List<ChipsBean> res=chipsRepository.findByUserIdOrderById(userId.toUpperCase());
+		log.info("["+transactionId+"] Chips History : "+res);
+		return res;
 	}
 	
 }
