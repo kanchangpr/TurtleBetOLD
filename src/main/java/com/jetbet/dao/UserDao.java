@@ -98,7 +98,7 @@ public class UserDao {
 	public Boolean checkUserNameAvailability(String userName, String transactionId) {
 		log.info("["+transactionId+"]*************************INSIDE addUserRole CLASS UserDao*************************");
 		log.info("["+transactionId+"] userName: "+userName.toUpperCase());
-		int count=0;
+		Long count;
 		count = userRepository.countByUserId(userName.toUpperCase());
 		log.info("count of existing User: "+count);
 		return (count==0) ? true : false;
@@ -127,7 +127,7 @@ public class UserDao {
 			log.info("["+transactionId+"] Parent's User Limit: "+parentBean.getUserLimit());
 			log.info("["+transactionId+"] Parent's User Count: "+userCountofParent);
 			if(parentBean.getUserLimit()>userCountofParent) {
-				int userCount = userRepository.countByUserId(userBean.getUserId());
+				Long userCount = userRepository.countByUserId(userBean.getUserId());
 				final int totalStake=100;
 				int adminStake=0;
 				int supermasterStake=0;

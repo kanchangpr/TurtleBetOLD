@@ -14,7 +14,7 @@ public interface UserRepository extends JpaRepository<UserBean, Long>{
 	
 	List<UserBean> findByUserId(String userName);
 	
-	int countByUserId(String userName);
+	Long countByUserId(String userName);
 	
 	long countByParent(String parent);
 
