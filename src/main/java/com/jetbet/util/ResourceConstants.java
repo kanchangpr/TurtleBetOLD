@@ -9,7 +9,7 @@ public class ResourceConstants {
 	
 	public static final String PARENT_LIST="ParentListByRole";
 	
-	public static final String USER_NAME_AVAILABILITY="UserNameAvailability/{userName}";
+	public static final String USER_NAME_AVAILABILITY="UserNameAvailability";
 	
 	public static final String USER_CONTROLS="UserControls";
 	
