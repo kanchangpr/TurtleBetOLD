@@ -113,7 +113,7 @@ public class ResourceConstants {
 	
 	
 	public static String checkNulString(String aString) {
-		return StringUtils.isBlank(aString) ? null : aString;
+		return StringUtils.isBlank(aString) ? "" : aString;
 	}
 	
 }
