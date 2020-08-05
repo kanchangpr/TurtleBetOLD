@@ -113,5 +113,40 @@ public class UserBean {
 	
 	@Column(name = "createdby" , updatable=false)
 	private String createdBy;
+
+	public UserBean(Long id, String userId, String fullName, String userRole, String parent, Date regDate,
+			float oddsCommission, float sessionCommission, int betDelay, int sessionDelay, long userLimit,
+			double maxProfit, double maxLoss, double oddsMaxStake, double goingInPlayStake, double sessionMaxStake,
+			double chips, String isActive, String isUserLock, String isBettingLock, String remarks,
+			Date lastUpdatedDate, String lastUpdateBy, Date createdDate, String createdBy) {
+		super();
+		this.id = id;
+		this.userId = userId;
+		this.fullName = fullName;
+		this.userRole = userRole;
+		this.parent = parent;
+		this.regDate = regDate;
+		this.oddsCommission = oddsCommission;
+		this.sessionCommission = sessionCommission;
+		this.betDelay = betDelay;
+		this.sessionDelay = sessionDelay;
+		this.userLimit = userLimit;
+		this.maxProfit = maxProfit;
+		this.maxLoss = maxLoss;
+		this.oddsMaxStake = oddsMaxStake;
+		this.goingInPlayStake = goingInPlayStake;
+		this.sessionMaxStake = sessionMaxStake;
+		this.chips = chips;
+		this.isActive = isActive;
+		this.isUserLock = isUserLock;
+		this.isBettingLock = isBettingLock;
+		this.remarks = remarks;
+		this.lastUpdatedDate = lastUpdatedDate;
+		this.lastUpdateBy = lastUpdateBy;
+		this.createdDate = createdDate;
+		this.createdBy = createdBy;
+	}
+	
+	
 	
 }

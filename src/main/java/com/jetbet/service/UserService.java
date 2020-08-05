@@ -47,7 +47,7 @@ public interface UserService {
 
 	List<MatchBean> activeMatchList(String sportsId ,String seriesId,String transactionId);
 
-	List<UserBean> getUserDetails(String parent, String userId, String transactionId);
+	List<UserBean> getUserDetails(String master,String parent, String userId,  String transactionId);
 
 	PartnershipBean getPartnershipDetails(String userId, String transactionId);
 

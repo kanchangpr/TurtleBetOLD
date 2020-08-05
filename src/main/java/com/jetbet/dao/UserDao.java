@@ -504,18 +504,53 @@ public class UserDao {
 		return responseBeanList;
 	}
 
-	public List<UserBean> getUserDetails(String parent, String userId, String transactionId) {
+	public List<UserBean> getUserDetails(String master, String parent, String userId, String transactionId) {
 		log.info("["+transactionId+"]*************************INSIDE getUserDetails CLASS UserDao*************************");
+		log.info("["+transactionId+"]parent:: "+master);
 		log.info("["+transactionId+"]parent:: "+parent);
 		log.info("["+transactionId+"]userId:: "+userId);
 		List<UserBean> responseBeans = new ArrayList<UserBean>();
-		if(!StringUtils.isBlank(parent)) {
+		if(!StringUtils.isBlank(master)) {
+			
+		responseBeans= jdbcTemplate.query(
+					QueryListConstant.GET_USER_DETAILS_BY_MASTER, new Object[]{master.toUpperCase(),master.toUpperCase()},
+		            (rs, rowNum) ->
+		                    new UserBean(
+		                            rs.getLong("id"),
+		                            rs.getString("user_id"),
+		                            rs.getString("full_name"),
+		                            rs.getString("user_Role"),
+		                            rs.getString("parent"),
+		                            rs.getDate("Reg_Date"),
+		                            rs.getFloat("Odds_Commission"),
+		                            rs.getFloat("Session_Commission"),
+		                            rs.getInt("Bet_Delay"),
+		                            rs.getInt("Session_Delay"),
+		                            rs.getLong("User_Limit"),
+		                            rs.getDouble("Max_Profit"),
+		                            rs.getDouble("Max_Loss"),
+		                            rs.getDouble("Odds_Max_Stake"),
+		                            rs.getDouble("Going_In_Play_Stake"),
+		                            rs.getDouble("Session_Max_Stake"),
+		                            rs.getDouble("chips"),
+		                            rs.getString("isactive"),
+		                            rs.getString("isuserlock"),
+		                            rs.getString("isbettinglock"),
+		                            rs.getString("remarks"),
+		                            rs.getDate("lastupdateddate"),
+		                            rs.getString("lastupdateby"),
+		                            rs.getDate("createddate"),
+		                            rs.getString("createdby")
+		                    )
+		    );
+		}else if(!StringUtils.isBlank(parent)) {
 			responseBeans=userRepository.findByParentOrderByFullName(parent.toUpperCase());
 		}else if(!StringUtils.isBlank(userId)) {
 			responseBeans=userRepository.findByUserIdOrderByFullName(userId.toUpperCase());
 		}else {
 			responseBeans=userRepository.findAllByOrderByFullName();
 		}
+		log.info("responseBeans:  "+responseBeans);
 		return responseBeans;
 	}
 

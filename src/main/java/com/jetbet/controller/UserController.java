@@ -138,11 +138,12 @@ public class UserController {
 	
 	@RequestMapping(value=ResourceConstants.USER_DETAILS, method=RequestMethod.GET)
 	public ResponseEntity<List<UserBean>> getUserDetails(
+			@RequestParam(value="master" ,required=false) String master,
 			@RequestParam(value="parent" ,required=false) String parent,
 			@RequestParam(value="userId" ,required=false) String userId) {
 		String transactionId = "TB"+UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
 		log.info("["+transactionId+"]*************************INSIDE GET USER DETAILS METHOD POST*************************");
-		List<UserBean> response = userService.getUserDetails(parent,userId,transactionId);
+		List<UserBean> response = userService.getUserDetails(master,parent,userId,transactionId);
 		return new ResponseEntity<List<UserBean>>(response,HttpStatus.OK);
 	}
 	

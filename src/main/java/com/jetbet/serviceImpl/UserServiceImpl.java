@@ -103,9 +103,9 @@ public class UserServiceImpl implements UserService{
 	}
 
 	@Override
-	public List<UserBean> getUserDetails(String parent, String userId, String transactionId) {
+	public List<UserBean> getUserDetails(String master, String parent, String userId, String transactionId) {
 		log.info("["+transactionId+"]*************************INSIDE getUserDetails CLASS AdminServiceImpl*************************");
-		return userDao.getUserDetails(parent,userId,transactionId);
+		return userDao.getUserDetails(master,parent,userId,transactionId);
 	}
 
 	@Override
