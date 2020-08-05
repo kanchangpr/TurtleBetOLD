@@ -514,7 +514,7 @@ public class UserDao {
 		}else if(!StringUtils.isBlank(userId)) {
 			responseBeans=userRepository.findByUserIdOrderByFullName(userId.toUpperCase());
 		}else {
-			responseBeans=userRepository.findAllOrderByFullName();
+			responseBeans=userRepository.findAllByOrderByFullName();
 		}
 		return responseBeans;
 	}

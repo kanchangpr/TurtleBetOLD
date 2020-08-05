@@ -18,6 +18,6 @@ public interface UserRepository extends JpaRepository<UserBean, Long>{
 	
 	long countByParent(String parent);
 	
-	List<UserBean> findAllOrderByFullName();
+	List<UserBean> findAllByOrderByFullName();
 
 }
