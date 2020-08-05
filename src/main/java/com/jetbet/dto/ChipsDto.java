@@ -13,6 +13,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class ChipsDto {
 	private long chips;
+	private String userRole;
 	private String toUser;
 	private String fromUser;
 	private String action;

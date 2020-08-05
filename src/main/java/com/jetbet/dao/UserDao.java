@@ -411,7 +411,8 @@ public class UserDao {
 		 List<ChipsDto> chipsList = new ArrayList<ChipsDto>();
 		for (Map<String, Object> row : chipsMap) {
 			ChipsDto chipsDto = new ChipsDto();
-			chipsDto.setToUser(row.get("USER_NAME").toString());
+			chipsDto.setUserRole(row.get("USER_ROLE").toString());
+			chipsDto.setToUser(row.get("USER_ID").toString());
 			chipsDto.setChips(Long.parseLong(row.get("CHIPS").toString()));
 			chipsList.add(chipsDto);
 	    } 
