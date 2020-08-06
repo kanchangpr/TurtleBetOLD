@@ -78,9 +78,9 @@ public class AdminDao {
 				userResponseDto.setErrorMsg(ResourceConstants.ACTION_NOT_ALLOWED);
 			}
 			
-			log.info("["+transactionId+"] errorCode:: "+errorCode);
+			log.info("["+transactionId+"] errorCode:: "+errorCode+"sportsControlReq.getIsActive(): "+sportsControlReq.getIsActive());
 			
-			if(!errorCode) {
+			if(!errorCode && sportsControlReq.getIsActive().equalsIgnoreCase("Y")) {
 				sqlString="UPDATE "+tableName
 						+" SET IS_ACTIVE= ? , "
 						+lastUpdatedByColumn +" = ? , "
@@ -100,6 +100,64 @@ public class AdminDao {
 				}else {
 					userResponseDto.setStatus(ResourceConstants.SUCCESS);
 					userResponseDto.setErrorMsg(ResourceConstants.UPDATED);
+				}
+			}else if(!errorCode && sportsControlReq.getIsActive()=="N"){
+				if(sportsControlReq.getOperation().equalsIgnoreCase(ResourceConstants.SPORTS_PAGE)) {
+					int sportsTableSqlCount=jdbcTemplate.update(QueryListConstant.SPORTS_CONTROL_FOR_SPORTS_PAGE, new Object[]{
+							sportsControlReq.getIsActive(),
+							sportsControlReq.getUserName(),
+							sportsControlReq.getOperationId()});
+					int seriesTableSqlCount=jdbcTemplate.update(QueryListConstant.SPORTS_CONTROL_FOR_SERIES_PAGE, new Object[]{
+							sportsControlReq.getIsActive(),
+							sportsControlReq.getUserName(),
+							sportsControlReq.getOperationId()});
+					int matchTableSqlCount=jdbcTemplate.update(QueryListConstant.SPORTS_CONTROL_FOR_MATCH_PAGE, new Object[]{
+							sportsControlReq.getIsActive(),
+							sportsControlReq.getUserName(),
+							sportsControlReq.getOperationId()});
+					if(sportsTableSqlCount==0 || seriesTableSqlCount==0 || matchTableSqlCount==0) {
+						userResponseDto.setStatus(ResourceConstants.FAILED);
+						userResponseDto.setErrorCode(ResourceConstants.ERR_003);
+						userResponseDto.setErrorMsg(ResourceConstants.UPDATION_FAILED);
+					}else {
+						userResponseDto.setStatus(ResourceConstants.SUCCESS);
+						userResponseDto.setErrorMsg(ResourceConstants.UPDATED);
+					}
+				}else if(sportsControlReq.getOperation().equalsIgnoreCase(ResourceConstants.SERIES_PAGE)) {
+					int seriesTableSqlCount=jdbcTemplate.update(QueryListConstant.SPORTS_CONTROL_FOR_SERIES_PAGE, new Object[]{
+							sportsControlReq.getIsActive(),
+							sportsControlReq.getUserName(),
+							sportsControlReq.getOperationId()});
+					int matchTableSqlCount=jdbcTemplate.update(QueryListConstant.SPORTS_CONTROL_FOR_MATCH_PAGE, new Object[]{
+							sportsControlReq.getIsActive(),
+							sportsControlReq.getUserName(),
+							sportsControlReq.getOperationId()});
+					if(seriesTableSqlCount==0 || matchTableSqlCount==0) {
+						userResponseDto.setStatus(ResourceConstants.FAILED);
+						userResponseDto.setErrorCode(ResourceConstants.ERR_003);
+						userResponseDto.setErrorMsg(ResourceConstants.UPDATION_FAILED);
+					}else {
+						userResponseDto.setStatus(ResourceConstants.SUCCESS);
+						userResponseDto.setErrorMsg(ResourceConstants.UPDATED);
+					}
+				}else if(sportsControlReq.getOperation().equalsIgnoreCase(ResourceConstants.MATCH_PAGE)) {
+					int matchTableSqlCount=jdbcTemplate.update(QueryListConstant.SPORTS_CONTROL_FOR_MATCH_PAGE, new Object[]{
+							sportsControlReq.getIsActive(),
+							sportsControlReq.getUserName(),
+							sportsControlReq.getOperationId()});
+					if(matchTableSqlCount==0) {
+						userResponseDto.setStatus(ResourceConstants.FAILED);
+						userResponseDto.setErrorCode(ResourceConstants.ERR_003);
+						userResponseDto.setErrorMsg(ResourceConstants.UPDATION_FAILED);
+					}else {
+						userResponseDto.setStatus(ResourceConstants.SUCCESS);
+						userResponseDto.setErrorMsg(ResourceConstants.UPDATED);
+					}
+				} else {
+					errorCode=true;
+					userResponseDto.setStatus(ResourceConstants.FAILED);
+					userResponseDto.setErrorCode(ResourceConstants.ERR_009);
+					userResponseDto.setErrorMsg(ResourceConstants.ACTION_NOT_ALLOWED);
 				}
 			}
 			

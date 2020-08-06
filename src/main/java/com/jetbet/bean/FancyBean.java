@@ -34,6 +34,9 @@ public class FancyBean {
 	@Column(name = "market_count")
 	private int marketCount;
 	
+	@Column(name = "match_id")
+	private String matchId;
+	
 	@Column(name = "series_id")
 	private String seriesId;
 	
