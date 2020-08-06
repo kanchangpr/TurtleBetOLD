@@ -167,6 +167,7 @@ public class AdminDao {
 			userResponseDto.setErrorMsg(e.getMessage());
 			e.printStackTrace();
 		}
+		log.info("["+transactionId+"] userResponseDto: "+userResponseDto);
 		return userResponseDto;
 	}
 
