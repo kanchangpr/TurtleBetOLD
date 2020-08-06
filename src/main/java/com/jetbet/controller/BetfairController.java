@@ -96,7 +96,7 @@ public class BetfairController {
 		String transactionId = "TB"+UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
 		log.info("["+transactionId+"]*************************INSIDE getListOfEventType METHOD GET*************************");
 		List<FancyBean> response=betfairService.getListOfOdds(applicationKey, sessionToken, userName, transactionId);
-        return new ResponseEntity<List<FancyBean>> (response,HttpStatus.OK); 
+        return new ResponseEntity<List<FancyBean>> (response,HttpStatus.OK);
 	}
 	
 	@RequestMapping(value=ResourceConstants.GET_SESSION_TOKEN, method=RequestMethod.POST)

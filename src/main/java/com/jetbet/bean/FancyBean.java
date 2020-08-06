@@ -60,4 +60,20 @@ public class FancyBean {
 	@Column(name = "fancy_updated_date")
 	private Date fancyUpdatedDate;
 
+	public FancyBean(String marketType, int marketCount, String matchId, String seriesId, String sportId,
+			String isActive, String fancyCreatedBy, Date fancyCreatedDate) {
+		super();
+		this.marketType = marketType;
+		this.marketCount = marketCount;
+		this.matchId = matchId;
+		this.seriesId = seriesId;
+		this.sportId = sportId;
+		this.isActive = isActive;
+		this.fancyCreatedBy = fancyCreatedBy;
+		this.fancyCreatedDate = fancyCreatedDate;
+	}
+
+	
+	
+	
 }

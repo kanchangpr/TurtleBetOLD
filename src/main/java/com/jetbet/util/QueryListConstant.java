@@ -1,5 +1,9 @@
 package com.jetbet.util;
 
+import java.lang.invoke.DirectMethodHandle.StaticAccessor;
+
+import com.sun.org.glassfish.external.statistics.Statistic;
+
 public class QueryListConstant {
 	public static final String UPDATE_FROM_USER_ACC_CHIPS_SQL="UPDATE JETBET.JB_USER_DETAILS SET CHIPS= ?, LASTUPDATEDDATE=CURRENT_TIMESTAMP, LASTUPDATEBY=? WHERE USER_ID= ?";
 
@@ -40,4 +44,5 @@ public class QueryListConstant {
 	
 	public static final String MATCH_CONTROL_FOR_MATCH_PAGE="UPDATE JETBET.JB_MATCH_DETAILS SET IS_ACTIVE= ? , MATCH_UPDATED_BY = ? , MATCH_UPDATED_DATE   = CURRENT_TIMESTAMP WHERE MATCH_ID = ?";
 	
+	public static final String FANCY_LIST="SELECT MATCH.MATCH_NAME AS MATCH_NAME, FANCY.* FROM JETBET.JB_MATCH_DETAILS MATCH , JETBET.JB_FANCY_DETAILS FANCY WHERE  FANCY.MATCH_ID = MATCH.MATCH_ID ORDER BY MATCH_NAME";
 }

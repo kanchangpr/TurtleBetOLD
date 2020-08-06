@@ -239,13 +239,18 @@ public class AdminDao {
 		log.info("[" + transactionId + "] responseBeanList:  " + responseBeanList);
 		return responseBeanList;
 	}
-
+	
 	@Transactional
 	public List<FancyBean> fancyList(String transactionId) {
 		log.info("[" + transactionId
 				+ "]*************************INSIDE fancyList CLASS UserDao*************************");
 		List<FancyBean> responseBeanList = new ArrayList<FancyBean>();
-		responseBeanList = fancyRepository.findAll();
+		String getUserRolesSql = QueryListConstant.GET_MATCHES_LIST;
+		responseBeanList = jdbcTemplate.query(getUserRolesSql,
+				(rs, rowNum) -> new FancyBean(rs.getString("market_type"), rs.getInt("market_count"),
+						rs.getString("MATCH_NAME"), rs.getString("series_id"),
+						rs.getString("sports_id"), rs.getString("is_active"), rs.getString("fancy_created_by"),
+						rs.getDate("fancy_created_date")));
 		log.info("[" + transactionId + "] responseBeanList:  " + responseBeanList);
 		return responseBeanList;
 	}
