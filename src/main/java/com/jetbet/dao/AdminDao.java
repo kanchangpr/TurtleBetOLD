@@ -121,7 +121,7 @@ public class AdminDao {
 					jdbcTemplate.update(QueryListConstant.SERIES_CONTROL_FOR_SERIES_PAGE,
 							new Object[] { sportsControlReq.getIsActive(), sportsControlReq.getUserName(),
 									sportsControlReq.getOperationId() });
-					jdbcTemplate.update(QueryListConstant.SERIES_CONTROL_FOR_SERIES_PAGE,
+					jdbcTemplate.update(QueryListConstant.SERIES_CONTROL_FOR_MATCH_PAGE,
 							new Object[] { sportsControlReq.getIsActive(), sportsControlReq.getUserName(),
 									sportsControlReq.getOperationId() });
 
