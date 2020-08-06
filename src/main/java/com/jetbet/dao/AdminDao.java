@@ -245,7 +245,7 @@ public class AdminDao {
 		log.info("[" + transactionId
 				+ "]*************************INSIDE fancyList CLASS UserDao*************************");
 		List<FancyBean> responseBeanList = new ArrayList<FancyBean>();
-		String getUserRolesSql = QueryListConstant.GET_MATCHES_LIST;
+		String getUserRolesSql = QueryListConstant.GET_FANCY_LIST;
 		responseBeanList = jdbcTemplate.query(getUserRolesSql,
 				(rs, rowNum) -> new FancyBean(rs.getString("market_type"), rs.getInt("market_count"),
 						rs.getString("MATCH_NAME"), rs.getString("series_id"),
