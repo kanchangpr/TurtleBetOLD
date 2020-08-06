@@ -72,7 +72,7 @@ public class AdminController {
         return new ResponseEntity<List<MatchBean>> (response,HttpStatus.OK);
 	}
 	
-	@RequestMapping(value=ResourceConstants.LIST_OF_ODDS, method=RequestMethod.GET)
+	@RequestMapping(value=ResourceConstants.LIST_OF_FANCY, method=RequestMethod.GET)
 	public ResponseEntity<List<FancyBean>> fancyList() {
 		String transactionId = "TB"+UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
 		log.info("["+transactionId+"]*************************INSIDE getListOfEventType METHOD GET*************************");

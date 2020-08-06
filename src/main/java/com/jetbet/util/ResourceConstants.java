@@ -19,7 +19,7 @@ public class ResourceConstants {
 	
 	public static final String LIST_OF_MATHCES="ListOfMatches";
 	
-	public static final String LIST_OF_ODDS="ListOfOdds";
+	public static final String LIST_OF_FANCY="ListOfFancy";
 	
 	public static final String PARTNERSHIP="Partnership";
 	
