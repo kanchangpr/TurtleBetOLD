@@ -7,10 +7,12 @@ import java.util.Set;
 
 import javax.transaction.Transactional;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.jetbet.bean.FancyBean;
+import com.jetbet.bean.MarketCatalogueBean;
 import com.jetbet.bean.MatchBean;
 import com.jetbet.bean.SeriesBean;
 import com.jetbet.bean.SportsBean;
@@ -19,14 +21,20 @@ import com.jetbet.betfair.ApiNgRescriptOperations;
 import com.jetbet.betfair.entities.CompetitionResult;
 import com.jetbet.betfair.entities.EventResult;
 import com.jetbet.betfair.entities.EventTypeResult;
+import com.jetbet.betfair.entities.MarketBookCatalogue;
+import com.jetbet.betfair.entities.MarketCatalogue;
 import com.jetbet.betfair.entities.MarketFancyResult;
 import com.jetbet.betfair.entities.MarketFilter;
+import com.jetbet.betfair.enums.MarketProjection;
+import com.jetbet.betfair.enums.MarketSort;
 import com.jetbet.betfair.exceptions.APINGException;
 import com.jetbet.dto.SessionDetails;
 import com.jetbet.repository.FancyRepository;
+import com.jetbet.repository.MarketCatalogueRepository;
 import com.jetbet.repository.MatchRepository;
 import com.jetbet.repository.SeriesRepository;
 import com.jetbet.repository.SportsRepository;
+import com.jetbet.util.ResourceConstants;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -45,6 +53,9 @@ public class BetfairDao {
 
 	@Autowired
 	FancyRepository fancyRepository;
+
+	@Autowired
+	MarketCatalogueRepository marketCatalogueRepository;
 
 	private ApiNgOperations rescriptOperations = ApiNgRescriptOperations.getInstance();
 	private String applicationKey;
@@ -177,7 +188,7 @@ public class BetfairDao {
 						matchBeanList.add(matchBean);
 					});
 
-					matchBeanResponseList = storeListOfMatchDB(matchBeanList, transactionId);
+					matchBeanResponseList.addAll(storeListOfMatchDB(matchBeanList, transactionId));
 
 					log.info("[" + transactionId + "] response: " + response);
 				}
@@ -224,18 +235,19 @@ public class BetfairDao {
 					marketFilter.setCompetitionIds(seriesIdSet);
 
 					log.info("[" + transactionId + "] ***********Fecting Matches of " + sportsBean.getSportsName()
-					+ " : " + seriesBean.getSeriesName() + " *********");
-					List<MatchBean> matchBeanList = matchRepository.findBySportIdAndSeriesIdAndIsActive(eventTypeIdString, seriesId, "Y");
-					
+							+ " : " + seriesBean.getSeriesName() + " *********");
+					List<MatchBean> matchBeanList = matchRepository
+							.findBySportIdAndSeriesIdAndIsActive(eventTypeIdString, seriesId, "Y");
+
 					for (MatchBean matchBean : matchBeanList) {
 						log.info("[" + transactionId + "] ***********INSIDE Match LOOP*********");
 
 						String matchId = matchBean.getMatchId();
-						log.info("[" + transactionId + "]matchId: "+ matchId+" of seriesId: " + seriesId + " of Sports Id: "
-								+ eventTypeIdString);
+						log.info("[" + transactionId + "]matchId: " + matchId + " of seriesId: " + seriesId
+								+ " of Sports Id: " + eventTypeIdString);
 						Set<String> matchIdSet = new HashSet<String>();
 						matchIdSet.add(matchId);
-						marketFilter.setCompetitionIds(matchIdSet);
+						marketFilter.setEventIds(matchIdSet);
 
 						List<MarketFancyResult> response = rescriptOperations.listFancy(marketFilter, applicationKey,
 								sessionToken);
@@ -251,18 +263,116 @@ public class BetfairDao {
 							fancyBeanList.add(fancyBean);
 						});
 
-						fancyBeanResponseList = storeListOfFancyDB(fancyBeanList, transactionId);
+						fancyBeanResponseList.addAll(storeListOfFancyDB(fancyBeanList, transactionId));
 
-						log.info("[" + transactionId + "] response: " + response);
-
+						log.info("[" + transactionId + "] response: " + fancyBeanResponseList);
 					}
 				}
-
 			}
 		} catch (APINGException apiExc) {
 			log.info("[" + transactionId + "] " + apiExc.toString());
 		}
 		return fancyBeanResponseList;
+	}
+
+	@Transactional
+	public List<MarketCatalogueBean> getMarketCatalogue(String appKey, String ssoid, String userName, String transactionId) {
+		this.applicationKey = appKey;
+		this.sessionToken = ssoid;
+		MarketFilter marketFilter;
+		List<MarketCatalogue> marketCatalogueResult = null;
+		// List<MarketBook> marketBookResult = null;
+		MarketBookCatalogue marketBookCatalogue = new MarketBookCatalogue();
+		final List<MarketCatalogueBean> marketCatalogueList = new ArrayList<MarketCatalogueBean>();
+		List<MarketCatalogueBean> marketCatalogueResList = new ArrayList<MarketCatalogueBean>();
+		try {
+			String maxResults = "100";
+
+			List<FancyBean> marketTypeList = fancyRepository.findByIsActive("Y");
+			for (int i = 0; i < marketTypeList.size(); i++) {
+				Set<String> typesCode = new HashSet<String>();
+				typesCode.add(marketTypeList.get(i).getMarketType());
+				Set<String> eventIds = new HashSet<String>();
+				eventIds.add(marketTypeList.get(i).getMatchId());
+
+				log.info("[" + transactionId + "] MatchID: " + marketTypeList.get(i).getMatchId() + " Market Type: "
+						+ marketTypeList.get(i).getMarketType());
+
+				marketFilter = new MarketFilter();
+				marketFilter.setEventIds(eventIds);
+				marketFilter.setMarketTypeCodes(typesCode);
+				Set<MarketProjection> marketProjection = new HashSet<MarketProjection>();
+				marketProjection.add(MarketProjection.COMPETITION);
+				marketProjection.add(MarketProjection.EVENT);
+				marketProjection.add(MarketProjection.EVENT_TYPE);
+				marketProjection.add(MarketProjection.MARKET_START_TIME);
+				marketProjection.add(MarketProjection.MARKET_DESCRIPTION);
+				marketProjection.add(MarketProjection.RUNNER_DESCRIPTION);
+				marketProjection.add(MarketProjection.RUNNER_METADATA);
+
+				marketCatalogueResult = rescriptOperations.listMarketCatalogue(marketFilter, marketProjection,
+						MarketSort.FIRST_TO_START, maxResults, applicationKey, sessionToken);
+
+				marketCatalogueResult.stream().forEach(res -> {
+					for (int j = 0; j < res.getRunners().size(); j++) {
+						MarketCatalogueBean marketCatalogueBean = new MarketCatalogueBean();
+						marketCatalogueBean.setMarketId(res.getMarketId());
+						marketCatalogueBean.setMarketType(res.getDescription().getMarketType());
+						marketCatalogueBean.setMarketName(res.getMarketName());
+						marketCatalogueBean.setMarketStartTime(res.getMarketStartTime());
+						marketCatalogueBean.setTotalMatched(res.getTotalMatched());
+						marketCatalogueBean.setRunnerSelectionId(res.getRunners().get(j).getSelectionId());
+						marketCatalogueBean.setRunnerName(res.getRunners().get(j).getRunnerName());
+						marketCatalogueBean.setHandicap(res.getRunners().get(j).getHandicap());
+						marketCatalogueBean.setSortPriority(res.getRunners().get(j).getSortPriority());
+						marketCatalogueBean.setSportsId(res.getEventType().getId());
+						marketCatalogueBean.setSprotsName(res.getEventType().getName());
+						marketCatalogueBean.setSeriesId(res.getCompetition().getId());
+						marketCatalogueBean.setSeriesName(res.getCompetition().getName());
+						marketCatalogueBean.setMatchId(res.getEvent().getId());
+						marketCatalogueBean.setMatchName(res.getEvent().getName());
+						marketCatalogueBean.setMatchCountryCode(res.getEvent().getCountryCode());
+						marketCatalogueBean.setMatchTimeZone(res.getEvent().getTimezone());
+						marketCatalogueBean.setMatchVenue(res.getEvent().getVenue());
+						marketCatalogueBean.setMatchOpenDate(res.getEvent().getOpenDate());
+						marketCatalogueBean.setCreatedBy(ResourceConstants.USER_NAME);
+						marketCatalogueList.add(marketCatalogueBean);
+					}
+				});
+				marketCatalogueResList=storeMarketCatalogueDB(marketCatalogueList, transactionId);
+
+			}
+
+			log.info("Market Catalogue inseted in  DB: " + marketCatalogueList);
+
+			/*
+			 * String marketId = marketCatalogueResult.get(0).getMarketId();
+			 * 
+			 * PriceProjection priceProjection = new PriceProjection(); Set<PriceData>
+			 * priceData = new HashSet<PriceData>();
+			 * priceData.add(PriceData.EX_BEST_OFFERS);
+			 * priceProjection.setPriceData(priceData);
+			 * 
+			 * // In this case we don't need these objects so they are declared null
+			 * OrderProjection orderProjection = null; MatchProjection matchProjection =
+			 * null; String currencyCode = null;
+			 * 
+			 * List<String> marketIds = new ArrayList<String>(); marketIds.add(marketId);
+			 * 
+			 * marketBookResult = rescriptOperations.listMarketBook(marketIds,
+			 * priceProjection, orderProjection, matchProjection, currencyCode,
+			 * applicationKey, sessionToken);
+			 * 
+			 * marketBookCatalogue.setMarketCatalogue(marketCatalogueResult);
+			 * marketBookCatalogue.setMarketBook(marketBookResult);
+			 */
+
+		} catch (APINGException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return marketCatalogueList;
+
 	}
 
 	@Transactional
@@ -284,6 +394,7 @@ public class BetfairDao {
 		return responseBeanList;
 	}
 
+	@Transactional
 	private List<SeriesBean> storeListOfCompDB(List<SeriesBean> seriesBeanList, String transactionId) {
 		List<SeriesBean> responseBeanList = new ArrayList<SeriesBean>();
 		for (SeriesBean seriesBean : seriesBeanList) {
@@ -323,10 +434,13 @@ public class BetfairDao {
 
 	@Transactional
 	private List<FancyBean> storeListOfFancyDB(List<FancyBean> fancyBeanList, String transactionId) {
+		log.info("[" + transactionId
+				+ "]##############################Inside  storeListOfFancyDB#############################");
 		List<FancyBean> responseBeanList = new ArrayList<FancyBean>();
 		for (FancyBean fancyBean : fancyBeanList) {
 			String marketType = fancyBean.getMarketType();
-			long getRowCount = fancyRepository.countByMarketType(marketType);
+			String matchId = fancyBean.getMatchId();
+			long getRowCount = fancyRepository.countByMarketTypeAndMatchId(marketType,matchId);
 			if (getRowCount == 0) {
 				FancyBean responseBean = new FancyBean();
 				log.info("[" + transactionId + "] inside if marketType: " + marketType);
@@ -334,6 +448,29 @@ public class BetfairDao {
 				responseBeanList.add(responseBean);
 			} else {
 				log.info("[" + transactionId + "] inside Else marketType: " + marketType);
+			}
+		}
+		log.info("responseBeanList:: " + responseBeanList);
+		return responseBeanList;
+	}
+
+	@Transactional
+	private List<MarketCatalogueBean> storeMarketCatalogueDB(List<MarketCatalogueBean> marketCatalogueList,
+			String transactionId) {
+		log.info("[" + transactionId
+				+ "]##############################Inside  storeMarketCatalogueDB#############################");
+		List<MarketCatalogueBean> responseBeanList = new ArrayList<MarketCatalogueBean>();
+		for (MarketCatalogueBean marketCatalogueBean : marketCatalogueList) {
+			String marketId = marketCatalogueBean.getMarketId();
+			Long selectionId = marketCatalogueBean.getRunnerSelectionId();
+			long getRowCount = marketCatalogueRepository.countByMarketIdAndRunnerSelectionId(marketId,selectionId);
+			if (getRowCount==0) {
+				MarketCatalogueBean responseBean = new MarketCatalogueBean();
+				log.info("[" + transactionId + "] inside if MarketId: " + marketId);
+				responseBean = marketCatalogueRepository.saveAndFlush(marketCatalogueBean);
+				responseBeanList.add(responseBean);
+			} else {
+				log.info("[" + transactionId + "] inside Else MarketId: " + marketId);
 			}
 		}
 		log.info("responseBeanList:: " + responseBeanList);

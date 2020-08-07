@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.jetbet.bean.FancyBean;
+import com.jetbet.bean.MarketCatalogueBean;
 import com.jetbet.bean.MatchBean;
 import com.jetbet.bean.SeriesBean;
 import com.jetbet.bean.SportsBean;
@@ -14,6 +15,9 @@ import com.jetbet.dto.SessionDetails;
 import com.jetbet.repository.SportsRepository;
 import com.jetbet.service.BetfairService;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Service
 public class BetfairServiceImpl implements BetfairService{
 	
@@ -47,5 +51,10 @@ public class BetfairServiceImpl implements BetfairService{
 	public SessionDetails getSessionToken(String userName, String password, String transactionId) {
 		return betfairDao.getSessionToken(userName,password,transactionId);
 	}
-
+	
+	@Override
+	public List<MarketCatalogueBean> getMarketCatalogue(String applicationKey,String sessionToken,String userName, String transactionId) {
+		log.info("["+transactionId+"]*************************INSIDE getMatchOdds CLASS AdminServiceImpl*************************");
+		return betfairDao.getMarketCatalogue(applicationKey, sessionToken, userName,transactionId);
+	}
 }

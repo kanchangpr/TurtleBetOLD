@@ -2,13 +2,21 @@ package com.jetbet.betfair;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 import com.jetbet.betfair.entities.CompetitionResult;
 import com.jetbet.betfair.entities.EventResult;
 import com.jetbet.betfair.entities.EventTypeResult;
+import com.jetbet.betfair.entities.MarketBook;
+import com.jetbet.betfair.entities.MarketCatalogue;
 import com.jetbet.betfair.entities.MarketFancyResult;
 import com.jetbet.betfair.entities.MarketFilter;
+import com.jetbet.betfair.entities.PriceProjection;
+import com.jetbet.betfair.enums.MarketSort;
+import com.jetbet.betfair.enums.MatchProjection;
+import com.jetbet.betfair.enums.OrderProjection;
 import com.jetbet.betfair.exceptions.APINGException;
+import com.jetbet.betfair.enums.MarketProjection;
 import com.jetbet.dto.SessionDetails;
 
 
@@ -37,11 +45,11 @@ public abstract class ApiNgOperations {
 
 	public abstract SessionDetails getSessionToken(String userName, String password, String transactionId) ;
 
-//	public abstract List<MarketBook> listMarketBook(List<String> marketIds, PriceProjection priceProjection, OrderProjection orderProjection,
-//						MatchProjection matchProjection, String currencyCode, String appKey, String ssoId) throws APINGException;
-//
-//    public abstract List<MarketCatalogue> listMarketCatalogue(MarketFilter filter, Set<MarketProjection> marketProjection,
-//        MarketSort sort, String maxResult, String appKey, String ssoId) throws APINGException;
+	public abstract List<MarketBook> listMarketBook(List<String> marketIds, PriceProjection priceProjection, OrderProjection orderProjection,
+						MatchProjection matchProjection, String currencyCode, String appKey, String ssoId) throws APINGException;
+
+    public abstract List<MarketCatalogue> listMarketCatalogue(MarketFilter filter, Set<MarketProjection> marketProjection,
+        MarketSort sort, String maxResult, String appKey, String ssoId) throws APINGException;
 //
 //	public abstract PlaceExecutionReport placeOrders(String marketId, List<PlaceInstruction> instructions, String customerRef , String appKey, String ssoId) throws APINGException;
 //

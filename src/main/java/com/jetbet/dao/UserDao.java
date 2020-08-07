@@ -2,8 +2,10 @@ package com.jetbet.dao;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
@@ -19,6 +21,9 @@ import com.jetbet.bean.PartnershipBean;
 import com.jetbet.bean.SeriesBean;
 import com.jetbet.bean.SportsBean;
 import com.jetbet.bean.UserBean;
+import com.jetbet.betfair.entities.MarketCatalogue;
+import com.jetbet.betfair.entities.MarketFilter;
+import com.jetbet.betfair.enums.MarketProjection;
 import com.jetbet.dto.ChangePasswordDto;
 import com.jetbet.dto.ChipsDto;
 import com.jetbet.dto.UserControlsDto;
@@ -677,5 +682,5 @@ public class UserDao {
 		log.info("["+transactionId+"] Chips History : "+res);
 		return res;
 	}
-	
+
 }

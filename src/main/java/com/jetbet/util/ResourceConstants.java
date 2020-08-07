@@ -3,6 +3,9 @@ package com.jetbet.util;
 import org.apache.commons.lang3.StringUtils;
 
 public class ResourceConstants {
+	
+	public static final String USER_NAME="TURTLE_BETS";
+	
 	public static final String USER_DETAILS="UserDetails";
 	
 	public static final String USER_ROLES="UserRoles";
@@ -33,6 +36,9 @@ public class ResourceConstants {
 	public static final String CHIPS_BALANCE="chipsBalance";
 	public static final String CHIPS_HISTORY="chipsHistory";
 	public static final String CHANGE_PASSWORD="changePassword";
+	public static final String MARKET_CATALOGUE="marketCatalogue";
+	public static final String MATCH_ODDS="matchOdds";
+	public static final String PLACE_BETS="placeBets";
 	
 	public static final String SUPERMASTER="superMaster";
 	public static final String MASTER="master";

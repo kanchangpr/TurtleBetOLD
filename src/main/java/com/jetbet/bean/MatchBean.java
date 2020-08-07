@@ -5,7 +5,6 @@ import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.CreationTimestamp;
@@ -28,7 +27,6 @@ import lombok.Setter;
 public class MatchBean {
 	
 	@Id
-	@OrderBy
 	@Column(name = "match_id")
 	private String matchId;
 	

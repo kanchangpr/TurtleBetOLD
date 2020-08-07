@@ -1,5 +1,6 @@
 package com.jetbet.betfair.entities;
 
+import java.util.Date;
 import java.util.List;
 
 import lombok.AllArgsConstructor;
@@ -19,9 +20,12 @@ public class MarketCatalogue {
 	private String marketId;
 	private String marketName;
 	private MarketDescription description;
+	private Date marketStartTime;
+	private String totalMatched;
 	private List<RunnerCatalog> runners = null;
 	private EventType eventType;
 	private Competition competition;
 	private Event event;
+	
 
 }

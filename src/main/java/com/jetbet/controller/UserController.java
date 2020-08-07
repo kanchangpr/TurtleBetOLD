@@ -187,4 +187,14 @@ public class UserController {
 		List<ChipsBean> response = userService.getChipsHistory(userId,transactionId);
 		return new ResponseEntity<List<ChipsBean>>(response,HttpStatus.OK);
 	}
+	
+	@RequestMapping(value=ResourceConstants.PLACE_BETS, method=RequestMethod.POST)
+	public ResponseEntity<List<ChipsBean>> placeBets(@RequestParam(value="userId" ,required=true) String userId) {
+		String transactionId = "TB"+UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
+		log.info("["+transactionId+"]*************************INSIDE USER ROLE METHOD GET*************************");
+		List<ChipsBean> response = userService.getChipsHistory(userId,transactionId);
+		return new ResponseEntity<List<ChipsBean>>(response,HttpStatus.OK);
+	}
+	
+	
 }

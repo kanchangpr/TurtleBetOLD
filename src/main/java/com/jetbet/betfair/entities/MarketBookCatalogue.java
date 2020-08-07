@@ -1,5 +1,7 @@
 package com.jetbet.betfair.entities;
 
+import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
@@ -8,16 +10,12 @@ import lombok.Setter;
 import lombok.ToString;
 
 @Data
-@Getter
-@Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
+@Setter
 @ToString
-public class RunnerCatalog {
-
-	private Long selectionId;
-	private String runnerName;
-	private Double handicap;
-	private int sortPriority;
-
+public class MarketBookCatalogue {
+	private List<MarketBook> marketBook;
+	private List<MarketCatalogue> marketCatalogue;
 }

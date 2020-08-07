@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.jetbet.bean.FancyBean;
+import com.jetbet.bean.MarketCatalogueBean;
 import com.jetbet.bean.MatchBean;
 import com.jetbet.bean.SeriesBean;
 import com.jetbet.bean.SportsBean;
@@ -44,7 +45,7 @@ public class BetfairController {
 		
 		String applicationKey=sessionDetails.getBody().getProduct();
 		String sessionToken=sessionDetails.getBody().getToken();
-		String userName="KANCHAN";
+		String userName=ResourceConstants.USER_NAME;
 		
 		String transactionId = "TB"+UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
 		log.info("["+transactionId+"]*************************INSIDE getListOfEventType METHOD GET*************************");
@@ -62,7 +63,7 @@ public class BetfairController {
 		ResponseEntity<SessionDetails> sessionDetails=getSessionToken();
 		String applicationKey=sessionDetails.getBody().getProduct();
 		String sessionToken=sessionDetails.getBody().getToken();
-		String userName="KANCHAN";
+		String userName=ResourceConstants.USER_NAME;
 		String transactionId = "TB"+UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
 		log.info("["+transactionId+"]*************************INSIDE getListOfEventType METHOD GET*************************");
 		List<SeriesBean> response=betfairService.getListOfSeries(applicationKey, sessionToken, userName, transactionId);
@@ -77,7 +78,7 @@ public class BetfairController {
 		ResponseEntity<SessionDetails> sessionDetails=getSessionToken();
 		String applicationKey=sessionDetails.getBody().getProduct();
 		String sessionToken=sessionDetails.getBody().getToken();
-		String userName="KANCHAN";
+		String userName=ResourceConstants.USER_NAME;
 		String transactionId = "TB"+UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
 		log.info("["+transactionId+"]*************************INSIDE getListOfEventType METHOD GET*************************");
 		List<MatchBean> response=betfairService.getListOfMatches(applicationKey, sessionToken, userName, transactionId);
@@ -92,7 +93,7 @@ public class BetfairController {
 		ResponseEntity<SessionDetails> sessionDetails=getSessionToken();
 		String applicationKey=sessionDetails.getBody().getProduct();
 		String sessionToken=sessionDetails.getBody().getToken();
-		String userName="KANCHAN";
+		String userName=ResourceConstants.USER_NAME;
 		String transactionId = "TB"+UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
 		log.info("["+transactionId+"]*************************INSIDE getListOfEventType METHOD GET*************************");
 		List<FancyBean> response=betfairService.getListOfOdds(applicationKey, sessionToken, userName, transactionId);
@@ -110,4 +111,17 @@ public class BetfairController {
         return new ResponseEntity<SessionDetails> (response,HttpStatus.OK);
 	}
 	
+
+	@RequestMapping(value=ResourceConstants.MARKET_CATALOGUE, method=RequestMethod.GET)
+	public List<MarketCatalogueBean> getMarketCatalogue() {
+		String transactionId = "TB"+UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
+		log.info("["+transactionId+"]*************************INSIDE USER ROLE METHOD GET*************************");
+		
+		ResponseEntity<SessionDetails> sessionDetails=getSessionToken();
+		String applicationKey=sessionDetails.getBody().getProduct();
+		String sessionToken=sessionDetails.getBody().getToken();
+		String userName=ResourceConstants.USER_NAME;
+		
+		return betfairService.getMarketCatalogue(applicationKey,sessionToken,userName,transactionId);
+	}
 }

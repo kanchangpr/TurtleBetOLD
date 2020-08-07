@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.jetbet.bean.FancyBean;
+import com.jetbet.bean.MarketCatalogueBean;
 import com.jetbet.bean.MatchBean;
 import com.jetbet.bean.SeriesBean;
 import com.jetbet.bean.SportsBean;
@@ -22,5 +23,7 @@ public interface BetfairService {
 	List<FancyBean> getListOfOdds(String applicationKey, String sessionToken, String userName, String transactionId);
 
 	SessionDetails getSessionToken(String userName, String password, String transactionId);
+	
+	List<MarketCatalogueBean> getMarketCatalogue(String applicationKey,String sessionToken,String userName, String transactionId);
 
 }
