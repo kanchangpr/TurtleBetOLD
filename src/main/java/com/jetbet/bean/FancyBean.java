@@ -4,8 +4,11 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OrderBy;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.CreationTimestamp;
@@ -27,7 +30,10 @@ import lombok.Setter;
 public class FancyBean {
 	
 	@Id
-	@OrderBy
+	@SequenceGenerator(name="JB_FANCY_DETAILS_seq",sequenceName="JB_FANCY_DETAILS_seq",allocationSize=1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE,generator="JB_FANCY_DETAILS_seq")
+	private Long id;
+	
 	@Column(name = "market_type")
 	private String marketType;
 	
