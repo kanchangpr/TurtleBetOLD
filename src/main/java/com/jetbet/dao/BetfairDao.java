@@ -282,7 +282,7 @@ public class BetfairDao {
 		MarketFilter marketFilter;
 		List<MarketCatalogue> marketCatalogueResult = null;
 		// List<MarketBook> marketBookResult = null;
-		MarketBookCatalogue marketBookCatalogue = new MarketBookCatalogue();
+		//MarketBookCatalogue marketBookCatalogue = new MarketBookCatalogue();
 		final List<MarketCatalogueBean> marketCatalogueList = new ArrayList<MarketCatalogueBean>();
 		List<MarketCatalogueBean> marketCatalogueResList = new ArrayList<MarketCatalogueBean>();
 		try {
@@ -440,14 +440,15 @@ public class BetfairDao {
 		for (FancyBean fancyBean : fancyBeanList) {
 			String marketType = fancyBean.getMarketType();
 			String matchId = fancyBean.getMatchId();
+			log.info("marketType & Match ID " + marketType+ " : "+matchId);
 			long getRowCount = fancyRepository.countByMarketTypeAndMatchId(marketType,matchId);
 			if (getRowCount == 0) {
 				FancyBean responseBean = new FancyBean();
-				log.info("[" + transactionId + "] inside if marketType: " + marketType);
+				log.info("[" + transactionId + "] inside if marketType & Match ID " + marketType+ " : "+matchId);
 				responseBean = fancyRepository.saveAndFlush(fancyBean);
 				responseBeanList.add(responseBean);
 			} else {
-				log.info("[" + transactionId + "] inside Else marketType: " + marketType);
+				log.info("[" + transactionId + "] inside Else marketType & Match ID " + marketType+ " : "+matchId);
 			}
 		}
 		log.info("responseBeanList:: " + responseBeanList);
