@@ -436,10 +436,12 @@ public class BetfairDao {
 	private List<FancyBean> storeListOfFancyDB(List<FancyBean> fancyBeanList, String transactionId) {
 		log.info("[" + transactionId
 				+ "]##############################Inside  storeListOfFancyDB#############################");
+		String marketType=null;
+		String matchId=null;
 		List<FancyBean> responseBeanList = new ArrayList<FancyBean>();
 		for (FancyBean fancyBean : fancyBeanList) {
-			String marketType = fancyBean.getMarketType();
-			String matchId = fancyBean.getMatchId();
+			marketType = fancyBean.getMarketType();
+			matchId = fancyBean.getMatchId();
 			log.info("marketType & Match ID " + marketType+ " : "+matchId);
 			long getRowCount = fancyRepository.countByMarketTypeAndMatchId(marketType,matchId);
 			if (getRowCount == 0) {
