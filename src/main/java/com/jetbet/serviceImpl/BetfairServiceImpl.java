@@ -54,8 +54,8 @@ public class BetfairServiceImpl implements BetfairService{
 	}
 	
 	@Override
-	public List<SeriesMatchFancyResponseDto> getMarketCatalogue(String applicationKey,String sessionToken,String userName, String transactionId) {
+	public List<SeriesMatchFancyResponseDto> getMarketCatalogue(String sportsId,String applicationKey,String sessionToken,String userName, String transactionId) {
 		log.info("["+transactionId+"]*************************INSIDE getMatchOdds CLASS AdminServiceImpl*************************");
-		return betfairDao.getMarketCatalogue(applicationKey, sessionToken, userName,transactionId);
+		return betfairDao.getMarketCatalogue(sportsId,applicationKey, sessionToken, userName,transactionId);
 	}
 }

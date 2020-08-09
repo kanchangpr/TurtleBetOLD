@@ -1,6 +1,8 @@
 package com.jetbet.betfair;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -9,16 +11,19 @@ import com.google.gson.reflect.TypeToken;
 import com.jetbet.betfair.entities.CompetitionResult;
 import com.jetbet.betfair.entities.EventResult;
 import com.jetbet.betfair.entities.EventTypeResult;
+import com.jetbet.betfair.entities.ExchangePrices;
 import com.jetbet.betfair.entities.MarketBook;
 import com.jetbet.betfair.entities.MarketCatalogue;
 import com.jetbet.betfair.entities.MarketFancyResult;
 import com.jetbet.betfair.entities.MarketFilter;
 import com.jetbet.betfair.entities.PriceProjection;
+import com.jetbet.betfair.entities.Runner;
 import com.jetbet.betfair.enums.ApiNgOperation;
 import com.jetbet.betfair.enums.MarketProjection;
 import com.jetbet.betfair.enums.MarketSort;
 import com.jetbet.betfair.enums.MatchProjection;
 import com.jetbet.betfair.enums.OrderProjection;
+import com.jetbet.betfair.enums.PriceData;
 import com.jetbet.betfair.exceptions.APINGException;
 import com.jetbet.betfair.util.JsonConverter;
 import com.jetbet.dto.BetfailLoginRequestDto;
@@ -116,7 +121,56 @@ public class ApiNgRescriptOperations extends ApiNgOperations {
 		List<MarketCatalogue> container = JsonConverter.convertFromJson(result, new TypeToken<List<MarketCatalogue>>() {
 		}.getType());
 
+		for(int i=0; i< container.size();i++) {
+			
+			PriceProjection priceProjection = new PriceProjection(); 
+			Set<PriceData> priceData = new HashSet<PriceData>();
+			priceData.add(PriceData.EX_BEST_OFFERS);
+			priceProjection.setPriceData(priceData);
+			OrderProjection orderProjection = null; 
+			MatchProjection matchProjection =null; 
+			String currencyCode = null;
+			
+			String marketId=container.get(i).getMarketId();
+			int runnersSize=container.get(i).getRunners().size();
+			for(int j=0;j<runnersSize;j++) {
+				String selectionId=container.get(i).getRunners().get(j).getSelectionId().toString();
+				ExchangePrices exchangePrices=listRunnersBook(marketId,selectionId,priceProjection, orderProjection, matchProjection, currencyCode,appKey, ssoId);
+				container.get(i).getRunners().get(j).setEx(exchangePrices);
+			}
+		}
+		
 		return container;
+
+	}
+	
+	
+	public ExchangePrices listRunnersBook(String marketId,String selectionId, PriceProjection priceProjection,
+			OrderProjection orderProjection, MatchProjection matchProjection, String currencyCode, String appKey,
+			String ssoId) throws APINGException {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put(LOCALE, locale);
+		params.put(MARKET_ID, marketId);
+		params.put(SELECTION_ID, selectionId);
+		params.put(PRICE_PROJECTION, priceProjection);
+		params.put(ORDER_PROJECTION, orderProjection);
+		params.put(MATCH_PROJECTION, matchProjection);
+		String result = getInstance().makeRequest(ApiNgOperation.LISTRUNNERSBOOK.getOperationName(), params, appKey,
+				ssoId);
+		if (ApiNGDemo.isDebug())
+			System.out.println("\nResponse: " + result);
+
+		List<MarketBook> container = JsonConverter.convertFromJson(result, new TypeToken<List<MarketBook>>() {
+		}.getType());
+		ExchangePrices exPrice= new ExchangePrices();
+		for(int i=0;i<container.size();i++) {
+			
+			exPrice.setAvailableToBack(container.get(i).getRunners().get(0).getEx().getAvailableToBack());
+			exPrice.setAvailableToLay(container.get(i).getRunners().get(0).getEx().getAvailableToLay());
+			exPrice.setTradedVolume(container.get(i).getRunners().get(0).getEx().getTradedVolume());
+		}
+
+		return exPrice;
 
 	}
 

@@ -8,6 +8,7 @@ import java.util.Set;
 
 import javax.transaction.Transactional;
 
+import org.hibernate.validator.constraints.Length;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -248,85 +249,92 @@ public class BetfairDao {
 	}
 
 	@Transactional
-	public List<SeriesMatchFancyResponseDto> getMarketCatalogue(String appKey, String ssoid, String userName,
+	public List<SeriesMatchFancyResponseDto> getMarketCatalogue(String sportsId, String appKey, String ssoid, String userName,
 			String transactionId) {
 		this.applicationKey = appKey;
 		this.sessionToken = ssoid;
 		MarketFilter marketFilter;
-		
+
 		List<SeriesMatchFancyResponseDto> seriesMatchFancyResList = new ArrayList<SeriesMatchFancyResponseDto>();
 		List<MarketCatalogue> marketCatalogueResult = null;
-		List<MatchAndFancyDetailDto> matchAndFancyDetailList=new ArrayList<MatchAndFancyDetailDto>();
+		
 		final List<MarketCatalogueBean> marketCatalogueList = new ArrayList<MarketCatalogueBean>();
-		//List<MarketCatalogueBean> marketCatalogueResList = new ArrayList<MarketCatalogueBean>();
+		// List<MarketCatalogueBean> marketCatalogueResList = new
+		// ArrayList<MarketCatalogueBean>();
 		try {
 			String maxResults = "100";
-			
-			List<SeriesBean> seriesList = seriesRepository.findBySportIdAndIsActiveOrderBySportId("4", "Y");
+
+			List<SeriesBean> seriesList = seriesRepository.findBySportIdAndIsActiveOrderBySportId(sportsId, "Y");
 			for (int k = 0; k < seriesList.size(); k++) {
 				SeriesMatchFancyResponseDto seriesMatchFancyRes = new SeriesMatchFancyResponseDto();
-				String seriesId=seriesList.get(k).getSeriesId();
-				String seriesName=seriesList.get(k).getSeriesName();
-				
-				log.info("seriesId: "+seriesId);
-				log.info("seriesName:: "+seriesName);
-				
+				List<MatchAndFancyDetailDto> matchAndFancyDetailList = new ArrayList<MatchAndFancyDetailDto>();
+				String seriesId = seriesList.get(k).getSeriesId();
+				String seriesName = seriesList.get(k).getSeriesName();
+
+				log.info("seriesId: " + seriesId);
+				log.info("seriesName:: " + seriesName);
+
 				seriesMatchFancyRes.setSeriesId(seriesId);
 				seriesMatchFancyRes.setSeriesName(seriesName);
-				
+
 				List<MatchBean> matchList = matchRepository.findBySeriesIdAndIsActive(seriesId, "Y");
 				for (int j = 0; j < matchList.size(); j++) {
-				
-					String matchIdString= matchList.get(j).getMatchId();
-					String matchNameString= matchList.get(j).getMatchName();
-					Date matchOpenDate= matchList.get(j).getMatchOpenDate();
-					log.info("Match ID for Fancy Details:  "+matchIdString);
-					List<FancyBean> marketTypeList = fancyRepository.findByMatchIdAndIsActive(matchIdString, "Y");
 					
+					MatchAndFancyDetailDto matchAndFancyDetailDto = new MatchAndFancyDetailDto();
+					String matchIdString = matchList.get(j).getMatchId();
+					String matchNameString = matchList.get(j).getMatchName();
+					Date matchOpenDate = matchList.get(j).getMatchOpenDate();
+					log.info("Match ID for Fancy Details:  " + matchIdString);
+					List<FancyBean> marketTypeList = fancyRepository.findByMatchIdAndIsActive(matchIdString, "Y");
+
 					for (int i = 0; i < marketTypeList.size(); i++) {
-						MatchAndFancyDetailDto matchAndFancyDetailDto=new MatchAndFancyDetailDto();
-						
-						String matchId=matchIdString;
-						String matchName=matchNameString;
-						Date matchDate=matchOpenDate;
-						String marketType=marketTypeList.get(i).getMarketType();
-						
-						log.info("matchId: "+matchId);
-						log.info("matchName:: "+matchName);
-						log.info("matchDate: "+matchDate);
-						log.info("marketType:: "+marketType);
-						
+
+						String matchId = matchIdString;
+						String matchName = matchNameString;
+						Date matchDate = matchOpenDate;
+						String marketType = marketTypeList.get(i).getMarketType();
+
+						log.info("matchId: " + matchId);
+						log.info("matchName:: " + matchName);
+						log.info("matchDate: " + matchDate);
+						log.info("marketType:: " + marketType);
+
 						matchAndFancyDetailDto.setMatchId(matchId);
 						matchAndFancyDetailDto.setMatchName(matchName);
 						matchAndFancyDetailDto.setMatchDate(matchDate);
 						matchAndFancyDetailDto.setMarketType(marketType);
-						
+
 						Set<String> typesCode = new HashSet<String>();
 						typesCode.add(marketType);
 						Set<String> eventIds = new HashSet<String>();
 						eventIds.add(matchId);
 
-						log.info("[" + transactionId + "] MatchID: " + matchId + " Market Type: "+ marketType);
+						log.info("[" + transactionId + "] MatchID: " + matchId + " Market Type: " + marketType);
 
 						marketFilter = new MarketFilter();
 						marketFilter.setEventIds(eventIds);
 						marketFilter.setMarketTypeCodes(typesCode);
 						Set<MarketProjection> marketProjection = new HashSet<MarketProjection>();
-						marketProjection.add(MarketProjection.COMPETITION);
-						marketProjection.add(MarketProjection.EVENT);
-						marketProjection.add(MarketProjection.EVENT_TYPE);
+						//marketProjection.add(MarketProjection.COMPETITION);
+						//marketProjection.add(MarketProjection.EVENT);
+						//marketProjection.add(MarketProjection.EVENT_TYPE);
 						marketProjection.add(MarketProjection.MARKET_START_TIME);
-						marketProjection.add(MarketProjection.MARKET_DESCRIPTION);
+						//marketProjection.add(MarketProjection.MARKET_DESCRIPTION);
 						marketProjection.add(MarketProjection.RUNNER_DESCRIPTION);
-						marketProjection.add(MarketProjection.RUNNER_METADATA);
+						//marketProjection.add(MarketProjection.RUNNER_METADATA);
 
 						marketCatalogueResult = rescriptOperations.listMarketCatalogue(marketFilter, marketProjection,
 								MarketSort.FIRST_TO_START, maxResults, applicationKey, sessionToken);
-						matchAndFancyDetailDto.setMarketCatalogueRes(marketCatalogueResult);
-						matchAndFancyDetailList.add(matchAndFancyDetailDto);
-						seriesMatchFancyRes.setMatchAndFancyDetail(matchAndFancyDetailList);
+						if(marketCatalogueResult.size()==0) {
+							log.info("INSIDE IF");
+							matchAndFancyDetailDto.setMarketCatalogueRes(new MarketCatalogue());
+						}
+						else {
+							matchAndFancyDetailDto.setMarketCatalogueRes(marketCatalogueResult.get(0));
+						}
 					}
-					
+					matchAndFancyDetailList.add(matchAndFancyDetailDto);
+					seriesMatchFancyRes.setMatchAndFancyDetail(matchAndFancyDetailList);
 				}
 				seriesMatchFancyResList.add(seriesMatchFancyRes);
 			}

@@ -23,5 +23,5 @@ public class MatchAndFancyDetailDto {
 	private String marketType;
 	private String marketCount;
 	private Date matchDate;
-	private List<MarketCatalogue> marketCatalogueRes;
+	private MarketCatalogue marketCatalogueRes;
 }

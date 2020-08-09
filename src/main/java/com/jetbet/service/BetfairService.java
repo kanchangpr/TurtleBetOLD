@@ -25,6 +25,6 @@ public interface BetfairService {
 
 	SessionDetails getSessionToken(String userName, String password, String transactionId);
 	
-	List<SeriesMatchFancyResponseDto> getMarketCatalogue(String applicationKey,String sessionToken,String userName, String transactionId);
+	List<SeriesMatchFancyResponseDto> getMarketCatalogue(String sportsId,String applicationKey,String sessionToken,String userName, String transactionId);
 
 }

@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.jetbet.bean.FancyBean;
@@ -116,7 +117,7 @@ public class BetfairController {
 	
 
 	@RequestMapping(value=ResourceConstants.MARKET_CATALOGUE, method=RequestMethod.GET)
-	public List<SeriesMatchFancyResponseDto> getMarketCatalogue() {
+	public List<SeriesMatchFancyResponseDto> getMarketCatalogue(@RequestParam(value="sportsId" ,required=true) String sportsId) {
 		String transactionId = "TB"+UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
 		log.info("["+transactionId+"]*************************INSIDE USER ROLE METHOD GET*************************");
 		
@@ -125,6 +126,6 @@ public class BetfairController {
 		String sessionToken=sessionDetails.getBody().getToken();
 		String userName=ResourceConstants.USER_NAME;
 		
-		return betfairService.getMarketCatalogue(applicationKey,sessionToken,userName,transactionId);
+		return betfairService.getMarketCatalogue(sportsId,applicationKey,sessionToken,userName,transactionId);
 	}
 }

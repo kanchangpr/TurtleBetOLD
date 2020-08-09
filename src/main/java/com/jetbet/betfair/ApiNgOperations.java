@@ -27,6 +27,7 @@ public abstract class ApiNgOperations {
     protected final String MAX_RESULT = "maxResults";
     protected final String MARKET_IDS = "marketIds";
     protected final String MARKET_ID = "marketId";
+    protected final String SELECTION_ID="selectionId";
     protected final String INSTRUCTIONS = "instructions";
     protected final String CUSTOMER_REF = "customerRef";
     protected final String MARKET_PROJECTION = "marketProjection";
