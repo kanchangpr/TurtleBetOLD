@@ -17,6 +17,7 @@ import com.jetbet.bean.MarketCatalogueBean;
 import com.jetbet.bean.MatchBean;
 import com.jetbet.bean.SeriesBean;
 import com.jetbet.bean.SportsBean;
+import com.jetbet.dto.SeriesMatchFancyResponseDto;
 import com.jetbet.dto.SessionDetails;
 import com.jetbet.service.BetfairService;
 import com.jetbet.util.ResourceConstants;
@@ -113,7 +114,7 @@ public class BetfairController {
 	
 
 	@RequestMapping(value=ResourceConstants.MARKET_CATALOGUE, method=RequestMethod.GET)
-	public List<MarketCatalogueBean> getMarketCatalogue() {
+	public List<SeriesMatchFancyResponseDto> getMarketCatalogue() {
 		String transactionId = "TB"+UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
 		log.info("["+transactionId+"]*************************INSIDE USER ROLE METHOD GET*************************");
 		
