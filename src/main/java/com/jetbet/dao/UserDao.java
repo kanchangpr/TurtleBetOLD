@@ -1,11 +1,10 @@
 package com.jetbet.dao;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
@@ -18,12 +17,11 @@ import org.springframework.stereotype.Service;
 import com.jetbet.bean.ChipsBean;
 import com.jetbet.bean.MatchBean;
 import com.jetbet.bean.PartnershipBean;
+import com.jetbet.bean.PlaceBetsBean;
 import com.jetbet.bean.SeriesBean;
 import com.jetbet.bean.SportsBean;
+import com.jetbet.bean.StakesBean;
 import com.jetbet.bean.UserBean;
-import com.jetbet.betfair.entities.MarketCatalogue;
-import com.jetbet.betfair.entities.MarketFilter;
-import com.jetbet.betfair.enums.MarketProjection;
 import com.jetbet.dto.ChangePasswordDto;
 import com.jetbet.dto.ChipsDto;
 import com.jetbet.dto.UserControlsDto;
@@ -33,8 +31,10 @@ import com.jetbet.dto.UserRolesResponseDto;
 import com.jetbet.repository.ChipsRepository;
 import com.jetbet.repository.MatchRepository;
 import com.jetbet.repository.PartnershipRepository;
+import com.jetbet.repository.PlaceBetsRepository;
 import com.jetbet.repository.SeriesRepository;
 import com.jetbet.repository.SportsRepository;
+import com.jetbet.repository.StakesRepository;
 import com.jetbet.repository.UserRepository;
 import com.jetbet.util.QueryListConstant;
 import com.jetbet.util.ResourceConstants;
@@ -66,6 +66,14 @@ public class UserDao {
 	@Autowired
 	private PartnershipRepository partnershipRepository;
 	
+	@Autowired
+	private StakesRepository stakesRepository;
+	
+	@Autowired
+	PlaceBetsRepository placeBetsRepository;
+	
+	
+	public static DecimalFormat df = new DecimalFormat("0.00");
 	
 	public List<UserBean> getResponse() {
 		return userRepository.findAll();
@@ -127,7 +135,7 @@ public class UserDao {
 		String createdBy=userBean.getCreatedBy();
 		PartnershipBean psBean= new PartnershipBean();
 		try {
-			UserBean parentBean=userRepository.findFirst1ByUserIdOrderByFullName(userBean.getParent());
+			UserBean parentBean=userRepository.findFirst1ByUserId(userBean.getParent());
 			Long userCountofParent = userRepository.countByParent(userBean.getParent());
 			log.info("["+transactionId+"] Parent's User Limit: "+parentBean.getUserLimit());
 			log.info("["+transactionId+"] Parent's User Count: "+userCountofParent);
@@ -165,6 +173,21 @@ public class UserDao {
 						psBean.setMastrerStake(masterStake);
 						psBean.setSupermasterStake(supermasterStake);
 						psBean.setAdminStake(adminStake);
+						if(masterStake+supermasterStake+adminStake!=100) {
+							isValid=false;
+						}
+					}else if(userRole.equalsIgnoreCase(ResourceConstants.USER)) {
+						PartnershipBean psBeanObj= new PartnershipBean();
+						psBeanObj=partnershipRepository.findByUserId(userParent);
+						
+						masterStake=psBeanObj.getMastrerStake();
+						adminStake=psBeanObj.getAdminStake();
+						supermasterStake=psBeanObj.getSupermasterStake();
+						
+						psBean.setMastrerStake(masterStake);
+						psBean.setSupermasterStake(supermasterStake);
+						psBean.setAdminStake(adminStake);
+						
 						if(masterStake+supermasterStake+adminStake!=100) {
 							isValid=false;
 						}
@@ -312,11 +335,11 @@ public class UserDao {
 			depositWithdrawChips=chipsDto.getChips();
 			log.info("["+transactionId+"] depositWithdrawChipst: "+depositWithdrawChips);
 			
-			UserBean fromUserRes=userRepository.findFirst1ByUserIdOrderByFullName(fromUser);
+			UserBean fromUserRes=userRepository.findFirst1ByUserId(fromUser);
 			currentChipsInFromUserAcc=fromUserRes.getChips();
 			log.info("["+transactionId+"] Chips in From User Account: "+currentChipsInFromUserAcc);
 			
-			UserBean toUserRes=userRepository.findFirst1ByUserIdOrderByFullName(toUser);
+			UserBean toUserRes=userRepository.findFirst1ByUserId(toUser);
 			currentChipsInToUserAcc=toUserRes.getChips();
 			log.info("["+transactionId+"] Chips in To User Account: "+currentChipsInToUserAcc);
 			
@@ -332,10 +355,10 @@ public class UserDao {
 					totalChipsInFromAcc=currentChipsInFromUserAcc-depositWithdrawChips;
 					totalChipsInToAcc=currentChipsInToUserAcc+depositWithdrawChips;
 					
-					toUserAccBean.setDeposit(depositWithdrawChips);
+					toUserAccBean.setCredit(depositWithdrawChips);
 					toUserAccBean.setTotalChips(totalChipsInToAcc);
 					
-					FromUserAccBean.setWithdraw(depositWithdrawChips);
+					FromUserAccBean.setDebit(depositWithdrawChips);
 					FromUserAccBean.setTotalChips(totalChipsInFromAcc);
 				}
 			}else if (actString.equalsIgnoreCase(ResourceConstants.WITHDRAW)) {
@@ -350,10 +373,10 @@ public class UserDao {
 					totalChipsInFromAcc=currentChipsInFromUserAcc+depositWithdrawChips;
 					totalChipsInToAcc=currentChipsInToUserAcc-depositWithdrawChips;
 					
-					toUserAccBean.setWithdraw(depositWithdrawChips);
+					toUserAccBean.setDebit(depositWithdrawChips);
 					toUserAccBean.setTotalChips(totalChipsInToAcc);
 					
-					FromUserAccBean.setDeposit(depositWithdrawChips);
+					FromUserAccBean.setCredit(depositWithdrawChips);
 					FromUserAccBean.setTotalChips(totalChipsInFromAcc);
 				}
 			}
@@ -509,6 +532,7 @@ public class UserDao {
 		return responseBeanList;
 	}
 
+	@Transactional
 	public List<UserBean> getUserDetails(String master, String parent, String userId, String transactionId) {
 		log.info("["+transactionId+"]*************************INSIDE getUserDetails CLASS UserDao*************************");
 		log.info("["+transactionId+"]parent:: "+master);
@@ -559,12 +583,14 @@ public class UserDao {
 		return responseBeans;
 	}
 
+	@Transactional
 	public PartnershipBean getPartnershipDetails(String userId, String transactionId) {
 		log.info("["+transactionId+"]*************************INSIDE getPartnershipDetails CLASS UserDao*************************");
 		log.info("["+transactionId+"]userId:: "+userId);
 		return partnershipRepository.findByUserId(userId.toUpperCase());
 	}
 
+	@Transactional
 	public PartnershipBean updatePartnershipDetails(PartnershipBean psBean, String transactionId) {
 		log.info("["+transactionId+"]*************************INSIDE updatePartnershipDetails CLASS UserDao*************************");
 		String userId=psBean.getUserId().toUpperCase();
@@ -597,6 +623,7 @@ public class UserDao {
 		return responseBean;
 	}
 
+	@Transactional
 	public Map<Integer, Boolean> psPercentage(PartnershipBean psBean, String transactionId) {
 		log.info("["+transactionId+"]*************************INSIDE psPercentage CLASS UserDao*************************");
 		Map<Integer, Boolean> psPercRes= new HashMap<Integer, Boolean>();
@@ -624,6 +651,7 @@ public class UserDao {
 		return psPercRes;
 	}
 
+	@Transactional
 	public UserBean updateUserDetails(@Valid UserDetailsRequestDto userDetailsRequestDto, String transactionId) {
 		log.info("["+transactionId+"]*************************INSIDE psPercentage CLASS UserDao*************************");
 		String userId=userDetailsRequestDto.getUserId().toUpperCase();
@@ -654,7 +682,7 @@ public class UserDao {
 		log.info("["+transactionId+"] sessionMaxStake:: "+sessionMaxStake);
 		log.info("["+transactionId+"] remarks:: "+remarks);
 		
-		UserBean userUpdBean = userRepository.findFirst1ByUserIdOrderByFullName(userId);
+		UserBean userUpdBean = userRepository.findFirst1ByUserId(userId);
 		if(userUpdBean!=null) {
 			log.info("["+transactionId+"] userUpdBean:: "+userUpdBean);
 			userUpdBean.setFullName(fullName);
@@ -676,11 +704,232 @@ public class UserDao {
 		return userUpdBean;
 	}
 
+	@Transactional
 	public List<ChipsBean> getChipsHistory(String userId, String transactionId) {
 		log.info("["+transactionId+"]*************************INSIDE getChipsHistory CLASS UserDao*************************");
 		List<ChipsBean> res=chipsRepository.findByUserIdOrderById(userId.toUpperCase());
 		log.info("["+transactionId+"] Chips History : "+res);
 		return res;
+	}
+
+	@Transactional
+	public UserResponseDto changeUserPassword(@Valid ChangePasswordDto changePasswordDto, String transactionId) {
+		log.info("["+transactionId+"]*************************INSIDE changeUserPassword CLASS UserDao*************************");
+		UserResponseDto userResponseDto = new UserResponseDto();
+		log.info("["+transactionId+"] UserId: "+changePasswordDto.getUserId());
+		log.info("["+transactionId+"] OldPassword: "+changePasswordDto.getOldPassword());
+		log.info("["+transactionId+"] Password: "+changePasswordDto.getPassword());
+		log.info("["+transactionId+"] ConfirmPassword: "+changePasswordDto.getConfirmPassword());
+		log.info("["+transactionId+"] LoggedInUser: "+changePasswordDto.getLoggedInUser());
+		try {
+			String loggedInUserString=changePasswordDto.getLoggedInUser().toUpperCase();
+			String userId=changePasswordDto.getUserId().toUpperCase();
+			String oldPwd=changePasswordDto.getOldPassword();
+			String passwoord=changePasswordDto.getPassword();
+			String confirmPass=changePasswordDto.getConfirmPassword();
+			
+			UserBean userDet= userRepository.findFirst1ByUserId(userId);
+			
+			String oldPwdFromDB=userDet.getPassword();
+			
+			if(oldPwdFromDB.equals(oldPwd)) {
+				if(passwoord.equals(confirmPass)) {
+					String updatePasswordSql=QueryListConstant.UPDATE_PASSWORD_SQL;
+					int updatePasswordCount=jdbcTemplate.update(updatePasswordSql, new Object[]{
+							confirmPass,loggedInUserString,userId});
+					log.info("["+transactionId+"] updatePasswordCount:: "+updatePasswordCount);
+					if(updatePasswordCount>0 && updatePasswordCount==1) {
+						userResponseDto.setStatus(ResourceConstants.SUCCESS);
+						userResponseDto.setErrorMsg(ResourceConstants.PASSWORD_UPDATED);
+					}else {
+						userResponseDto.setStatus(ResourceConstants.FAILED);
+						userResponseDto.setErrorCode(ResourceConstants.ERR_006);
+						userResponseDto.setErrorMsg(ResourceConstants.PASSWORD_UPDATE_FAILED);
+					}
+				}else {
+					userResponseDto.setStatus(ResourceConstants.FAILED);
+					userResponseDto.setErrorCode(ResourceConstants.ERR_007);
+					userResponseDto.setErrorMsg(ResourceConstants.PASSWORD_NOT_MATCH);
+				}
+			}else {
+				userResponseDto.setStatus(ResourceConstants.FAILED);
+				userResponseDto.setErrorCode(ResourceConstants.ERR_012);
+				userResponseDto.setErrorMsg(ResourceConstants.OLD_PASSWORD_WRONG);
+			}
+			
+			
+		}catch (Exception e) {
+			userResponseDto.setStatus(ResourceConstants.EXCEPTION);
+			userResponseDto.setErrorCode(ResourceConstants.ERR_EXCEPTION);
+			userResponseDto.setErrorMsg(e.getMessage());
+			e.printStackTrace();
+		}
+		return userResponseDto;
+	
+	}
+
+	@Transactional
+	public StakesBean geStakesDetails(String userId, String transactionId) {
+		log.info("["+transactionId+"]*************************INSIDE geStakesDetails CLASS UserDao*************************");
+		StakesBean res=stakesRepository.findByUserId(userId);
+		log.info("["+transactionId+"] Stakes Detail : "+res);
+		return res;
+	}
+
+	@Transactional
+	public StakesBean updateStakesDetails(@Valid StakesBean stakesBean, String transactionId) {
+		log.info("["+transactionId+"]*************************INSIDE updateStakesDetails CLASS UserDao*************************");
+		StakesBean resStakesBean=null;
+		double stake1=stakesBean.getStake1();
+		double stake2=stakesBean.getStake2();
+		double stake3=stakesBean.getStake3();
+		double stake4=stakesBean.getStake4();
+		double stake5=stakesBean.getStake5();
+		String userId=stakesBean.getUserId().toUpperCase();
+		
+		log.info("["+transactionId+"] stake1:  "+stake1);
+		log.info("["+transactionId+"] stake2:  "+stake2);
+		log.info("["+transactionId+"] stake3:  "+stake3);
+		log.info("["+transactionId+"] stake4:  "+stake4);
+		log.info("["+transactionId+"] stake5:  "+stake5);
+		log.info("["+transactionId+"] userId:  "+userId);
+		
+		StakesBean stakesdet= stakesRepository.findByUserId(userId);
+		stakesdet.setStake1(stake1);
+		stakesdet.setStake2(stake2);
+		stakesdet.setStake3(stake3);
+		stakesdet.setStake4(stake4);
+		stakesdet.setStake5(stake5);
+		stakesdet.setLastUpdateBy(userId);
+		
+		resStakesBean=stakesRepository.saveAndFlush(stakesdet);
+		
+		log.info("["+transactionId+"] resStakesBean:  "+resStakesBean);
+		
+		return resStakesBean;
+	}
+
+	@Transactional
+	public Double getLiability(double odds, double stakes, String transactionId) {
+		log.info("["+transactionId+"]****************INSIDE getLiability CLASS UserDao****************");
+		//DecimalFormat df = new DecimalFormat("0.00");
+		log.info("["+transactionId+"] odds:  "+odds);
+		log.info("["+transactionId+"] stakes:  "+stakes);
+		
+		double total=odds*stakes;
+		double liability=Double.parseDouble(df.format(total-stakes));
+		
+		log.info("["+transactionId+"] total:  "+total);
+		log.info("["+transactionId+"] liability:  "+liability);
+		
+		return liability;
+	}
+
+	@Transactional
+	public UserResponseDto placeBets(@Valid PlaceBetsBean placeBetsBean, String transactionId) {
+		log.info("["+transactionId+"]****************INSIDE placeBets CLASS UserDao****************");
+		UserResponseDto userResponseDto = new UserResponseDto();
+		ChipsBean chipsBean = new ChipsBean();
+		try {
+			String updateChipsSql=null;
+			String loginId=placeBetsBean.getLoginId();
+			String userId=placeBetsBean.getUserId();
+			String sportsId=placeBetsBean.getSportsId();
+			String sportsName=placeBetsBean.getSportsName();
+			String seriesId=placeBetsBean.getSeriesId();
+			String seriesName=placeBetsBean.getSeriesName();
+			String matchId=placeBetsBean.getMatchId();
+			String matchName=placeBetsBean.getMatchName();
+			String marketId=placeBetsBean.getMarketId();
+			String marketName=placeBetsBean.getMarketName();
+			String selectionId=placeBetsBean.getSelectionId();
+			String runnerName=placeBetsBean.getRunnerName();
+			double odds=placeBetsBean.getOdds();
+			double stake=placeBetsBean.getStake();
+			double porfitLoss=placeBetsBean.getPorfitLoss();
+			String isback=placeBetsBean.getIsback();
+			String isLay=placeBetsBean.getIsLay();
+			String createdBy=placeBetsBean.getCreatedBy();
+			
+			UserBean userDetail = userRepository.findFirst1ByUserId(userId.toUpperCase());
+			String parent = userDetail.getParent();
+			int psId = userDetail.getPartnership();
+			double chips=userDetail.getChips();
+			String isbetLock=userDetail.getIsBettingLock();
+			
+			log.info("["+transactionId+"] parent:  "+parent);
+			log.info("["+transactionId+"] loginId:  "+loginId);
+			log.info("["+transactionId+"] userId:  "+userId);
+			log.info("["+transactionId+"] sportsId:  "+sportsId);
+			log.info("["+transactionId+"] sportsName:  "+sportsName);
+			log.info("["+transactionId+"] seriesId:  "+seriesId);
+			log.info("["+transactionId+"] seriesName:  "+seriesName);
+			log.info("["+transactionId+"] matchId:  "+matchId);
+			log.info("["+transactionId+"] matchName:  "+matchName);
+			log.info("["+transactionId+"] marketId:  "+marketId);
+			log.info("["+transactionId+"] marketName:  "+marketName);
+			log.info("["+transactionId+"] selectionId:  "+selectionId);
+			log.info("["+transactionId+"] runnerName:  "+runnerName);
+			log.info("["+transactionId+"] odds:  "+odds);
+			log.info("["+transactionId+"] stake:  "+stake);
+			log.info("["+transactionId+"] porfitLoss:  "+porfitLoss);
+			log.info("["+transactionId+"] isback:  "+isback);
+			log.info("["+transactionId+"] isLay:  "+isLay);
+			log.info("["+transactionId+"] createdBy:  "+createdBy);
+			
+			placeBetsBean.setParent(parent);
+			placeBetsBean.setPsId(psId);
+			placeBetsBean.setRemarks("Bet Placed by User "+userId);
+			
+			
+			if(isbetLock.equalsIgnoreCase("N")) {
+				if(stake<chips) {
+					PlaceBetsBean placeBetsResBean = placeBetsRepository.saveAndFlush(placeBetsBean);
+					if(placeBetsResBean.getUserId().equalsIgnoreCase(userId)) {
+						
+						log.info("["+transactionId+"] placeBetsResBean:: "+placeBetsResBean);
+						
+						double balance=Double.parseDouble(df.format(chips-stake));
+						
+						updateChipsSql=QueryListConstant.UPDATE_USER_CHIPS;
+						int updateChipsRowCount=jdbcTemplate.update(updateChipsSql, new Object[]{
+								balance,userId,userId});
+						log.info("["+transactionId+"] updateChipsRowCount:: "+updateChipsRowCount);
+						
+						chipsBean.setUserId(userId);
+						chipsBean.setBettingId(placeBetsResBean.getId());
+						chipsBean.setDebit(stake);
+						chipsBean.setTotalChips(balance);
+						chipsBean.setCreatedBy(userId);
+						chipsBean.setRemarks("Placed Bet on runner " +runnerName +" for "+stake);
+						chipsBean=chipsRepository.saveAndFlush(chipsBean);
+						
+						log.info("["+transactionId+"] chipsBean:: "+chipsBean);
+						
+						userResponseDto.setStatus(ResourceConstants.SUCCESS);
+						userResponseDto.setErrorMsg(ResourceConstants.BET_PLACED+placeBetsResBean.getId());
+					}else {
+						userResponseDto.setStatus(ResourceConstants.FAILED);
+						userResponseDto.setErrorCode(ResourceConstants.ERR_002);
+						userResponseDto.setErrorMsg(ResourceConstants.INSERTION_FAILED);
+					}
+				}else {
+					userResponseDto.setStatus(ResourceConstants.FAILED);
+					userResponseDto.setErrorCode(ResourceConstants.ERR_004);
+					userResponseDto.setErrorMsg(ResourceConstants.INSUFFICIENT_AMOUNT);
+				}
+			}else {
+				userResponseDto.setStatus(ResourceConstants.FAILED);
+				userResponseDto.setErrorCode(ResourceConstants.ERR_013);
+				userResponseDto.setErrorMsg(ResourceConstants.USER_BETTING_LOCK);
+			}
+		}catch (Exception e) {
+			userResponseDto.setStatus(ResourceConstants.EXCEPTION);
+			userResponseDto.setErrorCode(ResourceConstants.ERR_EXCEPTION);
+			userResponseDto.setErrorMsg(e.getMessage());
+			e.printStackTrace();
+		}
+		return userResponseDto;
 	}
 
 }

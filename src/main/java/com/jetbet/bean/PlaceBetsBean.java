@@ -10,6 +10,9 @@ import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
@@ -28,34 +31,49 @@ import lombok.ToString;
 public class PlaceBetsBean {
 	
 	@Id
-	@SequenceGenerator(name="JB_BET_DETAILS_SEQ",sequenceName="JB_BET_DETAILS_SEQ",allocationSize=1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE,generator="JB_BET_DETAILS_SEQ")
+	@SequenceGenerator(name="JB_BETS_DETAILS_SEQ",sequenceName="JB_BETS_DETAILS_SEQ",allocationSize=1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE,generator="JB_BETS_DETAILS_SEQ")
 	@Column(name = "id")
 	private Long id; 
 	
-	@Column(name = "loginid")
+	@Column(name = "login_id")
 	private String loginId;
 	
-	@Column(name = "userid")
+	@Column(name = "user_id")
 	private String userId;
 	
 	@Column(name = "parent")
 	private String parent;
 	
-	@Column(name = "matchid")
+	@Column(name = "sports_id")
+	private String sportsId;
+	@Column(name = "sports_name")
+	private String sportsName;
+	@Column(name = "series_id")
+	private String seriesId;
+	@Column(name = "series_name")
+	private String seriesName;
+	
+	
+	@Column(name = "match_id")
 	private String matchId;
+	@Column(name = "match_name")
+	private String matchName;
 	
-	@Column(name = "marketid")
+	@Column(name = "market_id")
 	private String marketId;
+	@Column(name = "market_name")
+	private String marketName;
 	
-	@Column(name = "selectionid")
+	@Column(name = "selection_id")
 	private String selectionId;
 	
-	@Column(name = "selectionname")
-	private String selectionName;
+	@Column(name = "runner_name")
+	private String runnerName;
 	
-	@Column(name = "betplacedate")
-	private String betPlaceDate;
+	@CreationTimestamp
+	@Column(name = "bet_place_date")
+	private Date betPlaceDate;
 	
 	@Column(name = "odds")
 	private double odds;
@@ -73,20 +91,22 @@ public class PlaceBetsBean {
 	private String isLay;
 	
 	@Column(name = "psid")
-	private String psId;
+	private int psId;
 	
 	@Column(name = "remarks")
 	private String remarks;
 	
-	@Column(name = "createdby")
+	@Column(name = "created_by")
 	private String createdBy;
 	
-	@Column(name = "createddate")
+	@CreationTimestamp
+	@Column(name = "created_date")
 	private Date createdDate;
 	
-	@Column(name = "lastupdateby")
+	@Column(name = "last_updated_by")
 	private String lastUpdateBy;
 	
-	@Column(name = "lastupdateddate")
+	@UpdateTimestamp
+	@Column(name = "last_updated_date")
 	private Date lastUpdatedDate;
 }

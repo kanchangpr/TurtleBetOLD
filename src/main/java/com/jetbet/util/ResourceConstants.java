@@ -35,10 +35,13 @@ public class ResourceConstants {
 	public static final String CHIPS_ALLOCATIONS="chipsAllocations";
 	public static final String CHIPS_BALANCE="chipsBalance";
 	public static final String CHIPS_HISTORY="chipsHistory";
+	public static final String RESET_PASSWORD="resetPassword";
 	public static final String CHANGE_PASSWORD="changePassword";
 	public static final String MARKET_CATALOGUE="marketCatalogue";
 	public static final String MATCH_ODDS="matchOdds";
 	public static final String PLACE_BETS="placeBets";
+	public static final String STAKES_DETAILS="stakesDetails";
+	public static final String LIABILITY="calcLiability";
 	
 	public static final String SUPERMASTER="superMaster";
 	public static final String MASTER="master";
@@ -78,8 +81,16 @@ public class ResourceConstants {
 	public static final String ERR_010="ERR_10";
 	public static final String USER_NOT_EXIST="User Does not Exist!!";
 	
-	public static final String ERR_011="ERR_10";
+	public static final String ERR_011="ERR_11";
 	public static final String PARTNERSHIP_INVALID="Partnership between all stakeholders is greater than 100!!";
+	
+	public static final String ERR_012="ERR_12";
+	public static final String OLD_PASSWORD_WRONG="Current Password is Wrong!!";
+	
+	public static final String ERR_013="ERR_13";
+	public static final String USER_BETTING_LOCK="Betting locked for User!!";
+	
+	public static final String BET_PLACED="Bet Placed Successfully!! Bet ID: ";
 	
 	public static final String ERR_EXCEPTION="ERR_EXEPCTION";
 	public static final String INSERTED="Data Inserted Successfully";

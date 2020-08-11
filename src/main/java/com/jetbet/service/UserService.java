@@ -10,8 +10,10 @@ import org.springframework.stereotype.Service;
 import com.jetbet.bean.ChipsBean;
 import com.jetbet.bean.MatchBean;
 import com.jetbet.bean.PartnershipBean;
+import com.jetbet.bean.PlaceBetsBean;
 import com.jetbet.bean.SeriesBean;
 import com.jetbet.bean.SportsBean;
+import com.jetbet.bean.StakesBean;
 import com.jetbet.bean.UserBean;
 import com.jetbet.dto.ChangePasswordDto;
 import com.jetbet.dto.ChipsDto;
@@ -58,6 +60,16 @@ public interface UserService {
 	UserBean updateUserDetails(@Valid UserDetailsRequestDto userDetailsRequestDto, String transactionId);
 
 	List<ChipsBean> getChipsHistory(String userId, String transactionId);
+
+	UserResponseDto changeUserPassword(@Valid ChangePasswordDto changePasswordDto, String transactionId);
+
+	StakesBean geStakesDetails(String userId, String transactionId);
+
+	StakesBean updateStakesDetails(@Valid StakesBean stakesBean, String transactionId);
+
+	Double getLiability(double odds, double stakes, String transactionId);
+
+	UserResponseDto placeBets(@Valid PlaceBetsBean placeBetsBean, String transactionId);
 
 	
 

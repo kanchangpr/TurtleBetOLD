@@ -11,8 +11,10 @@ import org.springframework.stereotype.Service;
 import com.jetbet.bean.ChipsBean;
 import com.jetbet.bean.MatchBean;
 import com.jetbet.bean.PartnershipBean;
+import com.jetbet.bean.PlaceBetsBean;
 import com.jetbet.bean.SeriesBean;
 import com.jetbet.bean.SportsBean;
+import com.jetbet.bean.StakesBean;
 import com.jetbet.bean.UserBean;
 import com.jetbet.dao.UserDao;
 import com.jetbet.dto.ChangePasswordDto;
@@ -136,6 +138,36 @@ public class UserServiceImpl implements UserService{
 	public List<ChipsBean> getChipsHistory(String userId, String transactionId) {
 		log.info("["+transactionId+"]*************************INSIDE getChipsHistory CLASS AdminServiceImpl*************************");
 		return userDao.getChipsHistory(userId,transactionId);
+	}
+
+	@Override
+	public UserResponseDto changeUserPassword(@Valid ChangePasswordDto changePasswordDto, String transactionId) {
+		log.info("["+transactionId+"]*************************INSIDE changePassword CLASS UserServiceImpl*************************");
+		return userDao.changeUserPassword(changePasswordDto,transactionId);
+	}
+
+	@Override
+	public StakesBean geStakesDetails(String userId, String transactionId) {
+		log.info("["+transactionId+"]*************************INSIDE geStakesDetails CLASS UserServiceImpl*************************");
+		return userDao.geStakesDetails(userId,transactionId);
+	}
+
+	@Override
+	public StakesBean updateStakesDetails(@Valid StakesBean stakesBean, String transactionId) {
+		log.info("["+transactionId+"]*************************INSIDE updateStakesDetails CLASS UserServiceImpl*************************");
+		return userDao.updateStakesDetails(stakesBean,transactionId);
+	}
+
+	@Override
+	public Double getLiability(double odds, double stakes, String transactionId) {
+		log.info("["+transactionId+"]*************************INSIDE getLiability CLASS UserServiceImpl*************************");
+		return userDao.getLiability(odds,stakes,transactionId);
+	}
+
+	@Override
+	public UserResponseDto placeBets(@Valid PlaceBetsBean placeBetsBean, String transactionId) {
+		log.info("["+transactionId+"]*************************INSIDE placeBets CLASS UserServiceImpl*************************");
+		return userDao.placeBets(placeBetsBean,transactionId);
 	}
 
 	

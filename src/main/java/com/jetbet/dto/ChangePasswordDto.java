@@ -13,6 +13,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class ChangePasswordDto {
 	private String userId;
+	private String oldPassword;
 	private String password;
 	private String confirmPassword;
 	private String loggedInUser;

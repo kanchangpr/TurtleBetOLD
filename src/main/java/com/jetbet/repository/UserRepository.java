@@ -8,7 +8,7 @@ import com.jetbet.bean.UserBean;
 
 public interface UserRepository extends JpaRepository<UserBean, Long>{
 
-	UserBean findFirst1ByUserIdOrderByFullName(String userName);
+	UserBean findFirst1ByUserId(String userName);
 	
 	List<UserBean> findByParentOrderByFullName(String parent);
 	

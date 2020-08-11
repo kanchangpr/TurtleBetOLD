@@ -166,6 +166,7 @@ public class AdminDao {
 		return responseBeanList;
 	}
 
+	@Transactional
 	public List<SeriesBean> seriesList(String sportsId, String transactionId) {
 		log.info("[" + transactionId
 				+ "]*************************INSIDE seriesList CLASS UserDao*************************");

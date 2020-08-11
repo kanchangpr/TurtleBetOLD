@@ -40,14 +40,20 @@ public class ChipsBean {
 	@Column(name = "from_user")
 	private String fromUser;
 	
-	@Column(name = "deposit")
-	private double deposit;
+	@Column(name = "credit")
+	private double credit;
 	
-	@Column(name = "withdraw")
-	private double withdraw;
+	@Column(name = "debit")
+	private double debit;
 	
 	@Column(name = "total_chips")
 	private double totalChips;
+	
+	@Column(name = "remarks")
+	private String remarks;
+	
+	@Column(name = "betting_id")
+	private long bettingId;
 	
 	@Column(name = "created_by")
 	private String createdBy;
