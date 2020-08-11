@@ -883,7 +883,7 @@ public class UserDao {
 			
 			
 			if(isbetLock.equalsIgnoreCase("N")) {
-				if(stake<chips) {
+				if(stake<=chips) {
 					PlaceBetsBean placeBetsResBean = placeBetsRepository.saveAndFlush(placeBetsBean);
 					if(placeBetsResBean.getUserId().equalsIgnoreCase(userId)) {
 						
