@@ -271,8 +271,8 @@ public class BetfairDao {
 				String seriesId = seriesList.get(k).getSeriesId();
 				String seriesName = seriesList.get(k).getSeriesName();
 
-				log.info("seriesId: " + seriesId);
-				log.info("seriesName:: " + seriesName);
+				//log.info("seriesId: " + seriesId);
+			//	log.info("seriesName:: " + seriesName);
 
 				seriesMatchFancyRes.setSeriesId(seriesId);
 				seriesMatchFancyRes.setSeriesName(seriesName);
@@ -353,14 +353,14 @@ public class BetfairDao {
 			long getRowCount = sportsRepository.countBySportsTypeId(sportsId);
 			if (getRowCount == 0) {
 				SportsBean responseBean = new SportsBean();
-				log.info("[" + transactionId + "] inside if sportsId: " + sportsId);
+			//	log.info("[" + transactionId + "] inside if sportsId: " + sportsId);
 				responseBean = sportsRepository.saveAndFlush(sportsBean);
 				responseBeanList.add(responseBean);
 			} else {
-				log.info("[" + transactionId + "] inside Else sportsId: " + sportsId);
+			//	log.info("[" + transactionId + "] inside Else sportsId: " + sportsId);
 			}
 		}
-		log.info("responseBeanList:: " + responseBeanList);
+	//	log.info("responseBeanList:: " + responseBeanList);
 		return responseBeanList;
 	}
 
@@ -372,14 +372,14 @@ public class BetfairDao {
 			long getRowCount = seriesRepository.countBySeriesId(seriesId);
 			if (getRowCount == 0) {
 				SeriesBean responseBean = new SeriesBean();
-				log.info("[" + transactionId + "] inside if seriesId: " + seriesId);
+			//	log.info("[" + transactionId + "] inside if seriesId: " + seriesId);
 				responseBean = seriesRepository.saveAndFlush(seriesBean);
 				responseBeanList.add(responseBean);
 			} else {
-				log.info("[" + transactionId + "] inside Else seriesId: " + seriesId);
+			//	log.info("[" + transactionId + "] inside Else seriesId: " + seriesId);
 			}
 		}
-		log.info("responseBeanList:: " + responseBeanList);
+		//log.info("responseBeanList:: " + responseBeanList);
 		return responseBeanList;
 	}
 
@@ -391,33 +391,33 @@ public class BetfairDao {
 			long getRowCount = matchRepository.countByMatchId(matchId);
 			if (getRowCount == 0) {
 				MatchBean responseBean = new MatchBean();
-				log.info("[" + transactionId + "] inside if matchId: " + matchId);
+			//	log.info("[" + transactionId + "] inside if matchId: " + matchId);
 				responseBean = matchRepository.saveAndFlush(matchBean);
 				responseBeanList.add(responseBean);
 			} else {
-				log.info("[" + transactionId + "] inside Else matchId: " + matchId);
+			//	log.info("[" + transactionId + "] inside Else matchId: " + matchId);
 			}
 		}
-		log.info("responseBeanList:: " + responseBeanList);
+		//log.info("responseBeanList:: " + responseBeanList);
 		return responseBeanList;
 	}
 
 	@Transactional
 	private List<FancyBean> storeListOfFancyDB(List<FancyBean> fancyBeanList, String transactionId) {
-		log.info("[" + transactionId
-				+ "]##############################Inside  storeListOfFancyDB#############################");
+	//	log.info("[" + transactionId
+	//			+ "]##############################Inside  storeListOfFancyDB#############################");
 		List<FancyBean> responseBeanList = new ArrayList<FancyBean>();
 		for (FancyBean fancyBean : fancyBeanList) {
-			log.info("marketType & Match ID " + fancyBean.getMarketType() + " : " + fancyBean.getMatchId());
+		//	log.info("marketType & Match ID " + fancyBean.getMarketType() + " : " + fancyBean.getMatchId());
 			long getRowCount = fancyRepository.countByMarketTypeAndMatchId(fancyBean.getMarketType(),
 					fancyBean.getMatchId());
 			if (getRowCount == 0) {
-				log.info("[" + transactionId + "] inside if marketType & Match ID " + fancyBean.getMarketType() + " : "
-						+ fancyBean.getMatchId());
+		//		log.info("[" + transactionId + "] inside if marketType & Match ID " + fancyBean.getMarketType() + " : "
+		//				+ fancyBean.getMatchId());
 				responseBeanList.add(fancyRepository.save(fancyBean));
 			} else {
-				log.info("[" + transactionId + "] inside Else marketType & Match ID " + fancyBean.getMarketType()
-						+ " : " + fancyBean.getMatchId());
+			//	log.info("[" + transactionId + "] inside Else marketType & Match ID " + fancyBean.getMarketType()
+			//			+ " : " + fancyBean.getMatchId());
 			}
 		}
 		log.info("responseBeanList:: " + responseBeanList);
