@@ -60,7 +60,7 @@ public class BetfairController {
 	
 	//@RequestMapping(value=ResourceConstants.LIST_OF_SERIES, method=RequestMethod.GET)
 	//public ResponseEntity<List<SeriesBean>> getListOfSeries() {
-	@Scheduled(fixedDelay = 30000)
+	//@Scheduled(fixedDelay = 30000)
 	public void getListOfSeries() {
 //		String applicationKey="5tsF8QHfEw3n4Kp8";
 //		String sessionToken="PsszL+gNaXw+s7+MiHF7vk8HfFrz+oNeZaxO8l+GZGU=";
