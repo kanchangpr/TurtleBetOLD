@@ -42,6 +42,7 @@ public class ResourceConstants {
 	public static final String PLACE_BETS="placeBets";
 	public static final String STAKES_DETAILS="stakesDetails";
 	public static final String LIABILITY="calcLiability";
+	public static final String USER_REPORT="userReport";
 	
 	public static final String SUPERMASTER="superMaster";
 	public static final String MASTER="master";
@@ -107,6 +108,11 @@ public class ResourceConstants {
 	public static final String DEPOSIT="DEPOSIT";
 	public static final String WITHDRAW="WITHDRAW";
 	
+	public class BetType{
+		public static final String BET_HISTORY="BetHisotry";
+		public static final String ACCOUNT_HISTORY="AccountHisotry";
+		public static final String LOGIN_HISTORY="LoginHisotry";
+	}
 	
 	public static final String SPORTS_PAGE="SPORTS_PAGE";
 	public static final String SERIES_PAGE="SERIES_PAGE";

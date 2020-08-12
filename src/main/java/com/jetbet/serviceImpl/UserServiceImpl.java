@@ -1,5 +1,6 @@
 package com.jetbet.serviceImpl;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -168,6 +169,12 @@ public class UserServiceImpl implements UserService{
 	public UserResponseDto placeBets(@Valid PlaceBetsBean placeBetsBean, String transactionId) {
 		log.info("["+transactionId+"]*************************INSIDE placeBets CLASS UserServiceImpl*************************");
 		return userDao.placeBets(placeBetsBean,transactionId);
+	}
+
+	@Override
+	public List<Object> userReport(String type, String userId, String fromDate, String toDate, String transactionId) {
+		log.info("["+transactionId+"]*************************INSIDE userReport CLASS UserServiceImpl*************************");
+		return userDao.userReport( type,  userId,  fromDate,  toDate,transactionId);
 	}
 
 	

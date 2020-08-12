@@ -1,5 +1,6 @@
 package com.jetbet.controller;
 
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 import java.util.Map;
@@ -251,6 +252,17 @@ public class UserController {
 		log.info("[" + transactionId + "]*************INSIDE chipsBalance METHOD POST**************");
 		Double response = userService.getLiability(odds,stakes, transactionId);
 		return new ResponseEntity<Double>(response, HttpStatus.OK);
+	}
+	
+	@RequestMapping(value = ResourceConstants.USER_REPORT, method = RequestMethod.GET)
+	public ResponseEntity<List<Object>> userReport(@RequestParam(value = "type", required = true) String type,
+			@RequestParam(value = "userId", required = true) String userId,
+			@RequestParam(value = "fromDate", required = false) String fromDate,
+			@RequestParam(value = "toDate", required = false) String toDate) {
+		String transactionId = "TB" + UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
+		log.info("[" + transactionId + "]*************INSIDE chipsBalance METHOD POST**************");
+		List<Object> response = userService.userReport(type,userId.toUpperCase(),fromDate,toDate, transactionId);
+		return new ResponseEntity<List<Object>>(response, HttpStatus.OK);
 	}
 
 }

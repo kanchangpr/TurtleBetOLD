@@ -1,5 +1,6 @@
 package com.jetbet.service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -70,6 +71,8 @@ public interface UserService {
 	Double getLiability(double odds, double stakes, String transactionId);
 
 	UserResponseDto placeBets(@Valid PlaceBetsBean placeBetsBean, String transactionId);
+
+	List<Object> userReport(String type, String userId, String fromDate, String toDate, String transactionId);
 
 	
 
