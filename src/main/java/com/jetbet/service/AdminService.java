@@ -25,7 +25,7 @@ public interface AdminService {
 
 	List<MatchBean> matchList(String sportsId,String seriesId,String transactionId);
 
-	List<FancyBean> fancyList(String transactionId);
+	List<FancyBean> fancyList(String matchId,String fancyName,String transactionId);
 
 	UserResponseDto updateFancy(@Valid FancyControl fancyControl, String transactionId);
 

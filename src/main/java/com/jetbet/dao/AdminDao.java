@@ -273,10 +273,19 @@ public class AdminDao {
 	}
 
 	@Transactional
-	public List<FancyBean> fancyList(String transactionId) {
+	public List<FancyBean> fancyList(String matchId,String fancyName,String transactionId) {
 		log.info("[" + transactionId + "]**************INSIDE fancyList CLASS UserDao******************");
 		List<FancyBean> responseBeanList = new ArrayList<FancyBean>();
-		String getUserRolesSql = QueryListConstant.GET_FANCY_LIST;
+		String getUserRolesSql = null;
+		
+		if(StringUtils.isBlank(matchId) && StringUtils.isBlank(fancyName) ) {
+			getUserRolesSql = QueryListConstant.GET_FANCY_LIST +" ORDER BY MATCH_NAME";
+		}else if(!StringUtils.isBlank(matchId) && StringUtils.isBlank(fancyName)) {
+			getUserRolesSql = QueryListConstant.GET_FANCY_LIST +"AND MATCH.MATCH_ID='"+matchId+"' ORDER BY MATCH_NAME";
+		}else if(!StringUtils.isBlank(matchId) && !StringUtils.isBlank(fancyName)) {
+			getUserRolesSql = QueryListConstant.GET_FANCY_LIST +"AND MATCH.MATCH_ID='"+matchId+"' AND FANCY.MARKET_TYPE='"+fancyName+"' ORDER BY MATCH_NAME";
+		}
+		
 		responseBeanList = jdbcTemplate.query(getUserRolesSql,
 				(rs, rowNum) -> new FancyBean(new FancyIdDto(rs.getString("market_type"), rs.getString("MATCH_NAME")),
 						rs.getInt("market_count"), rs.getString("series_id"), rs.getString("sports_id"),
