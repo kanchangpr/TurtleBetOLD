@@ -281,9 +281,9 @@ public class AdminDao {
 		if(StringUtils.isBlank(matchId) && StringUtils.isBlank(fancyName) ) {
 			getUserRolesSql = QueryListConstant.GET_FANCY_LIST +" ORDER BY MATCH_NAME";
 		}else if(!StringUtils.isBlank(matchId) && StringUtils.isBlank(fancyName)) {
-			getUserRolesSql = QueryListConstant.GET_FANCY_LIST +"AND MATCH.MATCH_ID='"+matchId+"' ORDER BY MATCH_NAME";
+			getUserRolesSql = QueryListConstant.GET_FANCY_LIST +" AND MATCH.MATCH_ID='"+matchId+"' ORDER BY MATCH_NAME";
 		}else if(!StringUtils.isBlank(matchId) && !StringUtils.isBlank(fancyName)) {
-			getUserRolesSql = QueryListConstant.GET_FANCY_LIST +"AND MATCH.MATCH_ID='"+matchId+"' AND FANCY.MARKET_TYPE='"+fancyName+"' ORDER BY MATCH_NAME";
+			getUserRolesSql = QueryListConstant.GET_FANCY_LIST +" AND MATCH.MATCH_ID='"+matchId+"' AND FANCY.MARKET_TYPE='"+fancyName+"' ORDER BY MATCH_NAME";
 		}
 		
 		responseBeanList = jdbcTemplate.query(getUserRolesSql,
