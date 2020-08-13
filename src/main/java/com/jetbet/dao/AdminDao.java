@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.transaction.Transactional;
+import javax.validation.Valid;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import com.jetbet.bean.MatchBean;
 import com.jetbet.bean.SeriesBean;
 import com.jetbet.bean.SportsBean;
 import com.jetbet.controller.BetfairController;
+import com.jetbet.dto.FancyControl;
 import com.jetbet.dto.FancyIdDto;
 import com.jetbet.dto.SportsControl;
 import com.jetbet.dto.UserResponseDto;
@@ -52,7 +54,7 @@ public class AdminDao {
 		log.info("[" + transactionId
 				+ "]*************************INSIDE addUserRole CLASS UserDao*************************");
 		UserResponseDto userResponseDto = new UserResponseDto();
-		BetfairController bfController=new BetfairController();
+		BetfairController bfController = new BetfairController();
 		Boolean errorCode = false;
 		String sqlString = null;
 		String tableName = null;
@@ -91,7 +93,7 @@ public class AdminDao {
 					+ sportsControlReq.getIsActive());
 
 			if (!errorCode && sportsControlReq.getIsActive().equalsIgnoreCase("Y")) {
-				
+
 				sqlString = "UPDATE " + tableName + " SET IS_ACTIVE= ? , " + lastUpdatedByColumn + " = ? , "
 						+ lastUpdateDateColumn + " = CURRENT_TIMESTAMP " + "WHERE " + columnName + " = ?";
 
@@ -106,17 +108,17 @@ public class AdminDao {
 				} else {
 					userResponseDto.setStatus(ResourceConstants.SUCCESS);
 					userResponseDto.setErrorMsg(ResourceConstants.UPDATED);
-					if(sportsControlReq.getOperation().equalsIgnoreCase(ResourceConstants.SPORTS_PAGE)) {
+					if (sportsControlReq.getOperation().equalsIgnoreCase(ResourceConstants.SPORTS_PAGE)) {
 						new Thread(() -> {
 							bfController.updateListOfSeries();
 							return;
 						}).start();
-					}else if(sportsControlReq.getOperation().equalsIgnoreCase(ResourceConstants.SERIES_PAGE)) {
+					} else if (sportsControlReq.getOperation().equalsIgnoreCase(ResourceConstants.SERIES_PAGE)) {
 						new Thread(() -> {
 							bfController.updateListOfMatches();
 							return;
 						}).start();
-					}else if(sportsControlReq.getOperation().equalsIgnoreCase(ResourceConstants.MATCH_PAGE)) {
+					} else if (sportsControlReq.getOperation().equalsIgnoreCase(ResourceConstants.MATCH_PAGE)) {
 						new Thread(() -> {
 							bfController.updateListOfOdds();
 							return;
@@ -157,6 +159,10 @@ public class AdminDao {
 					log.info("[" + transactionId + "] sportsControlReq.getOperation(): "
 							+ sportsControlReq.getOperation());
 					jdbcTemplate.update(QueryListConstant.MATCH_CONTROL_FOR_MATCH_PAGE,
+							new Object[] { sportsControlReq.getIsActive(), sportsControlReq.getUserName(),
+									sportsControlReq.getOperationId() });
+					
+					jdbcTemplate.update(QueryListConstant.MATCH_CONTROL_FOR_FANCY_PAGE,
 							new Object[] { sportsControlReq.getIsActive(), sportsControlReq.getUserName(),
 									sportsControlReq.getOperationId() });
 
@@ -265,20 +271,41 @@ public class AdminDao {
 		log.info("[" + transactionId + "] responseBeanList:  " + responseBeanList);
 		return responseBeanList;
 	}
-	
+
 	@Transactional
 	public List<FancyBean> fancyList(String transactionId) {
-		log.info("[" + transactionId
-				+ "]*************************INSIDE fancyList CLASS UserDao*************************");
+		log.info("[" + transactionId + "]**************INSIDE fancyList CLASS UserDao******************");
 		List<FancyBean> responseBeanList = new ArrayList<FancyBean>();
 		String getUserRolesSql = QueryListConstant.GET_FANCY_LIST;
 		responseBeanList = jdbcTemplate.query(getUserRolesSql,
-				(rs, rowNum) -> new FancyBean( new FancyIdDto(rs.getString("market_type"),rs.getString("MATCH_NAME")) , rs.getInt("market_count"),
-						 rs.getString("series_id"),
-						rs.getString("sports_id"), rs.getString("is_active"), rs.getString("fancy_created_by"),
-						rs.getDate("fancy_created_date")));
+				(rs, rowNum) -> new FancyBean(new FancyIdDto(rs.getString("market_type"), rs.getString("MATCH_NAME")),
+						rs.getInt("market_count"), rs.getString("series_id"), rs.getString("sports_id"),
+						rs.getString("is_active"), rs.getString("fancy_created_by"), rs.getDate("fancy_created_date")));
 		log.info("[" + transactionId + "] responseBeanList:  " + responseBeanList);
 		return responseBeanList;
+	}
+
+	public UserResponseDto updateFancy(@Valid FancyControl fancyControl, String transactionId) {
+		log.info("[" + transactionId + "]**************INSIDE fancyList CLASS UserDao******************");
+		UserResponseDto userResponseDto=new UserResponseDto();
+		
+		String matchId=fancyControl.getMatchId();
+		String marketName=fancyControl.getMarketName();
+		String isActive=fancyControl.getIsActive();
+		String updatedBy=fancyControl.getUserName();
+		log.info("[" + transactionId + "] ");
+		
+		int count = jdbcTemplate.update(QueryListConstant.UPDATE_FANCY_DETAIL, new Object[] { isActive, updatedBy,marketName ,matchId});
+		if (count == 0) {
+			userResponseDto.setStatus(ResourceConstants.FAILED);
+			userResponseDto.setErrorCode(ResourceConstants.ERR_003);
+			userResponseDto.setErrorMsg(ResourceConstants.UPDATION_FAILED);
+		} else {
+			userResponseDto.setStatus(ResourceConstants.SUCCESS);
+			userResponseDto.setErrorMsg(ResourceConstants.UPDATED);
+		}
+		
+		return userResponseDto;
 	}
 
 }

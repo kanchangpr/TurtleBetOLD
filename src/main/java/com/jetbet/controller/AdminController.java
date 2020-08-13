@@ -19,6 +19,7 @@ import com.jetbet.bean.FancyBean;
 import com.jetbet.bean.MatchBean;
 import com.jetbet.bean.SeriesBean;
 import com.jetbet.bean.SportsBean;
+import com.jetbet.dto.FancyControl;
 import com.jetbet.dto.SportsControl;
 import com.jetbet.dto.UserResponseDto;
 import com.jetbet.service.AdminService;
@@ -80,6 +81,12 @@ public class AdminController {
         return new ResponseEntity<List<FancyBean>> (response,HttpStatus.OK);
 	}
 	
-	
+	@RequestMapping(value=ResourceConstants.LIST_OF_FANCY, method=RequestMethod.PUT)
+	public ResponseEntity<UserResponseDto> updateFancy(@Valid @RequestBody FancyControl fancyControl) {
+		String transactionId = "TB"+UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
+		log.info("["+transactionId+"]*************************INSIDE getListOfEventType METHOD GET*************************");
+		UserResponseDto response=adminService.updateFancy(fancyControl,transactionId);
+        return new ResponseEntity<UserResponseDto> (response,HttpStatus.OK);
+	}
 	
 }

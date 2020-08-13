@@ -2,6 +2,8 @@ package com.jetbet.serviceImpl;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -10,6 +12,7 @@ import com.jetbet.bean.MatchBean;
 import com.jetbet.bean.SeriesBean;
 import com.jetbet.bean.SportsBean;
 import com.jetbet.dao.AdminDao;
+import com.jetbet.dto.FancyControl;
 import com.jetbet.dto.SportsControl;
 import com.jetbet.dto.UserResponseDto;
 import com.jetbet.service.AdminService;
@@ -51,6 +54,12 @@ public class AdminServiceImpl implements AdminService{
 	public List<FancyBean> fancyList(String transactionId) {
 		log.info("["+transactionId+"]*************************INSIDE fancyList CLASS AdminServiceImpl*************************");
 		return adminDao.fancyList(transactionId);
+	}
+
+	@Override
+	public UserResponseDto updateFancy(@Valid FancyControl fancyControl, String transactionId) {
+		log.info("["+transactionId+"]*************************INSIDE updateFancy CLASS AdminServiceImpl*************************");
+		return adminDao.updateFancy(fancyControl,transactionId);
 	}
 
 }
