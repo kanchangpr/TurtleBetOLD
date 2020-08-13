@@ -154,7 +154,7 @@ public class BetfairController {
 		return betfairService.dashboardMatchList(applicationKey,sessionToken,userName,transactionId);
 	}
 	
-	@Async
+	
 	public void updateListOfSeries() {
 		ResponseEntity<SessionDetails> sessionDetails=getSessionToken();
 		String applicationKey=sessionDetails.getBody().getProduct();
@@ -165,7 +165,7 @@ public class BetfairController {
 		betfairService.getListOfSeries(applicationKey, sessionToken, userName, transactionId);
 	}
 	
-	@Async
+	
 	public void updateListOfMatches() {
 		ResponseEntity<SessionDetails> sessionDetails=getSessionToken();
 		String applicationKey=sessionDetails.getBody().getProduct();
@@ -176,7 +176,7 @@ public class BetfairController {
 		betfairService.getListOfMatches(applicationKey, sessionToken, userName, transactionId);
 	}
 	
-	@Async
+	
 	public void updateListOfOdds() {
 		ResponseEntity<SessionDetails> sessionDetails=getSessionToken();
 		String applicationKey=sessionDetails.getBody().getProduct();
