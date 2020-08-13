@@ -515,10 +515,15 @@ public class BetfairDao {
 					resBean.setMarketId(marketCatalogueResult.get(j).getMarketId());
 					resBean.setMarketType(marketCatalogueResult.get(j).getMarketName());
 					if(marketCatalogueResult.get(j).getRunners().size()==3) {
+						resBean.setTeamAId(marketCatalogueResult.get(j).getRunners().get(0).getSelectionId());
+						resBean.setTeamBId(marketCatalogueResult.get(j).getRunners().get(1).getSelectionId());
+						resBean.setDrawId(marketCatalogueResult.get(j).getRunners().get(2).getSelectionId());
 						resBean.setTeamA(marketCatalogueResult.get(j).getRunners().get(0).getRunnerName());
 						resBean.setTeamB(marketCatalogueResult.get(j).getRunners().get(1).getRunnerName());
 						resBean.setDraw(marketCatalogueResult.get(j).getRunners().get(2).getRunnerName());
 					}else if(marketCatalogueResult.get(j).getRunners().size()==2) {
+						resBean.setTeamAId(marketCatalogueResult.get(j).getRunners().get(0).getSelectionId());
+						resBean.setTeamBId(marketCatalogueResult.get(j).getRunners().get(1).getSelectionId());
 						resBean.setTeamA(marketCatalogueResult.get(j).getRunners().get(0).getRunnerName());
 						resBean.setTeamB(marketCatalogueResult.get(j).getRunners().get(1).getRunnerName());
 					}

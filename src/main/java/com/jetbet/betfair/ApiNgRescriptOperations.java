@@ -126,6 +126,7 @@ public class ApiNgRescriptOperations extends ApiNgOperations {
 			PriceProjection priceProjection = new PriceProjection();
 			Set<PriceData> priceData = new HashSet<PriceData>();
 			priceData.add(PriceData.EX_BEST_OFFERS);
+			priceData.add(PriceData.EX_ALL_OFFERS);
 			priceProjection.setPriceData(priceData);
 			OrderProjection orderProjection = null;
 			MatchProjection matchProjection = null;
@@ -174,6 +175,35 @@ public class ApiNgRescriptOperations extends ApiNgOperations {
 
 	}
 
+	public ExchangePrices listRunnersBook1(String marketId, String selectionId, PriceProjection priceProjection,
+			OrderProjection orderProjection, MatchProjection matchProjection, String currencyCode, String appKey,
+			String ssoId) throws APINGException {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put(LOCALE, locale);
+		params.put(MARKET_ID, marketId);
+		params.put(SELECTION_ID, selectionId);
+		params.put(PRICE_PROJECTION, priceProjection);
+		params.put(ORDER_PROJECTION, orderProjection);
+		params.put(MATCH_PROJECTION, matchProjection);
+		String result = getInstance().makeRequest(ApiNgOperation.LISTRUNNERSBOOK.getOperationName(), params, appKey,
+				ssoId);
+		if (ApiNGDemo.isDebug())
+			System.out.println("\nResponse: " + result);
+
+		List<MarketBook> container = JsonConverter.convertFromJson(result, new TypeToken<List<MarketBook>>() {
+		}.getType());
+		ExchangePrices exPrice = new ExchangePrices();
+		for (int i = 0; i < container.size(); i++) {
+
+			exPrice.setAvailableToBack(container.get(i).getRunners().get(0).getEx().getAvailableToBack());
+			exPrice.setAvailableToLay(container.get(i).getRunners().get(0).getEx().getAvailableToLay());
+			exPrice.setTradedVolume(container.get(i).getRunners().get(0).getEx().getTradedVolume());
+		}
+
+		return exPrice;
+
+	}
+	
 	public List<MarketCatalogue> listMarketCatalogue1(MarketFilter filter, Set<MarketProjection> marketProjection,
 			MarketSort sort, String maxResult, String appKey, String ssoId) throws APINGException {
 		Map<String, Object> params = new HashMap<String, Object>();

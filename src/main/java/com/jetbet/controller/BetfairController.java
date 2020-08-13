@@ -154,6 +154,18 @@ public class BetfairController {
 		return betfairService.dashboardMatchList(applicationKey,sessionToken,userName,transactionId);
 	}
 	
+	@RequestMapping(value=ResourceConstants.USER_DASHBOARD, method=RequestMethod.GET)
+	public List<DashboardMatchListDto> getRunnerBook() {
+		String transactionId = "TB"+UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
+		log.info("["+transactionId+"]*************************INSIDE USER ROLE METHOD GET*************************");
+		
+		ResponseEntity<SessionDetails> sessionDetails=getSessionToken();
+		String applicationKey=sessionDetails.getBody().getProduct();
+		String sessionToken=sessionDetails.getBody().getToken();
+		String userName=ResourceConstants.USER_NAME;
+		
+		return betfairService.dashboardMatchList(applicationKey,sessionToken,userName,transactionId);
+	}
 	
 	public void updateListOfSeries() {
 		ResponseEntity<SessionDetails> sessionDetails=getSessionToken();
