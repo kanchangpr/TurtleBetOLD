@@ -22,6 +22,7 @@ import com.jetbet.bean.MatchBean;
 import com.jetbet.bean.SeriesBean;
 import com.jetbet.bean.SportsBean;
 import com.jetbet.dto.DashboardMatchListDto;
+import com.jetbet.dto.RunnerPriceAndSize;
 import com.jetbet.dto.SeriesMatchFancyResponseDto;
 import com.jetbet.dto.SessionDetails;
 import com.jetbet.service.BetfairService;
@@ -154,6 +155,20 @@ public class BetfairController {
 		return betfairService.dashboardMatchList(applicationKey,sessionToken,userName,transactionId);
 	}
 	
+	@RequestMapping(value=ResourceConstants.RUNNERS_PRICE_SIZE, method=RequestMethod.GET)
+	public RunnerPriceAndSize getRunnersPrizeAndSize(
+			@RequestParam(value="marketId" ,required=true) String marketId,
+			@RequestParam(value="selectionId" ,required=true) String selectionId) {
+		String transactionId = "TB"+UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
+		log.info("["+transactionId+"]*************************INSIDE USER ROLE METHOD GET*************************");
+		
+		ResponseEntity<SessionDetails> sessionDetails=getSessionToken();
+		String applicationKey=sessionDetails.getBody().getProduct();
+		String sessionToken=sessionDetails.getBody().getToken();
+		String userName=ResourceConstants.USER_NAME;
+		
+		return betfairService.getRunnersPrizeAndSize(marketId,selectionId,applicationKey,sessionToken,userName,transactionId);
+	}
 	
 	
 	public void updateListOfSeries() {

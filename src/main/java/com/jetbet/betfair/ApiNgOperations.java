@@ -48,6 +48,9 @@ public abstract class ApiNgOperations {
 
 	public abstract List<MarketBook> listMarketBook(List<String> marketIds, PriceProjection priceProjection, OrderProjection orderProjection,
 						MatchProjection matchProjection, String currencyCode, String appKey, String ssoId) throws APINGException;
+	
+	public abstract List<MarketBook> listRunnersBook1(String marketIds,Long selectionId, PriceProjection priceProjection, OrderProjection orderProjection,
+			MatchProjection matchProjection, String currencyCode, String appKey, String ssoId) throws APINGException;
 
     public abstract List<MarketCatalogue> listMarketCatalogue(MarketFilter filter, Set<MarketProjection> marketProjection,
         MarketSort sort, String maxResult, String appKey, String ssoId) throws APINGException;

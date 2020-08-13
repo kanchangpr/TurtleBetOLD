@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.transaction.Transactional;
@@ -23,15 +24,21 @@ import com.jetbet.betfair.ApiNgRescriptOperations;
 import com.jetbet.betfair.entities.CompetitionResult;
 import com.jetbet.betfair.entities.EventResult;
 import com.jetbet.betfair.entities.EventTypeResult;
+import com.jetbet.betfair.entities.MarketBook;
 import com.jetbet.betfair.entities.MarketCatalogue;
 import com.jetbet.betfair.entities.MarketFancyResult;
 import com.jetbet.betfair.entities.MarketFilter;
+import com.jetbet.betfair.entities.PriceProjection;
 import com.jetbet.betfair.enums.MarketProjection;
 import com.jetbet.betfair.enums.MarketSort;
+import com.jetbet.betfair.enums.MatchProjection;
+import com.jetbet.betfair.enums.OrderProjection;
+import com.jetbet.betfair.enums.PriceData;
 import com.jetbet.betfair.exceptions.APINGException;
 import com.jetbet.dto.DashboardMatchListDto;
 import com.jetbet.dto.FancyIdDto;
 import com.jetbet.dto.MatchAndFancyDetailDto;
+import com.jetbet.dto.RunnerPriceAndSize;
 import com.jetbet.dto.SeriesMatchFancyResponseDto;
 import com.jetbet.dto.SessionDetails;
 import com.jetbet.repository.FancyRepository;
@@ -515,15 +522,46 @@ public class BetfairDao {
 					resBean.setMarketId(marketCatalogueResult.get(j).getMarketId());
 					resBean.setMarketType(marketCatalogueResult.get(j).getMarketName());
 					if(marketCatalogueResult.get(j).getRunners().size()==3) {
+						resBean.setTeamABackPrize(marketCatalogueResult.get(j).getRunners().get(0).getEx().getAvailableToBack().get(0).getPrice());
+						resBean.setTeamBBackPrize(marketCatalogueResult.get(j).getRunners().get(1).getEx().getAvailableToBack().get(0).getPrice());
+						resBean.setDrawBackPrize(marketCatalogueResult.get(j).getRunners().get(2).getEx().getAvailableToBack().get(0).getPrice());
+						
+						resBean.setTeamABackSize(marketCatalogueResult.get(j).getRunners().get(0).getEx().getAvailableToLay().get(0).getPrice());
+						resBean.setTeamBBackSize(marketCatalogueResult.get(j).getRunners().get(1).getEx().getAvailableToLay().get(0).getPrice());
+						resBean.setDrawBackSize(marketCatalogueResult.get(j).getRunners().get(2).getEx().getAvailableToLay().get(0).getPrice());
+						
+						resBean.setTeamALayPrize(marketCatalogueResult.get(j).getRunners().get(0).getEx().getAvailableToBack().get(0).getSize());
+						resBean.setTeamBLayPrize(marketCatalogueResult.get(j).getRunners().get(1).getEx().getAvailableToBack().get(0).getSize());
+						resBean.setDrawLayPrize(marketCatalogueResult.get(j).getRunners().get(2).getEx().getAvailableToBack().get(0).getSize());
+						
+						resBean.setTeamALaySize(marketCatalogueResult.get(j).getRunners().get(0).getEx().getAvailableToLay().get(0).getSize());
+						resBean.setTeamBLaySize(marketCatalogueResult.get(j).getRunners().get(1).getEx().getAvailableToLay().get(0).getSize());
+						resBean.setDrawLaySize(marketCatalogueResult.get(j).getRunners().get(2).getEx().getAvailableToLay().get(0).getSize());
+						
 						resBean.setTeamAId(marketCatalogueResult.get(j).getRunners().get(0).getSelectionId());
 						resBean.setTeamBId(marketCatalogueResult.get(j).getRunners().get(1).getSelectionId());
 						resBean.setDrawId(marketCatalogueResult.get(j).getRunners().get(2).getSelectionId());
+						
 						resBean.setTeamA(marketCatalogueResult.get(j).getRunners().get(0).getRunnerName());
 						resBean.setTeamB(marketCatalogueResult.get(j).getRunners().get(1).getRunnerName());
 						resBean.setDraw(marketCatalogueResult.get(j).getRunners().get(2).getRunnerName());
 					}else if(marketCatalogueResult.get(j).getRunners().size()==2) {
+						
+//						resBean.setTeamABackPrize(marketCatalogueResult.get(j).getRunners().get(0).getEx().getAvailableToBack().get(0).getPrice());
+//						resBean.setTeamBBackPrize(marketCatalogueResult.get(j).getRunners().get(1).getEx().getAvailableToBack().get(0).getPrice());
+//						
+//						resBean.setTeamABackSize(marketCatalogueResult.get(j).getRunners().get(0).getEx().getAvailableToLay().get(0).getPrice());
+//						resBean.setTeamBBackSize(marketCatalogueResult.get(j).getRunners().get(1).getEx().getAvailableToLay().get(0).getPrice());
+//						
+//						resBean.setTeamALayPrize(marketCatalogueResult.get(j).getRunners().get(0).getEx().getAvailableToBack().get(0).getSize());
+//						resBean.setTeamBLayPrize(marketCatalogueResult.get(j).getRunners().get(1).getEx().getAvailableToBack().get(0).getSize());
+//						
+//						resBean.setTeamALaySize(marketCatalogueResult.get(j).getRunners().get(0).getEx().getAvailableToLay().get(0).getSize());
+//						resBean.setTeamBLaySize(marketCatalogueResult.get(j).getRunners().get(1).getEx().getAvailableToLay().get(0).getSize());
+						
 						resBean.setTeamAId(marketCatalogueResult.get(j).getRunners().get(0).getSelectionId());
 						resBean.setTeamBId(marketCatalogueResult.get(j).getRunners().get(1).getSelectionId());
+						
 						resBean.setTeamA(marketCatalogueResult.get(j).getRunners().get(0).getRunnerName());
 						resBean.setTeamB(marketCatalogueResult.get(j).getRunners().get(1).getRunnerName());
 					}
@@ -534,6 +572,18 @@ public class BetfairDao {
 			e.printStackTrace();
 		}
 		return resBeanList;
+	}
+
+	
+	public RunnerPriceAndSize getRunnersPrizeAndSize1(List<DashboardMatchListDto> data, String applicationKey,
+			String sessionToken, String userName, String transactionId) throws APINGException {
+		return null;
+	}
+	
+	public RunnerPriceAndSize getRunnersPrizeAndSize(String marketId, String selectionId, String applicationKey,
+			String sessionToken, String userName, String transactionId) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

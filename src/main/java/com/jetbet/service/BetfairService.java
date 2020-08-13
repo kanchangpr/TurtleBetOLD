@@ -10,6 +10,7 @@ import com.jetbet.bean.MatchBean;
 import com.jetbet.bean.SeriesBean;
 import com.jetbet.bean.SportsBean;
 import com.jetbet.dto.DashboardMatchListDto;
+import com.jetbet.dto.RunnerPriceAndSize;
 import com.jetbet.dto.SeriesMatchFancyResponseDto;
 import com.jetbet.dto.SessionDetails;
 
@@ -30,5 +31,8 @@ public interface BetfairService {
 
 	List<DashboardMatchListDto> dashboardMatchList(String applicationKey, String sessionToken,
 			String userName, String transactionId);
+
+	RunnerPriceAndSize getRunnersPrizeAndSize(String marketId, String selectionId, String applicationKey,
+			String sessionToken, String userName, String transactionId);
 
 }

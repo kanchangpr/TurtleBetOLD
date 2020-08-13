@@ -12,6 +12,7 @@ import com.jetbet.bean.SeriesBean;
 import com.jetbet.bean.SportsBean;
 import com.jetbet.dao.BetfairDao;
 import com.jetbet.dto.DashboardMatchListDto;
+import com.jetbet.dto.RunnerPriceAndSize;
 import com.jetbet.dto.SeriesMatchFancyResponseDto;
 import com.jetbet.dto.SessionDetails;
 import com.jetbet.repository.SportsRepository;
@@ -65,5 +66,12 @@ public class BetfairServiceImpl implements BetfairService{
 			String userName, String transactionId) {
 		log.info("["+transactionId+"]*************************INSIDE getMatchOdds CLASS AdminServiceImpl*************************");
 		return betfairDao.dashboardMatchList(applicationKey, sessionToken, userName,transactionId);
+	}
+
+	@Override
+	public RunnerPriceAndSize getRunnersPrizeAndSize(String marketId, String selectionId, String applicationKey,
+			String sessionToken, String userName, String transactionId) {
+		log.info("["+transactionId+"]*************************INSIDE getRunnersPrizeAndSize CLASS AdminServiceImpl*************************");
+		return betfairDao.getRunnersPrizeAndSize(marketId,selectionId,applicationKey, sessionToken, userName,transactionId);
 	}
 }

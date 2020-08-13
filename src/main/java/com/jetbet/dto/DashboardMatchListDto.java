@@ -20,9 +20,24 @@ public class DashboardMatchListDto {
 	private String matchName;
 	private String marketId;
 	private String marketType;
+	private Double teamABackPrize;
+	private Double teamBBackPrize;
+	private Double drawBackPrize;
+	private Double teamABackSize;
+	private Double teamBBackSize;
+	private Double drawBackSize;
+	
+	private Double teamALayPrize;
+	private Double teamBLayPrize;
+	private Double drawLayPrize;
+	private Double teamALaySize;
+	private Double teamBLaySize;
+	private Double drawLaySize;
+	
 	private Long teamAId;
 	private Long teamBId;
 	private Long drawId;
+	
 	private String teamA;
 	private String teamB;
 	private String draw;
