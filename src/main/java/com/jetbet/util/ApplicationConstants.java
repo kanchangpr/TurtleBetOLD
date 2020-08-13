@@ -18,4 +18,6 @@ public class ApplicationConstants {
 	public static final String ERROR_CODE_004 = "ERROR_004";
 	public static final String ERROR_MSG_004 = "User Account Locked";
 	
+	public static final String ERROR_MSG_005 = "User LoggedIn Successfully!!!";
+	
 }

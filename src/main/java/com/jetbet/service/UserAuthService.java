@@ -2,7 +2,7 @@ package com.jetbet.service;
 
 import org.springframework.stereotype.Service;
 
-import com.jetbet.bean.JwtTokenRequest;
+import com.jetbet.auth.authentication.resources.JwtTokenRequest;
 import com.jetbet.bean.ResponseBean;
 
 

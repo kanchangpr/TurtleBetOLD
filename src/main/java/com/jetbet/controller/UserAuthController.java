@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.jetbet.bean.JwtTokenRequest;
+import com.jetbet.auth.authentication.resources.JwtTokenRequest;
 import com.jetbet.bean.ResponseBean;
 import com.jetbet.service.UserAuthService;
 import com.jetbet.util.ApplicationConstants;
@@ -32,10 +32,10 @@ public class UserAuthController {
 	
 	@CrossOrigin(origins = "*")
 	@RequestMapping(path = ApplicationConstants.AUTH_USER, method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE )
-	public ResponseEntity<ResponseBean> authUser(@Valid @RequestBody JwtTokenRequest userRequest) {
+	public ResponseEntity<?> authUser(@Valid @RequestBody JwtTokenRequest userRequest) {
 		String transactionId = "TB"+UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
 		log.info("["+transactionId+"]*******************************AuthController***************************************");
-		ResponseBean response= userAuthService.authUser(userRequest,transactionId);
-		return new ResponseEntity<ResponseBean>(response, HttpStatus.OK);
+		//ResponseBean response= userAuthService.authUser(userRequest,transactionId);
+		return new ResponseEntity<ResponseBean>(userAuthService.authUser(userRequest,transactionId), HttpStatus.OK);
 	}
 }

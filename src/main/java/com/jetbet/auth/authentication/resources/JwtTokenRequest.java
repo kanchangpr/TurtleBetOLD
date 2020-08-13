@@ -1,8 +1,6 @@
-package com.jetbet.bean;
+package com.jetbet.auth.authentication.resources;
 
 import java.io.Serializable;
-
-import javax.validation.constraints.NotBlank;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -21,9 +19,7 @@ public class JwtTokenRequest implements Serializable {
 
 	private static final long serialVersionUID = -5616176897013108345L;
 
-	@NotBlank
 	private String username;
-	@NotBlank
 	private String password;
 
 }

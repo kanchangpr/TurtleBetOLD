@@ -34,7 +34,6 @@ public class ChipsBean {
     @GeneratedValue(strategy = GenerationType.SEQUENCE,generator="jb_chips_details_seq")
 	private Long id;
 	
-	@OrderBy
 	@Column(name = "user_id")
 	private String userId;
 	

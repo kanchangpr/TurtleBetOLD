@@ -14,4 +14,8 @@ public class ResponseBean {
 	private String status;
 	private String errorCode;
 	private String errorMsg;
+	private String token;
+	private String userName;
+	private String userRole;
+	private String userParent;
 }
