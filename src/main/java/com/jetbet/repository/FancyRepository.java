@@ -5,11 +5,12 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.jetbet.bean.FancyBean;
+import com.jetbet.dto.FancyIdDto;
 
-public interface FancyRepository extends JpaRepository<FancyBean, String>{
+public interface FancyRepository extends JpaRepository<FancyBean, FancyIdDto>{
 	List<FancyBean> findByIsActive(String isActive);
 	
-	List<FancyBean> findByMatchIdAndIsActive(String matchId,String isActive);
+	List<FancyBean> findByFancyIdMatchIdAndIsActive(String matchId,String isActive);
 	
-	long countByMarketTypeAndMatchId (String marketType, String matchId);
+	long countByFancyIdMarketTypeAndFancyIdMatchId (String marketType, String matchId);
 }

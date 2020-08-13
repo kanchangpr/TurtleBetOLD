@@ -9,6 +9,7 @@ import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import lombok.AllArgsConstructor;
@@ -42,20 +43,20 @@ public class SeriesBean {
 	@Column(name = "sports_id")
 	private String sportId;
 	
-	@Column(name = "is_active")
+	@Column(name = "is_active" , updatable=false)
 	private String isActive="N";
 	
-	@Column(name = "series_created_by")
+	@Column(name = "series_created_by" , updatable=false)
 	private String seriesCreatedBy;
 	
 	@CreationTimestamp
-	@Column(name = "series_created_date")
+	@Column(name = "series_created_date" , updatable=false)
 	private Date seriesCreatedDate;
 	
 	@Column(name = "series_updated_by")
 	private String seriesUpdatedBy;
 	
-	@LastModifiedDate
+	@UpdateTimestamp
 	@Column(name = "series_updated_date")
 	private Date seriesUpdatedDate;
 }

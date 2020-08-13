@@ -12,6 +12,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import lombok.AllArgsConstructor;
@@ -59,7 +60,7 @@ public class PartnershipBean {
 	@Column(name = "auto_remarks")
 	private String autoRemarks="AutoRemarks";
 	
-	@LastModifiedDate
+	@UpdateTimestamp
 	@Column(name = "lastupdateddate")
 	private Date lastUpdatedDate; 
 	

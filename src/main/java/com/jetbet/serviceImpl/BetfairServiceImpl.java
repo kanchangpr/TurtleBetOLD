@@ -11,6 +11,7 @@ import com.jetbet.bean.MatchBean;
 import com.jetbet.bean.SeriesBean;
 import com.jetbet.bean.SportsBean;
 import com.jetbet.dao.BetfairDao;
+import com.jetbet.dto.DashboardMatchListDto;
 import com.jetbet.dto.SeriesMatchFancyResponseDto;
 import com.jetbet.dto.SessionDetails;
 import com.jetbet.repository.SportsRepository;
@@ -57,5 +58,12 @@ public class BetfairServiceImpl implements BetfairService{
 	public List<SeriesMatchFancyResponseDto> getMarketCatalogue(String sportsId,String applicationKey,String sessionToken,String userName, String transactionId) {
 		log.info("["+transactionId+"]*************************INSIDE getMatchOdds CLASS AdminServiceImpl*************************");
 		return betfairDao.getMarketCatalogue(sportsId,applicationKey, sessionToken, userName,transactionId);
+	}
+
+	@Override
+	public List<DashboardMatchListDto> dashboardMatchList(String applicationKey, String sessionToken,
+			String userName, String transactionId) {
+		log.info("["+transactionId+"]*************************INSIDE getMatchOdds CLASS AdminServiceImpl*************************");
+		return betfairDao.dashboardMatchList(applicationKey, sessionToken, userName,transactionId);
 	}
 }

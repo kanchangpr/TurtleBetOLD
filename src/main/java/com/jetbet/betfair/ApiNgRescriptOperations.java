@@ -114,38 +114,38 @@ public class ApiNgRescriptOperations extends ApiNgOperations {
 		params.put(MARKET_PROJECTION, marketProjection);
 		String result = getInstance().makeRequest(ApiNgOperation.LISTMARKETCATALOGUE.getOperationName(), params, appKey,
 				ssoId);
-		log.info("MarketCatalogue: "+result);
+		log.info("MarketCatalogue: " + result);
 		if (ApiNGDemo.isDebug())
 			System.out.println("\nResponse: " + result);
 
 		List<MarketCatalogue> container = JsonConverter.convertFromJson(result, new TypeToken<List<MarketCatalogue>>() {
 		}.getType());
 
-		for(int i=0; i< container.size();i++) {
-			
-			PriceProjection priceProjection = new PriceProjection(); 
+		for (int i = 0; i < container.size(); i++) {
+
+			PriceProjection priceProjection = new PriceProjection();
 			Set<PriceData> priceData = new HashSet<PriceData>();
 			priceData.add(PriceData.EX_BEST_OFFERS);
 			priceProjection.setPriceData(priceData);
-			OrderProjection orderProjection = null; 
-			MatchProjection matchProjection =null; 
+			OrderProjection orderProjection = null;
+			MatchProjection matchProjection = null;
 			String currencyCode = null;
-			
-			String marketId=container.get(i).getMarketId();
-			int runnersSize=container.get(i).getRunners().size();
-			for(int j=0;j<runnersSize;j++) {
-				String selectionId=container.get(i).getRunners().get(j).getSelectionId().toString();
-				ExchangePrices exchangePrices=listRunnersBook(marketId,selectionId,priceProjection, orderProjection, matchProjection, currencyCode,appKey, ssoId);
+
+			String marketId = container.get(i).getMarketId();
+			int runnersSize = container.get(i).getRunners().size();
+			for (int j = 0; j < runnersSize; j++) {
+				String selectionId = container.get(i).getRunners().get(j).getSelectionId().toString();
+				ExchangePrices exchangePrices = listRunnersBook(marketId, selectionId, priceProjection, orderProjection,
+						matchProjection, currencyCode, appKey, ssoId);
 				container.get(i).getRunners().get(j).setEx(exchangePrices);
 			}
 		}
-		
+
 		return container;
 
 	}
-	
-	
-	public ExchangePrices listRunnersBook(String marketId,String selectionId, PriceProjection priceProjection,
+
+	public ExchangePrices listRunnersBook(String marketId, String selectionId, PriceProjection priceProjection,
 			OrderProjection orderProjection, MatchProjection matchProjection, String currencyCode, String appKey,
 			String ssoId) throws APINGException {
 		Map<String, Object> params = new HashMap<String, Object>();
@@ -162,15 +162,35 @@ public class ApiNgRescriptOperations extends ApiNgOperations {
 
 		List<MarketBook> container = JsonConverter.convertFromJson(result, new TypeToken<List<MarketBook>>() {
 		}.getType());
-		ExchangePrices exPrice= new ExchangePrices();
-		for(int i=0;i<container.size();i++) {
-			
+		ExchangePrices exPrice = new ExchangePrices();
+		for (int i = 0; i < container.size(); i++) {
+
 			exPrice.setAvailableToBack(container.get(i).getRunners().get(0).getEx().getAvailableToBack());
 			exPrice.setAvailableToLay(container.get(i).getRunners().get(0).getEx().getAvailableToLay());
 			exPrice.setTradedVolume(container.get(i).getRunners().get(0).getEx().getTradedVolume());
 		}
 
 		return exPrice;
+
+	}
+
+	public List<MarketCatalogue> listMarketCatalogue1(MarketFilter filter, Set<MarketProjection> marketProjection,
+			MarketSort sort, String maxResult, String appKey, String ssoId) throws APINGException {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put(LOCALE, locale);
+		params.put(FILTER, filter);
+		params.put(SORT, sort);
+		params.put(MAX_RESULT, maxResult);
+		params.put(MARKET_PROJECTION, marketProjection);
+		String result = getInstance().makeRequest(ApiNgOperation.LISTMARKETCATALOGUE.getOperationName(), params, appKey,
+				ssoId);
+		if (ApiNGDemo.isDebug())
+			System.out.println("\nResponse: " + result);
+
+		List<MarketCatalogue> container = JsonConverter.convertFromJson(result, new TypeToken<List<MarketCatalogue>>() {
+		}.getType());
+
+		return container;
 
 	}
 

@@ -43,6 +43,7 @@ public class ResourceConstants {
 	public static final String STAKES_DETAILS="stakesDetails";
 	public static final String LIABILITY="calcLiability";
 	public static final String USER_REPORT="userReport";
+	public static final String USER_DASHBOARD="userDashboard";
 	
 	public static final String SUPERMASTER="superMaster";
 	public static final String MASTER="master";
@@ -117,14 +118,17 @@ public class ResourceConstants {
 	public static final String SPORTS_PAGE="SPORTS_PAGE";
 	public static final String SERIES_PAGE="SERIES_PAGE";
 	public static final String MATCH_PAGE="MATCH_PAGE";
+	public static final String FANCY_PAGE="FANCY_PAGE";
 	
 	public static final String SPORTS_TABLE="JETBET.JB_SPORTS_DETAILS";
 	public static final String SERIES_TABLE="JETBET.JB_SERIES_DETAILS";
 	public static final String MATCH_TABLE="JETBET.JB_MATCH_DETAILS";
+	public static final String FANCY_TABLE="JETBET.JB_FANCY_DETAILS";
 	
 	public static final String SPORTS_ID="SPORTS_ID";
 	public static final String SERIES_ID="SERIES_ID";
 	public static final String MATCH_ID="MATCH_ID";
+	public static final String MARKET_ID="MATCH_ID";
 	
 	public static final String SPORTS_UPDATED_BY="SPORTS_UPDATED_BY";
 	public static final String SERIES_UPDATED_BY="SERIES_UPDATED_BY";

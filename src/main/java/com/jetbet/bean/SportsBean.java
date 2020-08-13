@@ -9,6 +9,7 @@ import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import lombok.AllArgsConstructor;
@@ -49,7 +50,7 @@ public class SportsBean {
 	@Column(name = "sports_updated_by")
 	private String sportsUpdatedBy;
 	
-	@LastModifiedDate
+	@UpdateTimestamp
 	@Column(name = "sports_updated_date")
 	private Date sportsUpdatedDate;
 

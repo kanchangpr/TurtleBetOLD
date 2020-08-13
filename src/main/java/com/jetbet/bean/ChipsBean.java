@@ -12,6 +12,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import lombok.AllArgsConstructor;
@@ -65,7 +66,7 @@ public class ChipsBean {
 	@Column(name = "updated_by")
 	private String updatedBy;
 	
-	@LastModifiedDate
+	@UpdateTimestamp
 	@Column(name = "updated_on")
 	private Date updatedDate;
 

@@ -8,6 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import lombok.AllArgsConstructor;
@@ -54,20 +55,20 @@ public class MatchBean {
 	@Column(name = "sports_id")
 	private String sportId;
 	
-	@Column(name = "is_active")
+	@Column(name = "is_active" , updatable=false)
 	private String isActive="N";
 	
-	@Column(name = "match_created_by")
+	@Column(name = "match_created_by" , updatable=false)
 	private String matchCreatedBy;
 	
 	@CreationTimestamp
-	@Column(name = "match_created_date")
+	@Column(name = "match_created_date" , updatable=false)
 	private Date matchCreatedDate;
 	
 	@Column(name = "match_updated_by")
 	private String matchUpdatedBy;
 	
-	@LastModifiedDate
+	@UpdateTimestamp
 	@Column(name = "match_updated_date")
 	private Date matchUpdatedDate;
 }

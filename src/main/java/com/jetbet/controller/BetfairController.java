@@ -8,6 +8,7 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,6 +21,7 @@ import com.jetbet.bean.MarketCatalogueBean;
 import com.jetbet.bean.MatchBean;
 import com.jetbet.bean.SeriesBean;
 import com.jetbet.bean.SportsBean;
+import com.jetbet.dto.DashboardMatchListDto;
 import com.jetbet.dto.SeriesMatchFancyResponseDto;
 import com.jetbet.dto.SessionDetails;
 import com.jetbet.service.BetfairService;
@@ -58,9 +60,9 @@ public class BetfairController {
         return new ResponseEntity<List<SportsBean>> (response,HttpStatus.OK);
 	}
 	
-	//@RequestMapping(value=ResourceConstants.LIST_OF_SERIES, method=RequestMethod.GET)
+	@RequestMapping(value=ResourceConstants.LIST_OF_SERIES, method=RequestMethod.GET)
 	//public ResponseEntity<List<SeriesBean>> getListOfSeries() {
-	@Scheduled(fixedDelay = 30000)
+	//@Scheduled(fixedDelay = 30000)
 	public void getListOfSeries() {
 //		String applicationKey="5tsF8QHfEw3n4Kp8";
 //		String sessionToken="PsszL+gNaXw+s7+MiHF7vk8HfFrz+oNeZaxO8l+GZGU=";
@@ -137,5 +139,51 @@ public class BetfairController {
 		String userName=ResourceConstants.USER_NAME;
 		
 		return betfairService.getMarketCatalogue(sportsId,applicationKey,sessionToken,userName,transactionId);
+	}
+	
+	@RequestMapping(value=ResourceConstants.USER_DASHBOARD, method=RequestMethod.GET)
+	public List<DashboardMatchListDto> dashboardMatchList() {
+		String transactionId = "TB"+UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
+		log.info("["+transactionId+"]*************************INSIDE USER ROLE METHOD GET*************************");
+		
+		ResponseEntity<SessionDetails> sessionDetails=getSessionToken();
+		String applicationKey=sessionDetails.getBody().getProduct();
+		String sessionToken=sessionDetails.getBody().getToken();
+		String userName=ResourceConstants.USER_NAME;
+		
+		return betfairService.dashboardMatchList(applicationKey,sessionToken,userName,transactionId);
+	}
+	
+	@Async
+	public void updateListOfSeries() {
+		ResponseEntity<SessionDetails> sessionDetails=getSessionToken();
+		String applicationKey=sessionDetails.getBody().getProduct();
+		String sessionToken=sessionDetails.getBody().getToken();
+		String userName=ResourceConstants.USER_NAME;
+		String transactionId = "TB"+UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
+		log.info("["+transactionId+"]*************************INSIDE getListOfSeries METHOD GET*************************");
+		betfairService.getListOfSeries(applicationKey, sessionToken, userName, transactionId);
+	}
+	
+	@Async
+	public void updateListOfMatches() {
+		ResponseEntity<SessionDetails> sessionDetails=getSessionToken();
+		String applicationKey=sessionDetails.getBody().getProduct();
+		String sessionToken=sessionDetails.getBody().getToken();
+		String userName=ResourceConstants.USER_NAME;
+		String transactionId = "TB"+UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
+		log.info("["+transactionId+"]*************************INSIDE getListOfMatches METHOD GET*************************");
+		betfairService.getListOfMatches(applicationKey, sessionToken, userName, transactionId);
+	}
+	
+	@Async
+	public void updateListOfOdds() {
+		ResponseEntity<SessionDetails> sessionDetails=getSessionToken();
+		String applicationKey=sessionDetails.getBody().getProduct();
+		String sessionToken=sessionDetails.getBody().getToken();
+		String userName=ResourceConstants.USER_NAME;
+		String transactionId = "TB"+UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
+		log.info("["+transactionId+"]*************************INSIDE getListOfOdds METHOD GET*************************");
+		betfairService.getListOfOdds(applicationKey, sessionToken, userName, transactionId);
 	}
 }
