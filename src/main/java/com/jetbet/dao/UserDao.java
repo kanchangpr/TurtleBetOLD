@@ -23,6 +23,7 @@ import com.jetbet.bean.SeriesBean;
 import com.jetbet.bean.SportsBean;
 import com.jetbet.bean.StakesBean;
 import com.jetbet.bean.UserBean;
+import com.jetbet.bean.UserLoginBean;
 import com.jetbet.dto.ChangePasswordDto;
 import com.jetbet.dto.ChipsDto;
 import com.jetbet.dto.UserControlsDto;
@@ -36,6 +37,7 @@ import com.jetbet.repository.PlaceBetsRepository;
 import com.jetbet.repository.SeriesRepository;
 import com.jetbet.repository.SportsRepository;
 import com.jetbet.repository.StakesRepository;
+import com.jetbet.repository.UserLoginRepository;
 import com.jetbet.repository.UserRepository;
 import com.jetbet.util.QueryListConstant;
 import com.jetbet.util.ResourceConstants;
@@ -72,6 +74,9 @@ public class UserDao {
 
 	@Autowired
 	PlaceBetsRepository placeBetsRepository;
+	
+	@Autowired
+	UserLoginRepository userLoginRepository;
 
 	public static DecimalFormat df = new DecimalFormat("0.00");
 
@@ -923,6 +928,7 @@ public class UserDao {
 		log.info("[" + transactionId + "]****************INSIDE userReport CLASS UserDao****************");
 		List<PlaceBetsBean> betHistory = new ArrayList<PlaceBetsBean>();
 		List<ChipsBean> accHistory = new ArrayList<ChipsBean>();
+		List<UserLoginBean> loginHistory = new ArrayList<UserLoginBean>();
 		List<Object> resObjects = new ArrayList<Object>();
 		log.info("[" + transactionId + "] type:  " + type);
 		log.info("[" + transactionId + "] userId:  " + userId);
@@ -972,6 +978,19 @@ public class UserDao {
 			}
 		} else if (ResourceConstants.BetType.LOGIN_HISTORY.equalsIgnoreCase(type)) {
 			log.info("[" + transactionId + "] Inside :  " + type);
+			if (StringUtils.isEmpty(fromDate) && StringUtils.isEmpty(toDate)) {
+				loginHistory = userLoginRepository.findByUserIdOrderById(userId);
+			} else {
+				loginHistory = jdbcTemplate.query(QueryListConstant.LOGIN_HISTORY_BY_DATE_RANGE,
+						new Object[] { fromDate, toDate, userId },
+						(rs, rowNum) -> new UserLoginBean(rs.getLong("id"), rs.getString("user_id"),
+								rs.getString("user_role"),  rs.getString("user_parent"), rs.getDate("login_time"), rs.getString("ip_address"),
+								rs.getString("browser_detail")));
+			}
+
+			for (int i = 0; i < loginHistory.size(); i++) {
+				resObjects.add(loginHistory.get(i));
+			}
 		} else {
 
 		}
