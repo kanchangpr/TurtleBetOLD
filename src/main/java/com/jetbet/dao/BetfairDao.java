@@ -304,7 +304,7 @@ public class BetfairDao {
 				List<MatchBean> matchList = matchRepository.findBySeriesIdAndIsActive(seriesId, "Y");
 				for (int j = 0; j < matchList.size(); j++) {
 
-					MatchAndFancyDetailDto matchAndFancyDetailDto = new MatchAndFancyDetailDto();
+					
 					String matchIdString = matchList.get(j).getMatchId();
 					String matchNameString = matchList.get(j).getMatchName();
 					Date matchOpenDate = matchList.get(j).getMatchOpenDate();
@@ -312,7 +312,7 @@ public class BetfairDao {
 					List<FancyBean> marketTypeList = fancyRepository.findByFancyIdMatchIdAndIsActive(matchIdString, "Y");
 
 					for (int i = 0; i < marketTypeList.size(); i++) {
-
+						MatchAndFancyDetailDto matchAndFancyDetailDto = new MatchAndFancyDetailDto();
 						String matchId = matchIdString;
 						String matchName = matchNameString;
 						Date matchDate = matchOpenDate;
@@ -358,8 +358,9 @@ public class BetfairDao {
 						} else {
 							matchAndFancyDetailDto.setMarketCatalogueRes(marketCatalogueResult);
 						}
+						matchAndFancyDetailList.add(matchAndFancyDetailDto);
 					}
-					matchAndFancyDetailList.add(matchAndFancyDetailDto);
+					
 					seriesMatchFancyRes.setMatchAndFancyDetail(matchAndFancyDetailList);
 				}
 				seriesMatchFancyResList.add(seriesMatchFancyRes);
