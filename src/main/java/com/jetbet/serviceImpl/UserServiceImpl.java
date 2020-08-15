@@ -22,6 +22,7 @@ import com.jetbet.dto.ChangePasswordDto;
 import com.jetbet.dto.ChipsDto;
 import com.jetbet.dto.UserControlsDto;
 import com.jetbet.dto.UserDetailsRequestDto;
+import com.jetbet.dto.UserHomeDto;
 import com.jetbet.dto.UserResponseDto;
 import com.jetbet.dto.UserRolesResponseDto;
 import com.jetbet.service.UserService;
@@ -175,6 +176,12 @@ public class UserServiceImpl implements UserService{
 	public List<Object> userReport(String type, String userId, String fromDate, String toDate, String transactionId) {
 		log.info("["+transactionId+"]*************************INSIDE userReport CLASS UserServiceImpl*************************");
 		return userDao.userReport( type,  userId,  fromDate,  toDate,transactionId);
+	}
+
+	@Override
+	public List<UserHomeDto> userHome(String sportsId, String transactionId) {
+		log.info("["+transactionId+"]*************************INSIDE userHome CLASS UserServiceImpl*************************");
+		return userDao.userHome( sportsId,transactionId);
 	}
 
 	

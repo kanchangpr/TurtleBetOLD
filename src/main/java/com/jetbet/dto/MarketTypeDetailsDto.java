@@ -1,10 +1,6 @@
 package com.jetbet.dto;
 
 import java.util.Date;
-import java.util.List;
-
-import com.jetbet.bean.MarketCatalogueBean;
-import com.jetbet.betfair.entities.MarketCatalogue;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -17,11 +13,10 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class MatchAndFancyDetailDto {
+public class MarketTypeDetailsDto {
 	private String matchId;
 	private String matchName;
+	private Date matchOpenDate;
 	private String marketType;
 	private int marketCount;
-	private Date matchDate;
-	private List<MarketCatalogue> marketCatalogueRes;
 }

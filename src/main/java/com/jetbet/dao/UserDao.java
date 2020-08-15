@@ -16,6 +16,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import com.jetbet.bean.ChipsBean;
+import com.jetbet.bean.FancyBean;
 import com.jetbet.bean.MatchBean;
 import com.jetbet.bean.PartnershipBean;
 import com.jetbet.bean.PlaceBetsBean;
@@ -26,11 +27,17 @@ import com.jetbet.bean.UserBean;
 import com.jetbet.bean.UserLoginBean;
 import com.jetbet.dto.ChangePasswordDto;
 import com.jetbet.dto.ChipsDto;
+import com.jetbet.dto.MarketTypeDetailsDto;
+import com.jetbet.dto.MatchAndFancyDetailDto;
+import com.jetbet.dto.MatchDetailsDto;
+import com.jetbet.dto.SeriesMatchFancyResponseDto;
 import com.jetbet.dto.UserControlsDto;
 import com.jetbet.dto.UserDetailsRequestDto;
+import com.jetbet.dto.UserHomeDto;
 import com.jetbet.dto.UserResponseDto;
 import com.jetbet.dto.UserRolesResponseDto;
 import com.jetbet.repository.ChipsRepository;
+import com.jetbet.repository.FancyRepository;
 import com.jetbet.repository.MatchRepository;
 import com.jetbet.repository.PartnershipRepository;
 import com.jetbet.repository.PlaceBetsRepository;
@@ -65,6 +72,9 @@ public class UserDao {
 
 	@Autowired
 	private MatchRepository matchRepository;
+	
+	@Autowired
+	private FancyRepository fancyRepository;
 
 	@Autowired
 	private PartnershipRepository partnershipRepository;
@@ -999,6 +1009,52 @@ public class UserDao {
 		log.info("accHistory:: " + accHistory);
 		log.info("resObjects:: " + resObjects);
 		return resObjects;
+	}
+
+	public List<UserHomeDto> userHome(String sportsId, String transactionId) {
+		log.info("[" + transactionId + "]****************INSIDE userHome CLASS UserDao****************");
+		List<UserHomeDto> seriesMatchFancyResList = new ArrayList<UserHomeDto>();
+		
+		try {
+			List<SeriesBean> seriesList = seriesRepository.findBySportIdAndIsActiveOrderBySportId(sportsId, "Y");
+			for (int k = 0; k < seriesList.size(); k++) {
+				UserHomeDto seriesMatchFancyRes = new UserHomeDto();
+				String seriesId = seriesList.get(k).getSeriesId();
+				String seriesName = seriesList.get(k).getSeriesName();
+				
+				seriesMatchFancyRes.setSeriesId(seriesId);
+				seriesMatchFancyRes.setSeriesName(seriesName);
+				List<MarketTypeDetailsDto> fancyDetailList = new ArrayList<MarketTypeDetailsDto>();
+				List<MatchBean> matchList = matchRepository.findBySeriesIdAndIsActive(seriesId, "Y");
+				for (int j = 0; j < matchList.size(); j++) {
+					
+					String matchId = matchList.get(j).getMatchId();
+					String matchName = matchList.get(j).getMatchName();
+					Date matchOpenDate = matchList.get(j).getMatchOpenDate();
+					
+					List<FancyBean> marketTypeList = fancyRepository.findByFancyIdMatchIdAndIsActive(matchId, "Y");
+					for (int i = 0; i < marketTypeList.size(); i++) {
+						
+						MarketTypeDetailsDto marketTypeDetailsDto = new MarketTypeDetailsDto();
+						marketTypeDetailsDto.setMatchId(matchId);
+						marketTypeDetailsDto.setMatchName(matchName);
+						marketTypeDetailsDto.setMatchOpenDate(matchOpenDate);
+						marketTypeDetailsDto.setMarketType(marketTypeList.get(i).getFancyId().getMarketType());
+						marketTypeDetailsDto.setMarketCount(marketTypeList.get(i).getMarketCount());
+						fancyDetailList.add(marketTypeDetailsDto);
+						
+						
+						
+					}
+					
+				}
+				seriesMatchFancyRes.setMatchAndFancyDetails(fancyDetailList);
+				seriesMatchFancyResList.add(seriesMatchFancyRes);
+			}
+		}catch (Exception e) {
+			// TODO: handle exception
+		}
+		return seriesMatchFancyResList;
 	}
 
 }

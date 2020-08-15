@@ -17,6 +17,7 @@ import com.jetbet.betfair.entities.MarketCatalogue;
 import com.jetbet.betfair.entities.MarketFancyResult;
 import com.jetbet.betfair.entities.MarketFilter;
 import com.jetbet.betfair.entities.PriceProjection;
+import com.jetbet.betfair.entities.PriceSize;
 import com.jetbet.betfair.entities.Runner;
 import com.jetbet.betfair.enums.ApiNgOperation;
 import com.jetbet.betfair.enums.MarketProjection;
@@ -163,12 +164,30 @@ public class ApiNgRescriptOperations extends ApiNgOperations {
 
 		List<MarketBook> container = JsonConverter.convertFromJson(result, new TypeToken<List<MarketBook>>() {
 		}.getType());
+		List<PriceSize> priceSizeList=new ArrayList<PriceSize>();
+		PriceSize priceSize=new PriceSize();
+		priceSize.setPrice(0.0);
+		priceSize.setSize(0.0);
+		priceSizeList.add(priceSize);
 		ExchangePrices exPrice = new ExchangePrices();
 		for (int i = 0; i < container.size(); i++) {
-
-			exPrice.setAvailableToBack(container.get(i).getRunners().get(0).getEx().getAvailableToBack());
-			exPrice.setAvailableToLay(container.get(i).getRunners().get(0).getEx().getAvailableToLay());
-			exPrice.setTradedVolume(container.get(i).getRunners().get(0).getEx().getTradedVolume());
+			if(container.get(i).getRunners().get(0).getEx().getAvailableToBack().size()==0) {
+				exPrice.setAvailableToBack(priceSizeList);
+			}else {
+				exPrice.setAvailableToBack(container.get(i).getRunners().get(0).getEx().getAvailableToBack());
+			}
+			
+			if(container.get(i).getRunners().get(0).getEx().getAvailableToLay().size()==0) {
+				exPrice.setAvailableToLay(priceSizeList);
+			}else {
+				exPrice.setAvailableToLay(container.get(i).getRunners().get(0).getEx().getAvailableToLay());
+			}
+			
+			if(container.get(i).getRunners().get(0).getEx().getTradedVolume().size()==0) {
+				exPrice.setTradedVolume(priceSizeList);
+			}else {
+				exPrice.setTradedVolume(container.get(i).getRunners().get(0).getEx().getTradedVolume());
+			}
 		}
 
 		return exPrice;

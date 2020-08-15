@@ -41,5 +41,9 @@ public class DashboardMatchListDto {
 	private String teamA;
 	private String teamB;
 	private String draw;
+	
+	private String teamAResult;
+	private String teamBResult;
+	private String drawResult;
 	private Date matchOpenDate;
 }

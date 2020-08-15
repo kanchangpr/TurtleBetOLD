@@ -20,6 +20,7 @@ import com.jetbet.dto.ChangePasswordDto;
 import com.jetbet.dto.ChipsDto;
 import com.jetbet.dto.UserControlsDto;
 import com.jetbet.dto.UserDetailsRequestDto;
+import com.jetbet.dto.UserHomeDto;
 import com.jetbet.dto.UserResponseDto;
 import com.jetbet.dto.UserRolesResponseDto;
 
@@ -73,6 +74,8 @@ public interface UserService {
 	UserResponseDto placeBets(@Valid PlaceBetsBean placeBetsBean, String transactionId);
 
 	List<Object> userReport(String type, String userId, String fromDate, String toDate, String transactionId);
+
+	List<UserHomeDto> userHome(String sportsId, String transactionId);
 
 	
 

@@ -29,6 +29,7 @@ import com.jetbet.dto.ChangePasswordDto;
 import com.jetbet.dto.ChipsDto;
 import com.jetbet.dto.UserControlsDto;
 import com.jetbet.dto.UserDetailsRequestDto;
+import com.jetbet.dto.UserHomeDto;
 import com.jetbet.dto.UserResponseDto;
 import com.jetbet.dto.UserRolesResponseDto;
 import com.jetbet.service.UserService;
@@ -263,6 +264,14 @@ public class UserController {
 		log.info("[" + transactionId + "]*************INSIDE chipsBalance METHOD POST**************");
 		List<Object> response = userService.userReport(type,userId.toUpperCase(),fromDate,toDate, transactionId);
 		return new ResponseEntity<List<Object>>(response, HttpStatus.OK);
+	}
+	
+	@RequestMapping(value = ResourceConstants.USER_HOME, method = RequestMethod.GET)
+	public ResponseEntity<List<UserHomeDto>> userHome(@RequestParam(value = "sportsId", required = true) String sportsId) {
+		String transactionId = "TB" + UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
+		log.info("[" + transactionId + "]*************INSIDE userHome METHOD POST**************");
+		List<UserHomeDto> response = userService.userHome(sportsId, transactionId);
+		return new ResponseEntity<List<UserHomeDto>>(response, HttpStatus.OK);
 	}
 
 }
