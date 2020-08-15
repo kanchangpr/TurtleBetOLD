@@ -20,5 +20,6 @@ public class RunnerCatalog {
 	private Double handicap;
 	private int sortPriority;
 	private ExchangePrices ex;
+	private Runner runner;
 
 }

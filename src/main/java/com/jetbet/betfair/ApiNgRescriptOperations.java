@@ -137,9 +137,9 @@ public class ApiNgRescriptOperations extends ApiNgOperations {
 			int runnersSize = container.get(i).getRunners().size();
 			for (int j = 0; j < runnersSize; j++) {
 				String selectionId = container.get(i).getRunners().get(j).getSelectionId().toString();
-				ExchangePrices exchangePrices = listRunnersBook(marketId, selectionId, priceProjection, orderProjection,
+				Runner runner = listRunnersBook(marketId, selectionId, priceProjection, orderProjection,
 						matchProjection, currencyCode, appKey, ssoId);
-				container.get(i).getRunners().get(j).setEx(exchangePrices);
+				container.get(i).getRunners().get(j).setRunner(runner);
 			}
 		}
 
@@ -147,7 +147,7 @@ public class ApiNgRescriptOperations extends ApiNgOperations {
 
 	}
 
-	public ExchangePrices listRunnersBook(String marketId, String selectionId, PriceProjection priceProjection,
+	public Runner listRunnersBook(String marketId, String selectionId, PriceProjection priceProjection,
 			OrderProjection orderProjection, MatchProjection matchProjection, String currencyCode, String appKey,
 			String ssoId) throws APINGException {
 		Map<String, Object> params = new HashMap<String, Object>();
@@ -169,8 +169,10 @@ public class ApiNgRescriptOperations extends ApiNgOperations {
 		priceSize.setPrice(0.0);
 		priceSize.setSize(0.0);
 		priceSizeList.add(priceSize);
+		Runner runner = new Runner();
 		ExchangePrices exPrice = new ExchangePrices();
 		for (int i = 0; i < container.size(); i++) {
+			
 			if(container.get(i).getRunners().get(0).getEx().getAvailableToBack().size()==0) {
 				exPrice.setAvailableToBack(priceSizeList);
 			}else {
@@ -188,9 +190,11 @@ public class ApiNgRescriptOperations extends ApiNgOperations {
 			}else {
 				exPrice.setTradedVolume(container.get(i).getRunners().get(0).getEx().getTradedVolume());
 			}
+			runner.setStatus(container.get(i).getRunners().get(0).getStatus());
+			runner.setEx(exPrice);
 		}
 
-		return exPrice;
+		return runner;
 
 	}
 
