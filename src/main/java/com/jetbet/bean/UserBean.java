@@ -70,20 +70,20 @@ public class UserBean {
 	@Column(name = "User_Limit")
 	private long userLimit;
 	
-	@Column(name = "Max_Profit")
-	private double maxProfit;
-	
-	@Column(name = "Max_Loss")
-	private double maxLoss;
-	
-	@Column(name = "Odds_Max_Stake")
-	private double oddsMaxStake;
-	
-	@Column(name = "Going_In_Play_Stake")
-	private double goingInPlayStake;
-	
-	@Column(name = "Session_Max_Stake")
-	private double sessionMaxStake;
+//	@Column(name = "Max_Profit")
+//	private double maxProfit;
+//	
+//	@Column(name = "Max_Loss")
+//	private double maxLoss;
+//	
+//	@Column(name = "Odds_Max_Stake")
+//	private double oddsMaxStake;
+//	
+//	@Column(name = "Going_In_Play_Stake")
+//	private double goingInPlayStake;
+//	
+//	@Column(name = "Session_Max_Stake")
+//	private double sessionMaxStake;
 	
 	@Column(name = "chips" , updatable=false)
 	private double chips;
@@ -131,11 +131,11 @@ public class UserBean {
 		this.betDelay = betDelay;
 		this.sessionDelay = sessionDelay;
 		this.userLimit = userLimit;
-		this.maxProfit = maxProfit;
-		this.maxLoss = maxLoss;
-		this.oddsMaxStake = oddsMaxStake;
-		this.goingInPlayStake = goingInPlayStake;
-		this.sessionMaxStake = sessionMaxStake;
+//		this.maxProfit = maxProfit;
+//		this.maxLoss = maxLoss;
+//		this.oddsMaxStake = oddsMaxStake;
+//		this.goingInPlayStake = goingInPlayStake;
+//		this.sessionMaxStake = sessionMaxStake;
 		this.chips = chips;
 		this.isActive = isActive;
 		this.isUserLock = isUserLock;

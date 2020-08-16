@@ -21,5 +21,6 @@ public class RunnerCatalog {
 	private int sortPriority;
 	private ExchangePrices ex;
 	private Runner runner;
+	private String status;
 
 }

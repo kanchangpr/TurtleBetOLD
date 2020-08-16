@@ -23,11 +23,11 @@ public class JetbetMapper {
 			userBean.setBetDelay(userRolesRequestDto.getBetDelay());
 			userBean.setSessionDelay(userRolesRequestDto.getSessionDelay());
 			userBean.setUserLimit(userRolesRequestDto.getUserLimit());
-			userBean.setMaxProfit(userRolesRequestDto.getMaxProfit());
-			userBean.setMaxLoss(userRolesRequestDto.getMaxLoss());
-			userBean.setOddsMaxStake(userRolesRequestDto.getOddsMaxStake());
-			userBean.setGoingInPlayStake(userRolesRequestDto.getGoingInPlayStake());
-			userBean.setSessionMaxStake(userRolesRequestDto.getSessionMaxStake());
+//			userBean.setMaxProfit(userRolesRequestDto.getMaxProfit());
+//			userBean.setMaxLoss(userRolesRequestDto.getMaxLoss());
+//			userBean.setOddsMaxStake(userRolesRequestDto.getOddsMaxStake());
+//			userBean.setGoingInPlayStake(userRolesRequestDto.getGoingInPlayStake());
+//			userBean.setSessionMaxStake(userRolesRequestDto.getSessionMaxStake());
 		}
 		return userBean;
 	}

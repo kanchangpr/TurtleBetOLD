@@ -94,6 +94,9 @@ public class ResourceConstants {
 	public static final String ERR_013="ERR_13";
 	public static final String USER_BETTING_LOCK="Betting locked for User!!";
 	
+	public static final String ERR_014="ERR_14";
+	public static final String MINIMUM_STAKE_ERROR="Minimum Stake should be ";
+	
 	public static final String BET_PLACED="Bet Placed Successfully!! Bet ID: ";
 	
 	public static final String ERR_EXCEPTION="ERR_EXEPCTION";

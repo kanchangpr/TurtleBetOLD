@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import com.jetbet.bean.ChipsBean;
 import com.jetbet.bean.FancyBean;
+import com.jetbet.bean.LookupTableBean;
 import com.jetbet.bean.MatchBean;
 import com.jetbet.bean.PartnershipBean;
 import com.jetbet.bean.PlaceBetsBean;
@@ -38,6 +39,7 @@ import com.jetbet.dto.UserResponseDto;
 import com.jetbet.dto.UserRolesResponseDto;
 import com.jetbet.repository.ChipsRepository;
 import com.jetbet.repository.FancyRepository;
+import com.jetbet.repository.LookupTableRepository;
 import com.jetbet.repository.MatchRepository;
 import com.jetbet.repository.PartnershipRepository;
 import com.jetbet.repository.PlaceBetsRepository;
@@ -72,7 +74,7 @@ public class UserDao {
 
 	@Autowired
 	private MatchRepository matchRepository;
-	
+
 	@Autowired
 	private FancyRepository fancyRepository;
 
@@ -84,9 +86,12 @@ public class UserDao {
 
 	@Autowired
 	PlaceBetsRepository placeBetsRepository;
-	
+
 	@Autowired
 	UserLoginRepository userLoginRepository;
+
+	@Autowired
+	LookupTableRepository lookupTableRepository;
 
 	public static DecimalFormat df = new DecimalFormat("0.00");
 
@@ -660,11 +665,11 @@ public class UserDao {
 		int betDelay = userDetailsRequestDto.getBetDelay();
 		int sessionDelay = userDetailsRequestDto.getSessionDelay();
 		long userLimit = userDetailsRequestDto.getUserLimit();
-		double maxProfit = userDetailsRequestDto.getMaxProfit();
-		double maxLoss = userDetailsRequestDto.getMaxLoss();
-		double oddsMaxStake = userDetailsRequestDto.getOddsMaxStake();
-		double goingInPlayStake = userDetailsRequestDto.getGoingInPlayStake();
-		double sessionMaxStake = userDetailsRequestDto.getSessionMaxStake();
+//		double maxProfit = userDetailsRequestDto.getMaxProfit();
+//		double maxLoss = userDetailsRequestDto.getMaxLoss();
+//		double oddsMaxStake = userDetailsRequestDto.getOddsMaxStake();
+//		double goingInPlayStake = userDetailsRequestDto.getGoingInPlayStake();
+//		double sessionMaxStake = userDetailsRequestDto.getSessionMaxStake();
 		String remarks = userDetailsRequestDto.getRemarks();
 
 		log.info("[" + transactionId + "] userId:: " + userId);
@@ -674,11 +679,11 @@ public class UserDao {
 		log.info("[" + transactionId + "] betDelay:: " + betDelay);
 		log.info("[" + transactionId + "] sessionDelay:: " + sessionDelay);
 		log.info("[" + transactionId + "] userLimit:: " + userLimit);
-		log.info("[" + transactionId + "] maxProfit:: " + maxProfit);
-		log.info("[" + transactionId + "] maxLoss:: " + maxLoss);
-		log.info("[" + transactionId + "] oddsMaxStake:: " + oddsMaxStake);
-		log.info("[" + transactionId + "] goingInPlayStake:: " + goingInPlayStake);
-		log.info("[" + transactionId + "] sessionMaxStake:: " + sessionMaxStake);
+//		log.info("[" + transactionId + "] maxProfit:: " + maxProfit);
+//		log.info("[" + transactionId + "] maxLoss:: " + maxLoss);
+//		log.info("[" + transactionId + "] oddsMaxStake:: " + oddsMaxStake);
+//		log.info("[" + transactionId + "] goingInPlayStake:: " + goingInPlayStake);
+//		log.info("[" + transactionId + "] sessionMaxStake:: " + sessionMaxStake);
 		log.info("[" + transactionId + "] remarks:: " + remarks);
 
 		UserBean userUpdBean = userRepository.findFirst1ByUserId(userId);
@@ -690,11 +695,11 @@ public class UserDao {
 			userUpdBean.setBetDelay(betDelay);
 			userUpdBean.setSessionDelay(sessionDelay);
 			userUpdBean.setUserLimit(userLimit);
-			userUpdBean.setMaxProfit(maxProfit);
-			userUpdBean.setMaxLoss(maxLoss);
-			userUpdBean.setOddsMaxStake(oddsMaxStake);
-			userUpdBean.setGoingInPlayStake(goingInPlayStake);
-			userUpdBean.setSessionMaxStake(sessionMaxStake);
+//			userUpdBean.setMaxProfit(maxProfit);
+//			userUpdBean.setMaxLoss(maxLoss);
+//			userUpdBean.setOddsMaxStake(oddsMaxStake);
+//			userUpdBean.setGoingInPlayStake(goingInPlayStake);
+//			userUpdBean.setSessionMaxStake(sessionMaxStake);
 			userUpdBean.setRemarks(remarks);
 			userUpdBean = userRepository.save(userUpdBean);
 		}
@@ -832,6 +837,8 @@ public class UserDao {
 		log.info("[" + transactionId + "]****************INSIDE placeBets CLASS UserDao****************");
 		UserResponseDto userResponseDto = new UserResponseDto();
 		ChipsBean chipsBean = new ChipsBean();
+		final String MINIMUM_STAKE = "MINIMUM_STAKE";
+		final String MATCH_ODDS = "Match Odds";
 		try {
 			String updateChipsSql = null;
 			String loginId = placeBetsBean.getLoginId();
@@ -858,6 +865,8 @@ public class UserDao {
 			int psId = userDetail.getPartnership();
 			double chips = userDetail.getChips();
 			String isbetLock = userDetail.getIsBettingLock();
+			int sessionDelay= userDetail.getSessionDelay();
+			int betDelay= userDetail.getBetDelay();
 
 			log.info("[" + transactionId + "] parent:  " + parent);
 			log.info("[" + transactionId + "] loginId:  " + loginId);
@@ -883,42 +892,56 @@ public class UserDao {
 			placeBetsBean.setPsId(psId);
 			placeBetsBean.setRemarks("Bet Placed by User " + userId);
 
+			LookupTableBean lookupTableRes = lookupTableRepository.findByLookupType(MINIMUM_STAKE);
+			Double minimumStake = Double.parseDouble(lookupTableRes.getLookupValue());
 			if (isbetLock.equalsIgnoreCase("N")) {
-				if (stake <= chips) {
-					PlaceBetsBean placeBetsResBean = placeBetsRepository.saveAndFlush(placeBetsBean);
-					if (placeBetsResBean.getUserId().equalsIgnoreCase(userId)) {
+				if (stake >= minimumStake) {
+					if (stake <= chips) {
+						PlaceBetsBean placeBetsResBean = placeBetsRepository.saveAndFlush(placeBetsBean);
+						if (placeBetsResBean.getUserId().equalsIgnoreCase(userId)) {
 
-						log.info("[" + transactionId + "] placeBetsResBean:: " + placeBetsResBean);
+							log.info("[" + transactionId + "] placeBetsResBean:: " + placeBetsResBean);
 
-						double balance = Double.parseDouble(df.format(chips - stake));
+							double balance = Double.parseDouble(df.format(chips - stake));
 
-						updateChipsSql = QueryListConstant.UPDATE_USER_CHIPS;
-						int updateChipsRowCount = jdbcTemplate.update(updateChipsSql,
-								new Object[] { balance, userId, userId });
-						log.info("[" + transactionId + "] updateChipsRowCount:: " + updateChipsRowCount);
+							updateChipsSql = QueryListConstant.UPDATE_USER_CHIPS;
+							int updateChipsRowCount = jdbcTemplate.update(updateChipsSql,
+									new Object[] { balance, userId, userId });
+							log.info("[" + transactionId + "] updateChipsRowCount:: " + updateChipsRowCount);
+							
+							if(marketName.equalsIgnoreCase(MATCH_ODDS)) {
+								Thread.sleep(betDelay*1000);
+							}else {
+								Thread.sleep(sessionDelay*1000);
+							}
+							
+							chipsBean.setUserId(userId);
+							chipsBean.setFromUser("BET_PLACED");
+							chipsBean.setBettingId(placeBetsResBean.getId());
+							chipsBean.setDebit(stake);
+							chipsBean.setTotalChips(balance);
+							chipsBean.setCreatedBy(userId);
+							chipsBean.setRemarks("Placed Bet on runner " + runnerName + " for " + stake);
+							chipsBean = chipsRepository.saveAndFlush(chipsBean);
 
-						chipsBean.setUserId(userId);
-						chipsBean.setFromUser("BET_PLACED");
-						chipsBean.setBettingId(placeBetsResBean.getId());
-						chipsBean.setDebit(stake);
-						chipsBean.setTotalChips(balance);
-						chipsBean.setCreatedBy(userId);
-						chipsBean.setRemarks("Placed Bet on runner " + runnerName + " for " + stake);
-						chipsBean = chipsRepository.saveAndFlush(chipsBean);
+							log.info("[" + transactionId + "] chipsBean:: " + chipsBean);
 
-						log.info("[" + transactionId + "] chipsBean:: " + chipsBean);
-
-						userResponseDto.setStatus(ResourceConstants.SUCCESS);
-						userResponseDto.setErrorMsg(ResourceConstants.BET_PLACED + placeBetsResBean.getId());
+							userResponseDto.setStatus(ResourceConstants.SUCCESS);
+							userResponseDto.setErrorMsg(ResourceConstants.BET_PLACED + placeBetsResBean.getId());
+						} else {
+							userResponseDto.setStatus(ResourceConstants.FAILED);
+							userResponseDto.setErrorCode(ResourceConstants.ERR_002);
+							userResponseDto.setErrorMsg(ResourceConstants.INSERTION_FAILED);
+						}
 					} else {
 						userResponseDto.setStatus(ResourceConstants.FAILED);
-						userResponseDto.setErrorCode(ResourceConstants.ERR_002);
-						userResponseDto.setErrorMsg(ResourceConstants.INSERTION_FAILED);
+						userResponseDto.setErrorCode(ResourceConstants.ERR_004);
+						userResponseDto.setErrorMsg(ResourceConstants.INSUFFICIENT_AMOUNT);
 					}
 				} else {
 					userResponseDto.setStatus(ResourceConstants.FAILED);
-					userResponseDto.setErrorCode(ResourceConstants.ERR_004);
-					userResponseDto.setErrorMsg(ResourceConstants.INSUFFICIENT_AMOUNT);
+					userResponseDto.setErrorCode(ResourceConstants.ERR_013);
+					userResponseDto.setErrorMsg(ResourceConstants.MINIMUM_STAKE_ERROR + minimumStake);
 				}
 			} else {
 				userResponseDto.setStatus(ResourceConstants.FAILED);
@@ -994,8 +1017,8 @@ public class UserDao {
 				loginHistory = jdbcTemplate.query(QueryListConstant.LOGIN_HISTORY_BY_DATE_RANGE,
 						new Object[] { fromDate, toDate, userId },
 						(rs, rowNum) -> new UserLoginBean(rs.getLong("id"), rs.getString("user_id"),
-								rs.getString("user_role"),  rs.getString("user_parent"), rs.getDate("login_time"), rs.getString("ip_address"),
-								rs.getString("browser_detail")));
+								rs.getString("user_role"), rs.getString("user_parent"), rs.getDate("login_time"),
+								rs.getString("ip_address"), rs.getString("browser_detail")));
 			}
 
 			for (int i = 0; i < loginHistory.size(); i++) {
@@ -1014,27 +1037,27 @@ public class UserDao {
 	public List<UserHomeDto> userHome(String sportsId, String transactionId) {
 		log.info("[" + transactionId + "]****************INSIDE userHome CLASS UserDao****************");
 		List<UserHomeDto> seriesMatchFancyResList = new ArrayList<UserHomeDto>();
-		
+
 		try {
 			List<SeriesBean> seriesList = seriesRepository.findBySportIdAndIsActiveOrderBySportId(sportsId, "Y");
 			for (int k = 0; k < seriesList.size(); k++) {
 				UserHomeDto seriesMatchFancyRes = new UserHomeDto();
 				String seriesId = seriesList.get(k).getSeriesId();
 				String seriesName = seriesList.get(k).getSeriesName();
-				
+
 				seriesMatchFancyRes.setSeriesId(seriesId);
 				seriesMatchFancyRes.setSeriesName(seriesName);
 				List<MarketTypeDetailsDto> fancyDetailList = new ArrayList<MarketTypeDetailsDto>();
 				List<MatchBean> matchList = matchRepository.findBySeriesIdAndIsActive(seriesId, "Y");
 				for (int j = 0; j < matchList.size(); j++) {
-					
+
 					String matchId = matchList.get(j).getMatchId();
 					String matchName = matchList.get(j).getMatchName();
 					Date matchOpenDate = matchList.get(j).getMatchOpenDate();
-					
+
 					List<FancyBean> marketTypeList = fancyRepository.findByFancyIdMatchIdAndIsActive(matchId, "Y");
 					for (int i = 0; i < marketTypeList.size(); i++) {
-						
+
 						MarketTypeDetailsDto marketTypeDetailsDto = new MarketTypeDetailsDto();
 						marketTypeDetailsDto.setMatchId(matchId);
 						marketTypeDetailsDto.setMatchName(matchName);
@@ -1042,16 +1065,14 @@ public class UserDao {
 						marketTypeDetailsDto.setMarketType(marketTypeList.get(i).getFancyId().getMarketType());
 						marketTypeDetailsDto.setMarketCount(marketTypeList.get(i).getMarketCount());
 						fancyDetailList.add(marketTypeDetailsDto);
-						
-						
-						
+
 					}
-					
+
 				}
 				seriesMatchFancyRes.setMatchAndFancyDetails(fancyDetailList);
 				seriesMatchFancyResList.add(seriesMatchFancyRes);
 			}
-		}catch (Exception e) {
+		} catch (Exception e) {
 			// TODO: handle exception
 		}
 		return seriesMatchFancyResList;

@@ -36,11 +36,11 @@ public class UserDetailsRequestDto {
 	private int betDelay;
 	private int sessionDelay;
 	private int userLimit;
-	private int maxProfit;
-	private int maxLoss;
-	private int oddsMaxStake;
-	private int goingInPlayStake;
-	private int sessionMaxStake;
+//	private int maxProfit;
+//	private int maxLoss;
+//	private int oddsMaxStake;
+//	private int goingInPlayStake;
+//	private int sessionMaxStake;
 	
 	@NotNull
 	private String remarks;

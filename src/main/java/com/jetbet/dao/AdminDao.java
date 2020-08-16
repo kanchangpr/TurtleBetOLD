@@ -109,20 +109,11 @@ public class AdminDao {
 					userResponseDto.setStatus(ResourceConstants.SUCCESS);
 					userResponseDto.setErrorMsg(ResourceConstants.UPDATED);
 					if (sportsControlReq.getOperation().equalsIgnoreCase(ResourceConstants.SPORTS_PAGE)) {
-						new Thread(() -> {
 							bfController.updateListOfSeries();
-							return;
-						}).start();
 					} else if (sportsControlReq.getOperation().equalsIgnoreCase(ResourceConstants.SERIES_PAGE)) {
-						new Thread(() -> {
 							bfController.updateListOfMatches();
-							return;
-						}).start();
 					} else if (sportsControlReq.getOperation().equalsIgnoreCase(ResourceConstants.MATCH_PAGE)) {
-						new Thread(() -> {
 							bfController.updateListOfOdds();
-							return;
-						}).start();
 					}
 				}
 			} else if (!errorCode && sportsControlReq.getIsActive().equalsIgnoreCase("N")) {
