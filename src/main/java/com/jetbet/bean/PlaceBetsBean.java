@@ -66,7 +66,7 @@ public class PlaceBetsBean {
 	private String marketName;
 	
 	@Column(name = "selection_id")
-	private String selectionId;
+	private Long selectionId;
 	
 	@Column(name = "runner_name")
 	private String runnerName;
@@ -95,6 +95,9 @@ public class PlaceBetsBean {
 	
 	@Column(name = "remarks")
 	private String remarks;
+	
+	@Column(name = "bet_status")
+	private String betStatus;
 	
 	@Column(name = "created_by")
 	private String createdBy;

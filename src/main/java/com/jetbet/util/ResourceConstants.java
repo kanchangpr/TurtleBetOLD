@@ -46,6 +46,7 @@ public class ResourceConstants {
 	public static final String USER_DASHBOARD="userDashboard";
 	public static final String RUNNERS_PRICE_SIZE="runnersPriceAndSize";
 	public static final String USER_HOME="userHome";
+	public static final String DECLARE_RESULT="declareResult";
 	
 	public static final String SUPERMASTER="superMaster";
 	public static final String MASTER="master";

@@ -202,4 +202,15 @@ public class BetfairController {
 		log.info("["+transactionId+"]*************************INSIDE getListOfOdds METHOD GET*************************");
 		betfairService.getListOfOdds(applicationKey, sessionToken, userName, transactionId);
 	}
+	
+	@RequestMapping(value=ResourceConstants.DECLARE_RESULT, method=RequestMethod.GET)
+	public void declareResult() {
+		ResponseEntity<SessionDetails> sessionDetails=getSessionToken();
+		String applicationKey=sessionDetails.getBody().getProduct();
+		String sessionToken=sessionDetails.getBody().getToken();
+		String userName=ResourceConstants.USER_NAME;
+		String transactionId = "TB"+UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
+		log.info("["+transactionId+"]*************************INSIDE getListOfOdds METHOD GET*************************");
+		betfairService.declareResult(applicationKey, sessionToken, userName, transactionId);
+	}
 }

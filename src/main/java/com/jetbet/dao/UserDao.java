@@ -29,9 +29,6 @@ import com.jetbet.bean.UserLoginBean;
 import com.jetbet.dto.ChangePasswordDto;
 import com.jetbet.dto.ChipsDto;
 import com.jetbet.dto.MarketTypeDetailsDto;
-import com.jetbet.dto.MatchAndFancyDetailDto;
-import com.jetbet.dto.MatchDetailsDto;
-import com.jetbet.dto.SeriesMatchFancyResponseDto;
 import com.jetbet.dto.UserControlsDto;
 import com.jetbet.dto.UserDetailsRequestDto;
 import com.jetbet.dto.UserHomeDto;
@@ -85,13 +82,13 @@ public class UserDao {
 	private StakesRepository stakesRepository;
 
 	@Autowired
-	PlaceBetsRepository placeBetsRepository;
+	private PlaceBetsRepository placeBetsRepository;
 
 	@Autowired
-	UserLoginRepository userLoginRepository;
+	private UserLoginRepository userLoginRepository;
 
 	@Autowired
-	LookupTableRepository lookupTableRepository;
+	private LookupTableRepository lookupTableRepository;
 
 	public static DecimalFormat df = new DecimalFormat("0.00");
 
@@ -839,6 +836,7 @@ public class UserDao {
 		ChipsBean chipsBean = new ChipsBean();
 		final String MINIMUM_STAKE = "MINIMUM_STAKE";
 		final String MATCH_ODDS = "Match Odds";
+		final String BET_STATUS = "OPEN";
 		try {
 			String updateChipsSql = null;
 			String loginId = placeBetsBean.getLoginId();
@@ -851,7 +849,7 @@ public class UserDao {
 			String matchName = placeBetsBean.getMatchName();
 			String marketId = placeBetsBean.getMarketId();
 			String marketName = placeBetsBean.getMarketName();
-			String selectionId = placeBetsBean.getSelectionId();
+			Long selectionId = placeBetsBean.getSelectionId();
 			String runnerName = placeBetsBean.getRunnerName();
 			double odds = placeBetsBean.getOdds();
 			double stake = placeBetsBean.getStake();
@@ -891,6 +889,7 @@ public class UserDao {
 			placeBetsBean.setParent(parent);
 			placeBetsBean.setPsId(psId);
 			placeBetsBean.setRemarks("Bet Placed by User " + userId);
+			placeBetsBean.setBetStatus(BET_STATUS);
 
 			LookupTableBean lookupTableRes = lookupTableRepository.findByLookupType(MINIMUM_STAKE);
 			Double minimumStake = Double.parseDouble(lookupTableRes.getLookupValue());
@@ -980,10 +979,10 @@ public class UserDao {
 								rs.getString("user_id"), rs.getString("parent"), rs.getString("sports_id"),
 								rs.getString("sports_name"), rs.getString("series_id"), rs.getString("series_name"),
 								rs.getString("match_id"), rs.getString("match_name"), rs.getString("market_id"),
-								rs.getString("market_name"), rs.getString("selection_id"), rs.getString("runner_name"),
+								rs.getString("market_name"), rs.getLong("selection_id"), rs.getString("runner_name"),
 								rs.getDate("bet_place_date"), rs.getDouble("odds"), rs.getDouble("stake"),
 								rs.getDouble("porfitloss"), rs.getString("isback"), rs.getString("islay"),
-								rs.getInt("psid"), rs.getString("remarks"), rs.getString("created_by"),
+								rs.getInt("psid"), rs.getString("remarks"),rs.getString("bet_status"), rs.getString("created_by"),
 								rs.getDate("created_date"), rs.getString("last_updated_by"),
 								rs.getDate("last_updated_date")));
 			}

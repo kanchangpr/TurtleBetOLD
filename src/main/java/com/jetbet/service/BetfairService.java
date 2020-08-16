@@ -35,4 +35,6 @@ public interface BetfairService {
 	RunnerPriceAndSize getRunnersPrizeAndSize(String marketId, String selectionId, String applicationKey,
 			String sessionToken, String userName, String transactionId);
 
+	void declareResult(String applicationKey, String sessionToken, String userName, String transactionId);
+
 }

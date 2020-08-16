@@ -17,6 +17,7 @@ import org.springframework.stereotype.Repository;
 import com.jetbet.bean.FancyBean;
 import com.jetbet.bean.MarketCatalogueBean;
 import com.jetbet.bean.MatchBean;
+import com.jetbet.bean.PlaceBetsBean;
 import com.jetbet.bean.SeriesBean;
 import com.jetbet.bean.SportsBean;
 import com.jetbet.betfair.ApiNgOperations;
@@ -44,10 +45,12 @@ import com.jetbet.dto.SessionDetails;
 import com.jetbet.repository.FancyRepository;
 import com.jetbet.repository.MarketCatalogueRepository;
 import com.jetbet.repository.MatchRepository;
+import com.jetbet.repository.PlaceBetsRepository;
 import com.jetbet.repository.SeriesRepository;
 import com.jetbet.repository.SportsRepository;
 import com.jetbet.util.ResourceConstants;
 
+import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -68,6 +71,9 @@ public class BetfairDao {
 
 	@Autowired
 	private MarketCatalogueRepository marketCatalogueRepository;
+
+	@Autowired
+	private PlaceBetsRepository placeBetsRepository;
 
 	@Autowired
 	JdbcTemplate jdbcTemplate;
@@ -247,15 +253,15 @@ public class BetfairDao {
 
 				response.stream().forEach(res -> {
 					FancyBean fancyBean = new FancyBean();
-					FancyIdDto fancyId= new FancyIdDto();
+					FancyIdDto fancyId = new FancyIdDto();
 					fancyId.setMarketType(res.getMarketType());
 					fancyId.setMatchId(matchId);
 					fancyBean.setFancyId(fancyId);
-					//fancyBean.getFancyId().setMarketType(res.getMarketType());
-					//fancyBean.setMarketType(res.getMarketType());
+					// fancyBean.getFancyId().setMarketType(res.getMarketType());
+					// fancyBean.setMarketType(res.getMarketType());
 					fancyBean.setMarketCount(res.getMarketCount());
-					//fancyBean.getFancyId().setMatchId(matchId);
-					//fancyBean.setMatchId(matchId);
+					// fancyBean.getFancyId().setMatchId(matchId);
+					// fancyBean.setMatchId(matchId);
 					fancyBean.setFancyCreatedBy(userName);
 					fancyBeanList.add(fancyBean);
 				});
@@ -304,12 +310,12 @@ public class BetfairDao {
 				List<MatchBean> matchList = matchRepository.findBySeriesIdAndIsActive(seriesId, "Y");
 				for (int j = 0; j < matchList.size(); j++) {
 
-					
 					String matchIdString = matchList.get(j).getMatchId();
 					String matchNameString = matchList.get(j).getMatchName();
 					Date matchOpenDate = matchList.get(j).getMatchOpenDate();
 					// log.info("Match ID for Fancy Details: " + matchIdString);
-					List<FancyBean> marketTypeList = fancyRepository.findByFancyIdMatchIdAndIsActive(matchIdString, "Y");
+					List<FancyBean> marketTypeList = fancyRepository.findByFancyIdMatchIdAndIsActive(matchIdString,
+							"Y");
 
 					for (int i = 0; i < marketTypeList.size(); i++) {
 						MatchAndFancyDetailDto matchAndFancyDetailDto = new MatchAndFancyDetailDto();
@@ -329,7 +335,7 @@ public class BetfairDao {
 						matchAndFancyDetailDto.setMatchDate(matchDate);
 						matchAndFancyDetailDto.setMarketType(marketType);
 						matchAndFancyDetailDto.setMarketCount(marketCount);
-						
+
 						Set<String> typesCode = new HashSet<String>();
 						typesCode.add(marketType);
 						Set<String> eventIds = new HashSet<String>();
@@ -360,7 +366,7 @@ public class BetfairDao {
 						}
 						matchAndFancyDetailList.add(matchAndFancyDetailDto);
 					}
-					
+
 					seriesMatchFancyRes.setMatchAndFancyDetail(matchAndFancyDetailList);
 				}
 				seriesMatchFancyResList.add(seriesMatchFancyRes);
@@ -395,16 +401,16 @@ public class BetfairDao {
 	private List<SeriesBean> storeListOfCompDB(List<SeriesBean> seriesBeanList, String transactionId) {
 		List<SeriesBean> responseBeanList = new ArrayList<SeriesBean>();
 		for (SeriesBean seriesBean : seriesBeanList) {
-			//String seriesId = seriesBean.getSeriesId();
-			//long getRowCount = seriesRepository.countBySeriesId(seriesId);
-			//if (getRowCount == 0) {
-				SeriesBean responseBean = new SeriesBean();
-				// log.info("[" + transactionId + "] inside if seriesId: " + seriesId);
-				responseBean = seriesRepository.saveAndFlush(seriesBean);
-				responseBeanList.add(responseBean);
-			//} else {
-				// log.info("[" + transactionId + "] inside Else seriesId: " + seriesId);
-		//	}
+			// String seriesId = seriesBean.getSeriesId();
+			// long getRowCount = seriesRepository.countBySeriesId(seriesId);
+			// if (getRowCount == 0) {
+			SeriesBean responseBean = new SeriesBean();
+			// log.info("[" + transactionId + "] inside if seriesId: " + seriesId);
+			responseBean = seriesRepository.saveAndFlush(seriesBean);
+			responseBeanList.add(responseBean);
+			// } else {
+			// log.info("[" + transactionId + "] inside Else seriesId: " + seriesId);
+			// }
 		}
 		// log.info("responseBeanList:: " + responseBeanList);
 		return responseBeanList;
@@ -414,16 +420,16 @@ public class BetfairDao {
 	private List<MatchBean> storeListOfMatchDB(List<MatchBean> matchBeanList, String transactionId) {
 		List<MatchBean> responseBeanList = new ArrayList<MatchBean>();
 		for (MatchBean matchBean : matchBeanList) {
-			//String matchId = matchBean.getMatchId();
-			//long getRowCount = matchRepository.countByMatchId(matchId);
-			//if (getRowCount == 0) {
-				MatchBean responseBean = new MatchBean();
-				// log.info("[" + transactionId + "] inside if matchId: " + matchId);
-				responseBean = matchRepository.saveAndFlush(matchBean);
-				responseBeanList.add(responseBean);
-			//} else {
-				// log.info("[" + transactionId + "] inside Else matchId: " + matchId);
-			//}
+			// String matchId = matchBean.getMatchId();
+			// long getRowCount = matchRepository.countByMatchId(matchId);
+			// if (getRowCount == 0) {
+			MatchBean responseBean = new MatchBean();
+			// log.info("[" + transactionId + "] inside if matchId: " + matchId);
+			responseBean = matchRepository.saveAndFlush(matchBean);
+			responseBeanList.add(responseBean);
+			// } else {
+			// log.info("[" + transactionId + "] inside Else matchId: " + matchId);
+			// }
 		}
 		// log.info("responseBeanList:: " + responseBeanList);
 		return responseBeanList;
@@ -438,18 +444,19 @@ public class BetfairDao {
 		for (FancyBean fancyBean : fancyBeanList) {
 			// log.info("marketType & Match ID " + fancyBean.getMarketType() + " : " +
 			// fancyBean.getMatchId());
-			//long getRowCount = fancyRepository.countByMarketTypeAndMatchId(fancyBean.getMarketType(),
-			//		fancyBean.getMatchId());
-			//if (getRowCount == 0) {
-				// log.info("[" + transactionId + "] inside if marketType & Match ID " +
-				// fancyBean.getMarketType() + " : "
-				// + fancyBean.getMatchId());
-				responseBeanList.add(fancyRepository.save(fancyBean));
-			//} else {
-				// log.info("[" + transactionId + "] inside Else marketType & Match ID " +
-				// fancyBean.getMarketType()
-				// + " : " + fancyBean.getMatchId());
-			//}
+			// long getRowCount =
+			// fancyRepository.countByMarketTypeAndMatchId(fancyBean.getMarketType(),
+			// fancyBean.getMatchId());
+			// if (getRowCount == 0) {
+			// log.info("[" + transactionId + "] inside if marketType & Match ID " +
+			// fancyBean.getMarketType() + " : "
+			// + fancyBean.getMatchId());
+			responseBeanList.add(fancyRepository.save(fancyBean));
+			// } else {
+			// log.info("[" + transactionId + "] inside Else marketType & Match ID " +
+			// fancyBean.getMarketType()
+			// + " : " + fancyBean.getMatchId());
+			// }
 		}
 		log.info("responseBeanList:: " + responseBeanList);
 		return responseBeanList;
@@ -491,10 +498,10 @@ public class BetfairDao {
 		List<MarketCatalogue> marketCatalogueResult = new ArrayList<MarketCatalogue>();
 		List<DashboardMatchListDto> resBeanList = new ArrayList<DashboardMatchListDto>();
 		try {
-			String maxResults="100";
+			String maxResults = "100";
 			MarketFilter marketFilter;
-			
-			List<FancyBean> fancyList=fancyRepository.findByIsActive("Y");
+
+			List<FancyBean> fancyList = fancyRepository.findByIsActive("Y");
 			Set<String> typesCode = new HashSet<String>();
 			Set<String> eventIds = new HashSet<String>();
 			for (int i = 0; i < fancyList.size(); i++) {
@@ -502,93 +509,150 @@ public class BetfairDao {
 				eventIds.add(fancyList.get(i).getFancyId().getMatchId());
 			}
 
-				// log.info("[" + transactionId + "] MatchID: " + matchId + " Market Type: " +
-				// marketType);
+			// log.info("[" + transactionId + "] MatchID: " + matchId + " Market Type: " +
+			// marketType);
 
-				marketFilter = new MarketFilter();
-				marketFilter.setEventIds(eventIds);
-				marketFilter.setMarketTypeCodes(typesCode);
-				Set<MarketProjection> marketProjection = new HashSet<MarketProjection>();
-				marketProjection.add(MarketProjection.EVENT);
-				marketProjection.add(MarketProjection.MARKET_START_TIME);
-				marketProjection.add(MarketProjection.RUNNER_DESCRIPTION);
+			marketFilter = new MarketFilter();
+			marketFilter.setEventIds(eventIds);
+			marketFilter.setMarketTypeCodes(typesCode);
+			Set<MarketProjection> marketProjection = new HashSet<MarketProjection>();
+			marketProjection.add(MarketProjection.EVENT);
+			marketProjection.add(MarketProjection.MARKET_START_TIME);
+			marketProjection.add(MarketProjection.RUNNER_DESCRIPTION);
 
-				marketCatalogueResult.addAll(rescriptOperations.listMarketCatalogue(marketFilter, marketProjection,
-						MarketSort.FIRST_TO_START, maxResults, applicationKey, sessionToken));
-				
-				for (int j = 0; j < marketCatalogueResult.size(); j++) {
-					DashboardMatchListDto resBean = new DashboardMatchListDto();
-					
-					resBean.setMatchId(marketCatalogueResult.get(j).getEvent().getId());
-					resBean.setMatchName(marketCatalogueResult.get(j).getEvent().getName());
-					resBean.setMatchOpenDate(marketCatalogueResult.get(j).getEvent().getOpenDate());
-					resBean.setMarketId(marketCatalogueResult.get(j).getMarketId());
-					resBean.setMarketType(marketCatalogueResult.get(j).getMarketName());
-					if(marketCatalogueResult.get(j).getRunners().size()==3) {
-						System.out.println("INSIDE IF marketCatalogueResult.get(j).getRunners().size(): "+marketCatalogueResult.get(j).getRunners().size());
-						resBean.setTeamABackPrize(marketCatalogueResult.get(j).getRunners().get(0).getEx().getAvailableToBack().get(0).getPrice());
-						resBean.setTeamBBackPrize(marketCatalogueResult.get(j).getRunners().get(1).getEx().getAvailableToBack().get(0).getPrice());
-						resBean.setDrawBackPrize(marketCatalogueResult.get(j).getRunners().get(2).getEx().getAvailableToBack().get(0).getPrice());
-						
-						resBean.setTeamABackSize(marketCatalogueResult.get(j).getRunners().get(0).getEx().getAvailableToLay().get(0).getSize());
-						resBean.setTeamBBackSize(marketCatalogueResult.get(j).getRunners().get(1).getEx().getAvailableToLay().get(0).getSize());
-						resBean.setDrawBackSize(marketCatalogueResult.get(j).getRunners().get(2).getEx().getAvailableToLay().get(0).getSize());
-						
-						resBean.setTeamALayPrize(marketCatalogueResult.get(j).getRunners().get(0).getEx().getAvailableToBack().get(0).getPrice());
-						resBean.setTeamBLayPrize(marketCatalogueResult.get(j).getRunners().get(1).getEx().getAvailableToBack().get(0).getPrice());
-						resBean.setDrawLayPrize(marketCatalogueResult.get(j).getRunners().get(2).getEx().getAvailableToBack().get(0).getPrice());
-						
-						resBean.setTeamALaySize(marketCatalogueResult.get(j).getRunners().get(0).getEx().getAvailableToLay().get(0).getSize());
-						resBean.setTeamBLaySize(marketCatalogueResult.get(j).getRunners().get(1).getEx().getAvailableToLay().get(0).getSize());
-						resBean.setDrawLaySize(marketCatalogueResult.get(j).getRunners().get(2).getEx().getAvailableToLay().get(0).getSize());
-						
-						resBean.setTeamAId(marketCatalogueResult.get(j).getRunners().get(0).getSelectionId());
-						resBean.setTeamBId(marketCatalogueResult.get(j).getRunners().get(1).getSelectionId());
-						resBean.setDrawId(marketCatalogueResult.get(j).getRunners().get(2).getSelectionId());
-						
-						resBean.setTeamA(marketCatalogueResult.get(j).getRunners().get(0).getRunnerName());
-						resBean.setTeamB(marketCatalogueResult.get(j).getRunners().get(1).getRunnerName());
-						resBean.setDraw(marketCatalogueResult.get(j).getRunners().get(2).getRunnerName());
-						
-					}else if(marketCatalogueResult.get(j).getRunners().size()==2) {
-						System.out.println("INSIDE ELSE marketCatalogueResult.get(j).getRunners().size(): "+marketCatalogueResult.get(j).getRunners().size());
-						resBean.setTeamABackPrize(marketCatalogueResult.get(j).getRunners().get(0).getEx().getAvailableToBack().get(0).getPrice());
-						resBean.setTeamBBackPrize(marketCatalogueResult.get(j).getRunners().get(1).getEx().getAvailableToBack().get(0).getPrice());
-						
-						resBean.setTeamABackSize(marketCatalogueResult.get(j).getRunners().get(0).getEx().getAvailableToLay().get(0).getSize());
-						resBean.setTeamBBackSize(marketCatalogueResult.get(j).getRunners().get(1).getEx().getAvailableToLay().get(0).getSize());
-						
-						resBean.setTeamALayPrize(marketCatalogueResult.get(j).getRunners().get(0).getEx().getAvailableToBack().get(0).getPrice());
-						resBean.setTeamBLayPrize(marketCatalogueResult.get(j).getRunners().get(1).getEx().getAvailableToBack().get(0).getPrice());
-						
-						resBean.setTeamALaySize(marketCatalogueResult.get(j).getRunners().get(0).getEx().getAvailableToLay().get(0).getSize());
-						resBean.setTeamBLaySize(marketCatalogueResult.get(j).getRunners().get(1).getEx().getAvailableToLay().get(0).getSize());
-						
-						resBean.setTeamAId(marketCatalogueResult.get(j).getRunners().get(0).getSelectionId());
-						resBean.setTeamBId(marketCatalogueResult.get(j).getRunners().get(1).getSelectionId());
-						
-						resBean.setTeamA(marketCatalogueResult.get(j).getRunners().get(0).getRunnerName());
-						resBean.setTeamB(marketCatalogueResult.get(j).getRunners().get(1).getRunnerName());
-					}
-					resBeanList.add(resBean);
+			marketCatalogueResult.addAll(rescriptOperations.listMarketCatalogue(marketFilter, marketProjection,
+					MarketSort.FIRST_TO_START, maxResults, applicationKey, sessionToken));
+
+			for (int j = 0; j < marketCatalogueResult.size(); j++) {
+				DashboardMatchListDto resBean = new DashboardMatchListDto();
+
+				resBean.setMatchId(marketCatalogueResult.get(j).getEvent().getId());
+				resBean.setMatchName(marketCatalogueResult.get(j).getEvent().getName());
+				resBean.setMatchOpenDate(marketCatalogueResult.get(j).getEvent().getOpenDate());
+				resBean.setMarketId(marketCatalogueResult.get(j).getMarketId());
+				resBean.setMarketType(marketCatalogueResult.get(j).getMarketName());
+				if (marketCatalogueResult.get(j).getRunners().size() == 3) {
+					System.out.println("INSIDE IF marketCatalogueResult.get(j).getRunners().size(): "
+							+ marketCatalogueResult.get(j).getRunners().size());
+					resBean.setTeamABackPrize(marketCatalogueResult.get(j).getRunners().get(0).getEx()
+							.getAvailableToBack().get(0).getPrice());
+					resBean.setTeamBBackPrize(marketCatalogueResult.get(j).getRunners().get(1).getEx()
+							.getAvailableToBack().get(0).getPrice());
+					resBean.setDrawBackPrize(marketCatalogueResult.get(j).getRunners().get(2).getEx()
+							.getAvailableToBack().get(0).getPrice());
+
+					resBean.setTeamABackSize(marketCatalogueResult.get(j).getRunners().get(0).getEx()
+							.getAvailableToLay().get(0).getSize());
+					resBean.setTeamBBackSize(marketCatalogueResult.get(j).getRunners().get(1).getEx()
+							.getAvailableToLay().get(0).getSize());
+					resBean.setDrawBackSize(marketCatalogueResult.get(j).getRunners().get(2).getEx().getAvailableToLay()
+							.get(0).getSize());
+
+					resBean.setTeamALayPrize(marketCatalogueResult.get(j).getRunners().get(0).getEx()
+							.getAvailableToBack().get(0).getPrice());
+					resBean.setTeamBLayPrize(marketCatalogueResult.get(j).getRunners().get(1).getEx()
+							.getAvailableToBack().get(0).getPrice());
+					resBean.setDrawLayPrize(marketCatalogueResult.get(j).getRunners().get(2).getEx()
+							.getAvailableToBack().get(0).getPrice());
+
+					resBean.setTeamALaySize(marketCatalogueResult.get(j).getRunners().get(0).getEx().getAvailableToLay()
+							.get(0).getSize());
+					resBean.setTeamBLaySize(marketCatalogueResult.get(j).getRunners().get(1).getEx().getAvailableToLay()
+							.get(0).getSize());
+					resBean.setDrawLaySize(marketCatalogueResult.get(j).getRunners().get(2).getEx().getAvailableToLay()
+							.get(0).getSize());
+
+					resBean.setTeamAId(marketCatalogueResult.get(j).getRunners().get(0).getSelectionId());
+					resBean.setTeamBId(marketCatalogueResult.get(j).getRunners().get(1).getSelectionId());
+					resBean.setDrawId(marketCatalogueResult.get(j).getRunners().get(2).getSelectionId());
+
+					resBean.setTeamA(marketCatalogueResult.get(j).getRunners().get(0).getRunnerName());
+					resBean.setTeamB(marketCatalogueResult.get(j).getRunners().get(1).getRunnerName());
+					resBean.setDraw(marketCatalogueResult.get(j).getRunners().get(2).getRunnerName());
+
+				} else if (marketCatalogueResult.get(j).getRunners().size() == 2) {
+					System.out.println("INSIDE ELSE marketCatalogueResult.get(j).getRunners().size(): "
+							+ marketCatalogueResult.get(j).getRunners().size());
+					resBean.setTeamABackPrize(marketCatalogueResult.get(j).getRunners().get(0).getEx()
+							.getAvailableToBack().get(0).getPrice());
+					resBean.setTeamBBackPrize(marketCatalogueResult.get(j).getRunners().get(1).getEx()
+							.getAvailableToBack().get(0).getPrice());
+
+					resBean.setTeamABackSize(marketCatalogueResult.get(j).getRunners().get(0).getEx()
+							.getAvailableToLay().get(0).getSize());
+					resBean.setTeamBBackSize(marketCatalogueResult.get(j).getRunners().get(1).getEx()
+							.getAvailableToLay().get(0).getSize());
+
+					resBean.setTeamALayPrize(marketCatalogueResult.get(j).getRunners().get(0).getEx()
+							.getAvailableToBack().get(0).getPrice());
+					resBean.setTeamBLayPrize(marketCatalogueResult.get(j).getRunners().get(1).getEx()
+							.getAvailableToBack().get(0).getPrice());
+
+					resBean.setTeamALaySize(marketCatalogueResult.get(j).getRunners().get(0).getEx().getAvailableToLay()
+							.get(0).getSize());
+					resBean.setTeamBLaySize(marketCatalogueResult.get(j).getRunners().get(1).getEx().getAvailableToLay()
+							.get(0).getSize());
+
+					resBean.setTeamAId(marketCatalogueResult.get(j).getRunners().get(0).getSelectionId());
+					resBean.setTeamBId(marketCatalogueResult.get(j).getRunners().get(1).getSelectionId());
+
+					resBean.setTeamA(marketCatalogueResult.get(j).getRunners().get(0).getRunnerName());
+					resBean.setTeamB(marketCatalogueResult.get(j).getRunners().get(1).getRunnerName());
 				}
-				
-		}catch (APINGException e) {
+				resBeanList.add(resBean);
+			}
+
+		} catch (APINGException e) {
 			e.printStackTrace();
 		}
 		return resBeanList;
 	}
 
-	
 	public RunnerPriceAndSize getRunnersPrizeAndSize1(List<DashboardMatchListDto> data, String applicationKey,
 			String sessionToken, String userName, String transactionId) throws APINGException {
 		return null;
 	}
-	
+
 	public RunnerPriceAndSize getRunnersPrizeAndSize(String marketId, String selectionId, String applicationKey,
 			String sessionToken, String userName, String transactionId) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	public void declareResult(String applicationKey, String sessionToken, String userName, String transactionId) {
+		log.info("[" + transactionId + "]##########Inside  declareResult#########");
+		this.applicationKey = applicationKey;
+		this.sessionToken = sessionToken;
+		final String BET_STATUS = "OPEN";
+		try {
+			PriceProjection priceProjection = new PriceProjection();
+			Set<PriceData> priceData = new HashSet<PriceData>();
+			priceData.add(PriceData.EX_BEST_OFFERS);
+			priceData.add(PriceData.EX_ALL_OFFERS);
+			priceProjection.setPriceData(priceData);
+			OrderProjection orderProjection = null;
+			MatchProjection matchProjection = null;
+			String currencyCode = null;
+
+			List<PlaceBetsBean> placeBetsList = new ArrayList<PlaceBetsBean>();
+
+			placeBetsList = placeBetsRepository.findByBetStatusOrderById(BET_STATUS);
+
+			for (int i = 0; i < placeBetsList.size(); i++) {
+
+				String marketIds = placeBetsList.get(i).getMarketId();
+				Long selectionId = placeBetsList.get(i).getSelectionId();
+
+				List<MarketBook> runnerBook = rescriptOperations.listRunnersBook1(marketIds, selectionId,
+						priceProjection, orderProjection, matchProjection, currencyCode, applicationKey, sessionToken);
+				
+				log.info("runnerBook:: "+runnerBook);
+			}
+		} catch (APINGException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 	}
 
 }

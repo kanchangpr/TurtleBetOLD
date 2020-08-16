@@ -74,4 +74,10 @@ public class BetfairServiceImpl implements BetfairService{
 		log.info("["+transactionId+"]*************************INSIDE getRunnersPrizeAndSize CLASS AdminServiceImpl*************************");
 		return betfairDao.getRunnersPrizeAndSize(marketId,selectionId,applicationKey, sessionToken, userName,transactionId);
 	}
+
+	@Override
+	public void declareResult(String applicationKey, String sessionToken, String userName, String transactionId) {
+		log.info("["+transactionId+"]*************************INSIDE declareResult CLASS AdminServiceImpl*************************");
+		betfairDao.declareResult(applicationKey, sessionToken, userName,transactionId);
+	}
 }
