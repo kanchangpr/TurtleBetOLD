@@ -245,11 +245,12 @@ public class ApiNgRescriptOperations extends ApiNgOperations {
 			String ssoId) throws APINGException {
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put(LOCALE, locale);
-		params.put(MARKET_IDS, marketIds);
+		params.put(MARKET_ID, marketIds);
+		params.put(SELECTION_ID, selectionId);
 		params.put(PRICE_PROJECTION, priceProjection);
 		params.put(ORDER_PROJECTION, orderProjection);
 		params.put(MATCH_PROJECTION, matchProjection);
-		String result = getInstance().makeRequest(ApiNgOperation.LISTMARKETBOOK.getOperationName(), params, appKey,
+		String result = getInstance().makeRequest(ApiNgOperation.LISTRUNNERSBOOK.getOperationName(), params, appKey,
 				ssoId);
 		if (ApiNGDemo.isDebug())
 			System.out.println("\nResponse: " + result);

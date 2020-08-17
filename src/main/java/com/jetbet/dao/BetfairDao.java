@@ -48,6 +48,7 @@ import com.jetbet.repository.MatchRepository;
 import com.jetbet.repository.PlaceBetsRepository;
 import com.jetbet.repository.SeriesRepository;
 import com.jetbet.repository.SportsRepository;
+import com.jetbet.util.QueryListConstant;
 import com.jetbet.util.ResourceConstants;
 
 import lombok.extern.java.Log;
@@ -621,9 +622,8 @@ public class BetfairDao {
 
 	public void declareResult(String applicationKey, String sessionToken, String userName, String transactionId) {
 		log.info("[" + transactionId + "]##########Inside  declareResult#########");
-		this.applicationKey = applicationKey;
-		this.sessionToken = sessionToken;
-		final String BET_STATUS = "OPEN";
+		
+		final String BET_STATUS = "ACTIVE";
 		try {
 			PriceProjection priceProjection = new PriceProjection();
 			Set<PriceData> priceData = new HashSet<PriceData>();
@@ -646,13 +646,29 @@ public class BetfairDao {
 				List<MarketBook> runnerBook = rescriptOperations.listRunnersBook1(marketIds, selectionId,
 						priceProjection, orderProjection, matchProjection, currencyCode, applicationKey, sessionToken);
 				
-				log.info("runnerBook:: "+runnerBook);
+				String betResult=runnerBook.get(0).getRunners().get(0).getStatus();
+				
+				int count=jdbcTemplate.update(QueryListConstant.UPDATE_BET_RESULT, new Object[] { betResult, selectionId.toString() , marketIds });
+				
+				if(count>0) {
+					if(placeBetsList.get(i).getIsback()=="Y") {
+						
+					}
+				}
+				
+				log.info("betResult:: "+betResult);
 			}
+			syncResult(placeBetsList);
+			
 		} catch (APINGException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
+	}
+	
+	public void syncResult(List<PlaceBetsBean> placeBetsList) {
+		
 	}
 
 }

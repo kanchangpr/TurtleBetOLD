@@ -8,7 +8,9 @@ import com.jetbet.bean.PlaceBetsBean;
 
 public interface PlaceBetsRepository extends JpaRepository<PlaceBetsBean, Long>{
 
-	List<PlaceBetsBean> findByUserIdOrderById(String userId);
+	List<PlaceBetsBean> findByUserIdOrderByIdDesc(String userId);
 	
 	List<PlaceBetsBean> findByBetStatusOrderById(String betStatus);
+	
+	List<PlaceBetsBean> findByUserIdAndBetResultOrderByIdDesc(String userId,String betResult);
 }

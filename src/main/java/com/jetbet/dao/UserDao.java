@@ -836,7 +836,8 @@ public class UserDao {
 		ChipsBean chipsBean = new ChipsBean();
 		final String MINIMUM_STAKE = "MINIMUM_STAKE";
 		final String MATCH_ODDS = "Match Odds";
-		final String BET_STATUS = "OPEN";
+		final String BET_STATUS = "ACTIVE";
+		final String BET_RESULT = "OPEN";
 		try {
 			String updateChipsSql = null;
 			String loginId = placeBetsBean.getLoginId();
@@ -853,7 +854,7 @@ public class UserDao {
 			String runnerName = placeBetsBean.getRunnerName();
 			double odds = placeBetsBean.getOdds();
 			double stake = placeBetsBean.getStake();
-			double porfitLoss = placeBetsBean.getPorfitLoss();
+			double liability = placeBetsBean.getLiability();
 			String isback = placeBetsBean.getIsback();
 			String isLay = placeBetsBean.getIsLay();
 			String createdBy = placeBetsBean.getCreatedBy();
@@ -881,7 +882,7 @@ public class UserDao {
 			log.info("[" + transactionId + "] runnerName:  " + runnerName);
 			log.info("[" + transactionId + "] odds:  " + odds);
 			log.info("[" + transactionId + "] stake:  " + stake);
-			log.info("[" + transactionId + "] porfitLoss:  " + porfitLoss);
+			log.info("[" + transactionId + "] porfitLoss:  " + liability);
 			log.info("[" + transactionId + "] isback:  " + isback);
 			log.info("[" + transactionId + "] isLay:  " + isLay);
 			log.info("[" + transactionId + "] createdBy:  " + createdBy);
@@ -890,6 +891,7 @@ public class UserDao {
 			placeBetsBean.setPsId(psId);
 			placeBetsBean.setRemarks("Bet Placed by User " + userId);
 			placeBetsBean.setBetStatus(BET_STATUS);
+			placeBetsBean.setBetResult(BET_RESULT);
 
 			LookupTableBean lookupTableRes = lookupTableRepository.findByLookupType(MINIMUM_STAKE);
 			Double minimumStake = Double.parseDouble(lookupTableRes.getLookupValue());
@@ -908,12 +910,6 @@ public class UserDao {
 									new Object[] { balance, userId, userId });
 							log.info("[" + transactionId + "] updateChipsRowCount:: " + updateChipsRowCount);
 							
-							if(marketName.equalsIgnoreCase(MATCH_ODDS)) {
-								Thread.sleep(betDelay*1000);
-							}else {
-								Thread.sleep(sessionDelay*1000);
-							}
-							
 							chipsBean.setUserId(userId);
 							chipsBean.setFromUser("BET_PLACED");
 							chipsBean.setBettingId(placeBetsResBean.getId());
@@ -924,7 +920,12 @@ public class UserDao {
 							chipsBean = chipsRepository.saveAndFlush(chipsBean);
 
 							log.info("[" + transactionId + "] chipsBean:: " + chipsBean);
-
+							
+							if(marketName.equalsIgnoreCase(MATCH_ODDS)) {
+								Thread.sleep(betDelay*1000);
+							}else {
+								Thread.sleep(sessionDelay*1000);
+							}
 							userResponseDto.setStatus(ResourceConstants.SUCCESS);
 							userResponseDto.setErrorMsg(ResourceConstants.BET_PLACED + placeBetsResBean.getId());
 						} else {
@@ -971,7 +972,7 @@ public class UserDao {
 			log.info("[" + transactionId + "] Inside :  " + type);
 
 			if (StringUtils.isEmpty(fromDate) && StringUtils.isEmpty(toDate)) {
-				betHistory = placeBetsRepository.findByUserIdOrderById(userId);
+				betHistory = placeBetsRepository.findByUserIdOrderByIdDesc(userId);
 			} else {
 				betHistory = jdbcTemplate.query(QueryListConstant.BET_HISTORY_BY_DATE_RANGE,
 						new Object[] { fromDate, toDate, userId },
@@ -981,8 +982,8 @@ public class UserDao {
 								rs.getString("match_id"), rs.getString("match_name"), rs.getString("market_id"),
 								rs.getString("market_name"), rs.getLong("selection_id"), rs.getString("runner_name"),
 								rs.getDate("bet_place_date"), rs.getDouble("odds"), rs.getDouble("stake"),
-								rs.getDouble("porfitloss"), rs.getString("isback"), rs.getString("islay"),
-								rs.getInt("psid"), rs.getString("remarks"),rs.getString("bet_status"), rs.getString("created_by"),
+								rs.getDouble("liability"),rs.getDouble("profit"),rs.getDouble("loss"), rs.getString("isback"), rs.getString("islay"),
+								rs.getInt("psid"), rs.getString("remarks"),rs.getString("bet_status"), rs.getString("bet_result"), rs.getString("created_by"),
 								rs.getDate("created_date"), rs.getString("last_updated_by"),
 								rs.getDate("last_updated_date")));
 			}
@@ -1075,6 +1076,16 @@ public class UserDao {
 			// TODO: handle exception
 		}
 		return seriesMatchFancyResList;
+	}
+
+	public List<PlaceBetsBean> openPlacedBets(String userId, String transactionId) {
+		log.info("[" + transactionId + "]****************INSIDE userHome CLASS UserDao****************");
+		final String BET_RESULT = "OPEN";
+		List<PlaceBetsBean> placeBetsList= new ArrayList<PlaceBetsBean>();
+		
+		placeBetsList=placeBetsRepository.findByUserIdAndBetResultOrderByIdDesc(userId.toUpperCase(),BET_RESULT);
+		
+		return placeBetsList;
 	}
 
 }

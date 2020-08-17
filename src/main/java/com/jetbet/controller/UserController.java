@@ -273,5 +273,14 @@ public class UserController {
 		List<UserHomeDto> response = userService.userHome(sportsId, transactionId);
 		return new ResponseEntity<List<UserHomeDto>>(response, HttpStatus.OK);
 	}
+	
+	@RequestMapping(value = ResourceConstants.OPEN_PLACE_BETS, method = RequestMethod.GET)
+	public ResponseEntity<List<PlaceBetsBean>> openPlacedBets(
+			@RequestParam(value = "userId", required = true) String userId) {
+		String transactionId = "TB" + UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
+		log.info("[" + transactionId + "]*************INSIDE userHome METHOD POST**************");
+		List<PlaceBetsBean> response = userService.openPlacedBets(userId, transactionId);
+		return new ResponseEntity<List<PlaceBetsBean>>(response, HttpStatus.OK);
+	}
 
 }

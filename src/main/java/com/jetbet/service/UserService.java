@@ -77,6 +77,8 @@ public interface UserService {
 
 	List<UserHomeDto> userHome(String sportsId, String transactionId);
 
+	List<PlaceBetsBean> openPlacedBets(String userId, String transactionId);
+
 	
 
 }

@@ -81,8 +81,14 @@ public class PlaceBetsBean {
 	@Column(name = "stake")
 	private double stake;
 	
-	@Column(name = "porfitloss")
-	private double porfitLoss;
+	@Column(name = "liability")
+	private double liability;
+	
+	@Column(name = "profit")
+	private double profit;
+	
+	@Column(name = "loss")
+	private double loss;
 	
 	@Column(name = "isback")
 	private String isback;
@@ -98,6 +104,9 @@ public class PlaceBetsBean {
 	
 	@Column(name = "bet_status")
 	private String betStatus;
+	
+	@Column(name = "bet_result")
+	private String betResult;
 	
 	@Column(name = "created_by")
 	private String createdBy;
