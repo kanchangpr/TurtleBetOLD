@@ -648,17 +648,13 @@ public class BetfairDao {
 				
 				String betResult=runnerBook.get(0).getRunners().get(0).getStatus();
 				
-				int count=jdbcTemplate.update(QueryListConstant.UPDATE_BET_RESULT, new Object[] { betResult, selectionId.toString() , marketIds });
-				
-				if(count>0) {
-					if(placeBetsList.get(i).getIsback()=="Y") {
-						
-					}
-				}
+				jdbcTemplate.update(QueryListConstant.UPDATE_BET_STATUS, new Object[] { betResult, selectionId.toString() , marketIds });
 				
 				log.info("betResult:: "+betResult);
 			}
-			syncResult(placeBetsList);
+			int count=jdbcTemplate.update(QueryListConstant.UPDATE_BET_RESULT);
+			
+			log.info(count +" results updated");
 			
 		} catch (APINGException e) {
 			// TODO Auto-generated catch block
@@ -667,8 +663,5 @@ public class BetfairDao {
 
 	}
 	
-	public void syncResult(List<PlaceBetsBean> placeBetsList) {
-		
-	}
 
 }

@@ -59,11 +59,12 @@ public class UserController {
 
 	@RequestMapping(value = ResourceConstants.PARENT_LIST, method = RequestMethod.GET)
 	public ResponseEntity<List<UserRolesResponseDto>> getParentList(
+			@RequestParam(value = "userId", required = true) String userId,
 			@RequestParam(value = "role", required = true) String role) {
 		String transactionId = "TB" + UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
 		log.info("[" + transactionId
 				+ "]*************************INSIDE PARENT LIST METHOD GET*************************");
-		List<UserRolesResponseDto> response = userService.getParentList(role, transactionId);
+		List<UserRolesResponseDto> response = userService.getParentList(userId,role, transactionId);
 		return new ResponseEntity<List<UserRolesResponseDto>>(response, HttpStatus.OK);
 	}
 
@@ -276,6 +277,15 @@ public class UserController {
 	
 	@RequestMapping(value = ResourceConstants.OPEN_PLACE_BETS, method = RequestMethod.GET)
 	public ResponseEntity<List<PlaceBetsBean>> openPlacedBets(
+			@RequestParam(value = "userId", required = true) String userId) {
+		String transactionId = "TB" + UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
+		log.info("[" + transactionId + "]*************INSIDE userHome METHOD POST**************");
+		List<PlaceBetsBean> response = userService.openPlacedBets(userId, transactionId);
+		return new ResponseEntity<List<PlaceBetsBean>>(response, HttpStatus.OK);
+	}
+	
+	@RequestMapping(value = ResourceConstants.CALCULATE_SETTLEMENT, method = RequestMethod.GET)
+	public ResponseEntity<List<PlaceBetsBean>> calculateSettlement(
 			@RequestParam(value = "userId", required = true) String userId) {
 		String transactionId = "TB" + UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
 		log.info("[" + transactionId + "]*************INSIDE userHome METHOD POST**************");

@@ -48,9 +48,9 @@ public class UserServiceImpl implements UserService{
 	}
 
 	@Override
-	public List<UserRolesResponseDto> getParentList(String role, String transactionId) {
+	public List<UserRolesResponseDto> getParentList(String userId,String role, String transactionId) {
 		log.info("["+transactionId+"]*************************INSIDE getParentList CLASS UserServiceImpl*************************");
-		return userDao.getParentList(role,transactionId);
+		return userDao.getParentList(userId,role,transactionId);
 	}
 
 	@Override

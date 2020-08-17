@@ -48,6 +48,7 @@ public class ResourceConstants {
 	public static final String USER_HOME="userHome";
 	public static final String DECLARE_RESULT="declareResult";
 	public static final String OPEN_PLACE_BETS="openPlaceBets";
+	public static final String CALCULATE_SETTLEMENT="calculateSettlement";
 	
 	public static final String SUPERMASTER="superMaster";
 	public static final String MASTER="master";

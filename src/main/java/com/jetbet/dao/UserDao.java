@@ -107,12 +107,12 @@ public class UserDao {
 	}
 
 	@Transactional
-	public List<UserRolesResponseDto> getParentList(String role, String transactionId) {
+	public List<UserRolesResponseDto> getParentList(String userId,String role, String transactionId) {
 		log.info("[" + transactionId
 				+ "]*************************INSIDE addUserRole CLASS UserDao*************************");
 		log.info("[" + transactionId + "] Role: " + role);
 		String getParentListSql = QueryListConstant.GET_PARENT_LIST_SQL;
-		return jdbcTemplate.query(getParentListSql, new Object[] { role.toUpperCase() },
+		return jdbcTemplate.query(getParentListSql, new Object[] { userId.toUpperCase(), role.toUpperCase() },
 				(rs, rowNum) -> new UserRolesResponseDto(rs.getString("USER_ID")));
 	}
 

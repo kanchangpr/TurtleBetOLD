@@ -31,7 +31,7 @@ public interface UserService {
 
 	List<UserRolesResponseDto> getUserRoles(String role, String transactionId);
 
-	List<UserRolesResponseDto> getParentList(String role, String transactionId);
+	List<UserRolesResponseDto> getParentList(String userId, String role, String transactionId);
 
 	Boolean checkUserNameAvailability(String userName, String transactionId);
 
