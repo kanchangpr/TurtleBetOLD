@@ -140,8 +140,8 @@ public class ApiNgRescriptOperations extends ApiNgOperations {
 				String selectionId = container.get(i).getRunners().get(j).getSelectionId().toString();
 				MarketBook marketBook = listRunnersBook(marketId, selectionId, priceProjection, orderProjection,
 						matchProjection, currencyCode, appKey, ssoId);
-				marketBookList.add(marketBook);
-				container.get(i).setMarketBook(marketBookList);
+				//marketBookList.add(marketBook);
+				container.get(i).getRunners().get(j).setMarketBook(marketBook);
 			}
 		}
 

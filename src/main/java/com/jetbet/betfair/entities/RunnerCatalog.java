@@ -1,5 +1,7 @@
 package com.jetbet.betfair.entities;
 
+import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
@@ -22,5 +24,5 @@ public class RunnerCatalog {
 	//private ExchangePrices ex;
 	private Runner runner;
 	private String status;
-
+	private MarketBook marketBook;
 }
