@@ -19,7 +19,7 @@ public class RunnerCatalog {
 	private String runnerName;
 	private Double handicap;
 	private int sortPriority;
-	private ExchangePrices ex;
+	//private ExchangePrices ex;
 	private Runner runner;
 	private String status;
 

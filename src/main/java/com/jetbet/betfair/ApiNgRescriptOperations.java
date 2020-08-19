@@ -190,7 +190,7 @@ public class ApiNgRescriptOperations extends ApiNgOperations {
 			}else {
 				exPrice.setTradedVolume(container.get(i).getRunners().get(0).getEx().getTradedVolume());
 			}
-			runner.setStatus(container.get(i).getRunners().get(0).getStatus());
+			runner.setStatus(container.get(i).getStatus());
 			runner.setEx(exPrice);
 		}
 
