@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import com.jetbet.bean.FancyBean;
 import com.jetbet.bean.MatchBean;
+import com.jetbet.bean.PlaceBetsBean;
 import com.jetbet.bean.SeriesBean;
 import com.jetbet.bean.SportsBean;
 import com.jetbet.controller.BetfairController;
@@ -306,6 +307,21 @@ public class AdminDao {
 		}
 		
 		return userResponseDto;
+	}
+
+	public List<PlaceBetsBean> openPlacedBetsBySports(String matchId,String marketId,String userId, String transactionId) {
+		List<PlaceBetsBean> placeBetsList= new ArrayList<PlaceBetsBean>();
+		placeBetsList = jdbcTemplate.query(QueryListConstant.OPEN_BET_FOR_MASTERS,
+				new Object[] { userId,matchId,marketId },
+				(rs, rowNum) -> new PlaceBetsBean(
+						rs.getString("user_id"), 
+						rs.getString("match_id"), rs.getString("match_name"), rs.getString("market_id"),
+						rs.getString("market_name"), rs.getLong("selection_id"), rs.getString("runner_name"),
+						rs.getDate("bet_place_date"), rs.getDouble("odds"), rs.getDouble("stake"),
+						rs.getDouble("liability"),
+						rs.getString("isback"), rs.getString("islay")));
+		log.info("[" + transactionId + "] responseBeanList:  " + placeBetsList);
+		return placeBetsList;
 	}
 
 }

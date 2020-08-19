@@ -30,6 +30,25 @@ import lombok.ToString;
 @Table(name = "JB_BET_DETAILS")
 public class PlaceBetsBean {
 	
+	public PlaceBetsBean(String userId, String matchId, String matchName, String marketId, String marketName,
+			Long selectionId, String runnerName, Date betPlaceDate, double odds, double stake, double liability,
+			String isback, String isLay) {
+		super();
+		this.userId = userId;
+		this.matchId = matchId;
+		this.matchName = matchName;
+		this.marketId = marketId;
+		this.marketName = marketName;
+		this.selectionId = selectionId;
+		this.runnerName = runnerName;
+		this.betPlaceDate = betPlaceDate;
+		this.odds = odds;
+		this.stake = stake;
+		this.liability = liability;
+		this.isback = isback;
+		this.isLay = isLay;
+	}
+
 	@Id
 	@SequenceGenerator(name="JB_BETS_DETAILS_SEQ",sequenceName="JB_BETS_DETAILS_SEQ",allocationSize=1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE,generator="JB_BETS_DETAILS_SEQ")

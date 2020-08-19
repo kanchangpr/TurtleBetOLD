@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.jetbet.bean.FancyBean;
 import com.jetbet.bean.MatchBean;
+import com.jetbet.bean.PlaceBetsBean;
 import com.jetbet.bean.SeriesBean;
 import com.jetbet.bean.SportsBean;
 import com.jetbet.dto.FancyControl;
@@ -90,5 +91,17 @@ public class AdminController {
 		UserResponseDto response=adminService.updateFancy(fancyControl,transactionId);
         return new ResponseEntity<UserResponseDto> (response,HttpStatus.OK);
 	}
+	
+	@RequestMapping(value = ResourceConstants.OPEN_PLACE_BETS_BY_SPORTS, method = RequestMethod.GET)
+	public ResponseEntity<List<PlaceBetsBean>> openPlacedBetsBySports(
+			@RequestParam(value = "matchId", required = true) String matchId,
+			@RequestParam(value = "marketId", required = true) String marketId,
+			@RequestParam(value = "userId", required = true) String userId) {
+		String transactionId = "TB" + UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
+		log.info("[" + transactionId + "]*************INSIDE userHome METHOD POST**************");
+		List<PlaceBetsBean> response = adminService.openPlacedBetsBySports(matchId,marketId,userId, transactionId);
+		return new ResponseEntity<List<PlaceBetsBean>>(response, HttpStatus.OK);
+	}
+	
 	
 }

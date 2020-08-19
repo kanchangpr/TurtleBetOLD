@@ -137,9 +137,9 @@ public class ApiNgRescriptOperations extends ApiNgOperations {
 			int runnersSize = container.get(i).getRunners().size();
 			for (int j = 0; j < runnersSize; j++) {
 				String selectionId = container.get(i).getRunners().get(j).getSelectionId().toString();
-				Runner runner = listRunnersBook(marketId, selectionId, priceProjection, orderProjection,
+				MarketBook marketBook = listRunnersBook(marketId, selectionId, priceProjection, orderProjection,
 						matchProjection, currencyCode, appKey, ssoId);
-				container.get(i).getRunners().get(j).setRunner(runner);
+				container.get(i).setMarketBook(marketBook);
 			}
 		}
 
@@ -147,7 +147,7 @@ public class ApiNgRescriptOperations extends ApiNgOperations {
 
 	}
 
-	public Runner listRunnersBook(String marketId, String selectionId, PriceProjection priceProjection,
+	public MarketBook listRunnersBook(String marketId, String selectionId, PriceProjection priceProjection,
 			OrderProjection orderProjection, MatchProjection matchProjection, String currencyCode, String appKey,
 			String ssoId) throws APINGException {
 		Map<String, Object> params = new HashMap<String, Object>();
@@ -194,7 +194,7 @@ public class ApiNgRescriptOperations extends ApiNgOperations {
 			runner.setEx(exPrice);
 		}
 
-		return runner;
+		return container.get(0);
 
 	}
 

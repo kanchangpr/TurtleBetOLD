@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.jetbet.bean.FancyBean;
 import com.jetbet.bean.MatchBean;
+import com.jetbet.bean.PlaceBetsBean;
 import com.jetbet.bean.SeriesBean;
 import com.jetbet.bean.SportsBean;
 import com.jetbet.dao.AdminDao;
@@ -60,6 +61,12 @@ public class AdminServiceImpl implements AdminService{
 	public UserResponseDto updateFancy(@Valid FancyControl fancyControl, String transactionId) {
 		log.info("["+transactionId+"]*************************INSIDE updateFancy CLASS AdminServiceImpl*************************");
 		return adminDao.updateFancy(fancyControl,transactionId);
+	}
+
+	@Override
+	public List<PlaceBetsBean> openPlacedBetsBySports(String matchId,String marketId,String userId, String transactionId) {
+		log.info("["+transactionId+"]*************************INSIDE openPlacedBetsBySports CLASS AdminServiceImpl*************************");
+		return adminDao.openPlacedBetsBySports(matchId,marketId,userId,transactionId);
 	}
 
 }

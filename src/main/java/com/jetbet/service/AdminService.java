@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.jetbet.bean.FancyBean;
 import com.jetbet.bean.MatchBean;
+import com.jetbet.bean.PlaceBetsBean;
 import com.jetbet.bean.SeriesBean;
 import com.jetbet.bean.SportsBean;
 import com.jetbet.dto.FancyControl;
@@ -28,5 +29,7 @@ public interface AdminService {
 	List<FancyBean> fancyList(String matchId,String fancyName,String transactionId);
 
 	UserResponseDto updateFancy(@Valid FancyControl fancyControl, String transactionId);
+
+	List<PlaceBetsBean> openPlacedBetsBySports(String matchId,String marketId,String userId, String transactionId);
 
 }
