@@ -1,5 +1,6 @@
 package com.jetbet.dao;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
@@ -17,9 +18,11 @@ import org.springframework.stereotype.Repository;
 import com.jetbet.bean.FancyBean;
 import com.jetbet.bean.MarketCatalogueBean;
 import com.jetbet.bean.MatchBean;
+import com.jetbet.bean.PartnershipBean;
 import com.jetbet.bean.PlaceBetsBean;
 import com.jetbet.bean.SeriesBean;
 import com.jetbet.bean.SportsBean;
+import com.jetbet.bean.UserBean;
 import com.jetbet.betfair.ApiNgOperations;
 import com.jetbet.betfair.ApiNgRescriptOperations;
 import com.jetbet.betfair.entities.CompetitionResult;
@@ -45,9 +48,11 @@ import com.jetbet.dto.SessionDetails;
 import com.jetbet.repository.FancyRepository;
 import com.jetbet.repository.MarketCatalogueRepository;
 import com.jetbet.repository.MatchRepository;
+import com.jetbet.repository.PartnershipRepository;
 import com.jetbet.repository.PlaceBetsRepository;
 import com.jetbet.repository.SeriesRepository;
 import com.jetbet.repository.SportsRepository;
+import com.jetbet.repository.UserRepository;
 import com.jetbet.util.QueryListConstant;
 import com.jetbet.util.ResourceConstants;
 
@@ -75,9 +80,17 @@ public class BetfairDao {
 
 	@Autowired
 	private PlaceBetsRepository placeBetsRepository;
+	
+	@Autowired
+	private PartnershipRepository partnershipRepository;
+	
+	@Autowired
+	private UserRepository userRepository;
 
 	@Autowired
 	JdbcTemplate jdbcTemplate;
+	
+	public static DecimalFormat df = new DecimalFormat("0.00");
 
 	private ApiNgOperations rescriptOperations = ApiNgRescriptOperations.getInstance();
 	private String applicationKey;
@@ -620,6 +633,7 @@ public class BetfairDao {
 		return null;
 	}
 
+	@Transactional
 	public void declareResult(String applicationKey, String sessionToken, String userName, String transactionId) {
 		log.info("[" + transactionId + "]##########Inside  declareResult#########");
 		
@@ -650,11 +664,12 @@ public class BetfairDao {
 				
 				jdbcTemplate.update(QueryListConstant.UPDATE_BET_STATUS, new Object[] { betResult, selectionId.toString() , marketIds });
 				
-				log.info("betResult:: "+betResult);
+//				log.info("betResult:: "+betResult);
 			}
 			int count=jdbcTemplate.update(QueryListConstant.UPDATE_BET_RESULT);
 			
-			log.info(count +" results updated");
+//			log.info(count +" results updated");
+			
 			
 		} catch (APINGException e) {
 			// TODO Auto-generated catch block
@@ -663,5 +678,103 @@ public class BetfairDao {
 
 	}
 	
+	@Transactional
+	public void calculateProfitLoss() {
+		log.info("##########Inside  calculateProfitLoss#########");
+		List<PlaceBetsBean> placeBetsList = new ArrayList<PlaceBetsBean>();
+		
+		List<String> betResultList= new ArrayList<String>();
+		betResultList.add(ResourceConstants.WON);
+		betResultList.add(ResourceConstants.LOST);
+		
+		String betSettlement="NOT_INITIATED";
+		
+		placeBetsList = placeBetsRepository.findByBetResultInAndBetSettlementOrderById(betResultList,betSettlement);
+		
+//		log.info("calculateProfitLoss:: "+placeBetsList);
+		
+		for (int i = 0; i < placeBetsList.size(); i++) {
+			double profit=0.0;
+			double loss=0.0;
+			double commision=0.0;
+			double adminStakes=0.0;
+			double smStakes=0.0;
+			double masterStakes=0.0;
+			//String userId=placeBetsList.get(i).getUserId() ;
+			
+			PlaceBetsBean placeBetsBean = new PlaceBetsBean();
+			placeBetsBean=placeBetsList.get(i);
+			UserBean userDetail= userRepository.findByUserId(placeBetsBean.getUserId());
+			
+			PartnershipBean psDetails= partnershipRepository.findByUserId(placeBetsBean.getUserId());
+			
+			int adminPer=psDetails.getAdminStake();
+			int smPer=psDetails.getSupermasterStake();
+			int masterPer=psDetails.getMastrerStake();
+			
+			double oddCommision=userDetail.getOddsCommission();
+			double sessionCommision=userDetail.getSessionCommission();
+			double liability=placeBetsList.get(i).getLiability();
+			double stake=placeBetsList.get(i).getStake();
+			
+//			log.info("oddCommision:: "+oddCommision);
+//			log.info("sessionCommision:: "+sessionCommision);
+//			log.info("liability:: "+liability);
+//			log.info("stake:: "+stake);
+			
+//			log.info("Market Name:: "+placeBetsBean.getMarketName().toUpperCase());
+//			log.info("Bet Result:: "+placeBetsBean.getBetResult());
+			
+			if(placeBetsBean.getBetResult().equalsIgnoreCase(ResourceConstants.WON)) {
+//				log.info("INSIDE WON IF");
+				if(placeBetsBean.getMarketName().toUpperCase().contains("ODDS")) {
+//					log.info("INSIDE ODDs IF");
+					commision=calcuateCommision(liability,oddCommision);
+					profit=calcuateCommision(liability,Double.parseDouble(df.format(100.0-oddCommision)));
+//					log.info("commision:: "+commision);
+//					log.info("profit:: "+profit);
+				}else{
+//					log.info("INSIDE WON IF");
+					commision=calcuateCommision(liability,sessionCommision);
+					profit=calcuateCommision(liability,Double.parseDouble(df.format(100.0-oddCommision)));
+//					log.info("commision:: "+commision);
+//					log.info("profit:: "+profit);
+				}
+				
+				adminStakes=calcuateCommision(profit,adminPer);
+				smStakes=calcuateCommision(profit,smPer);
+				masterStakes=calcuateCommision(profit,masterPer);
+				
+				
+			} else if(placeBetsBean.getBetResult().equalsIgnoreCase(ResourceConstants.LOST)) {
+//				log.info("INSIDE LOST IF");
+				loss=stake;
+//				log.info("loss:: "+loss);
+				adminStakes=calcuateCommision(loss,adminPer);
+				smStakes=calcuateCommision(loss,smPer);
+				masterStakes=calcuateCommision(loss,masterPer);
+			}
+			
+			placeBetsBean.setCommision(commision);
+			placeBetsBean.setProfit(profit);
+			placeBetsBean.setLoss(loss);
+			placeBetsBean.setAdminStakes(adminStakes);
+			placeBetsBean.setSmStakes(smStakes);
+			placeBetsBean.setMasterStakes(masterStakes);
+			placeBetsBean.setBetSettlement("PENDING");
+			
+			placeBetsRepository.saveAndFlush(placeBetsBean);
+			
+		}
 
+	}
+
+	public double calcuateCommision(double price, double percentage) {
+//		log.info("price:: "+price);
+//		log.info("percentage:: "+percentage);
+		double amount= Double.parseDouble(df.format(Double.parseDouble(df.format(percentage * price)) / 100));
+//		log.info("amount:: "+amount);
+		return amount;
+	}
+	
 }

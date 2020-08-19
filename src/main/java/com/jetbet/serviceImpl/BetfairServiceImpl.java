@@ -80,4 +80,9 @@ public class BetfairServiceImpl implements BetfairService{
 		log.info("["+transactionId+"]*************************INSIDE declareResult CLASS AdminServiceImpl*************************");
 		betfairDao.declareResult(applicationKey, sessionToken, userName,transactionId);
 	}
+
+	@Override
+	public void calculateProfitLoss() {
+		betfairDao.calculateProfitLoss();
+	}
 }

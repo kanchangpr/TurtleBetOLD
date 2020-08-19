@@ -36,52 +36,52 @@ public class PlaceBetsBean {
 	@Column(name = "id")
 	private Long id; 
 	
-	@Column(name = "login_id")
+	@Column(name = "login_id" , updatable = false)
 	private String loginId;
 	
-	@Column(name = "user_id")
+	@Column(name = "user_id" , updatable = false)
 	private String userId;
 	
-	@Column(name = "parent")
+	@Column(name = "parent" , updatable = false)
 	private String parent;
 	
-	@Column(name = "sports_id")
+	@Column(name = "sports_id" , updatable = false)
 	private String sportsId;
-	@Column(name = "sports_name")
+	@Column(name = "sports_name" , updatable = false)
 	private String sportsName;
-	@Column(name = "series_id")
+	@Column(name = "series_id" , updatable = false)
 	private String seriesId;
-	@Column(name = "series_name")
+	@Column(name = "series_name" , updatable = false)
 	private String seriesName;
 	
 	
-	@Column(name = "match_id")
+	@Column(name = "match_id" , updatable = false)
 	private String matchId;
-	@Column(name = "match_name")
+	@Column(name = "match_name" , updatable = false)
 	private String matchName;
 	
-	@Column(name = "market_id")
+	@Column(name = "market_id", updatable = false)
 	private String marketId;
-	@Column(name = "market_name")
+	@Column(name = "market_name", updatable = false)
 	private String marketName;
 	
-	@Column(name = "selection_id")
+	@Column(name = "selection_id", updatable = false)
 	private Long selectionId;
 	
-	@Column(name = "runner_name")
+	@Column(name = "runner_name", updatable = false)
 	private String runnerName;
 	
 	@CreationTimestamp
-	@Column(name = "bet_place_date")
+	@Column(name = "bet_place_date", updatable = false)
 	private Date betPlaceDate;
 	
-	@Column(name = "odds")
+	@Column(name = "odds", updatable = false)
 	private double odds;
 	
-	@Column(name = "stake")
+	@Column(name = "stake", updatable = false)
 	private double stake;
 	
-	@Column(name = "liability")
+	@Column(name = "liability", updatable = false)
 	private double liability;
 	
 	@Column(name = "profit")
@@ -90,29 +90,44 @@ public class PlaceBetsBean {
 	@Column(name = "loss")
 	private double loss;
 	
-	@Column(name = "isback")
+	@Column(name = "commision")
+	private double commision;
+	
+	@Column(name = "admin_stakes")
+	private double adminStakes;
+	
+	@Column(name = "sm_stakes")
+	private double smStakes;
+	
+	@Column(name = "master_stakes")
+	private double masterStakes;
+	
+	@Column(name = "isback" , updatable = false)
 	private String isback;
 	
-	@Column(name = "islay")
+	@Column(name = "islay" , updatable = false)
 	private String isLay;
 	
-	@Column(name = "psid")
+	@Column(name = "psid" , updatable = false)
 	private int psId;
 	
-	@Column(name = "remarks")
+	@Column(name = "remarks" , updatable = false)
 	private String remarks;
 	
-	@Column(name = "bet_status")
+	@Column(name = "bet_status" , updatable = false)
 	private String betStatus;
 	
-	@Column(name = "bet_result")
+	@Column(name = "bet_result" , updatable = false)
 	private String betResult;
 	
-	@Column(name = "created_by")
+	@Column(name = "bet_settlement")
+	private String betSettlement;
+	
+	@Column(name = "created_by" , updatable = false)
 	private String createdBy;
 	
 	@CreationTimestamp
-	@Column(name = "created_date")
+	@Column(name = "created_date" , updatable = false)
 	private Date createdDate;
 	
 	@Column(name = "last_updated_by")

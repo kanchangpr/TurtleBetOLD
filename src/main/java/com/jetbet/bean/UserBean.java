@@ -56,10 +56,10 @@ public class UserBean {
 	private int partnership;
 	
 	@Column(name = "Odds_Commission")
-	private float oddsCommission;
+	private Double oddsCommission;
 	
 	@Column(name = "Session_Commission")
-	private float sessionCommission;
+	private Double sessionCommission;
 	
 	@Column(name = "Bet_Delay")
 	private int betDelay;
@@ -115,8 +115,8 @@ public class UserBean {
 	private String createdBy;
 
 	public UserBean(Long id, String userId, String fullName, String userRole, String parent, Date regDate,
-			float oddsCommission, float sessionCommission, int betDelay, int sessionDelay, long userLimit,
-			double maxProfit, double maxLoss, double oddsMaxStake, double goingInPlayStake, double sessionMaxStake,
+			double oddsCommission, double sessionCommission, int betDelay, int sessionDelay, long userLimit,
+//			double maxProfit, double maxLoss, double oddsMaxStake, double goingInPlayStake, double sessionMaxStake,
 			double chips, String isActive, String isUserLock, String isBettingLock, String remarks,
 			Date lastUpdatedDate, String lastUpdateBy, Date createdDate, String createdBy) {
 		super();

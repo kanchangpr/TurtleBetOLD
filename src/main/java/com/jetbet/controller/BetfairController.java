@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.jetbet.bean.FancyBean;
 import com.jetbet.bean.MarketCatalogueBean;
 import com.jetbet.bean.MatchBean;
+import com.jetbet.bean.PlaceBetsBean;
 import com.jetbet.bean.SeriesBean;
 import com.jetbet.bean.SportsBean;
 import com.jetbet.dto.DashboardMatchListDto;
@@ -212,5 +213,12 @@ public class BetfairController {
 		String transactionId = "TB"+UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
 		log.info("["+transactionId+"]*************************INSIDE getListOfOdds METHOD GET*************************");
 		betfairService.declareResult(applicationKey, sessionToken, userName, transactionId);
+	}
+	
+	@RequestMapping(value = ResourceConstants.CALCULATE_SETTLEMENT, method = RequestMethod.GET)
+	public void calculateProfitLoss() {
+		String transactionId = "TB" + UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
+		log.info("[" + transactionId + "]*************INSIDE userHome METHOD POST**************");
+		betfairService.calculateProfitLoss();
 	}
 }

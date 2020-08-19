@@ -146,7 +146,8 @@ public class ResourceConstants {
 	public static final String SERIES_UPDATED_DATE  ="SERIES_UPDATED_DATE  ";
 	public static final String MATCH_UPDATED_DATE ="MATCH_UPDATED_DATE ";
 	
-	
+	public static final String WON  ="WON";
+	public static final String LOST  ="LOST";
 	
 	public static String checkNulString(String aString) {
 		return StringUtils.isBlank(aString) ? "" : aString;

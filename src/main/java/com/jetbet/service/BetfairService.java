@@ -37,4 +37,6 @@ public interface BetfairService {
 
 	void declareResult(String applicationKey, String sessionToken, String userName, String transactionId);
 
+	void calculateProfitLoss();
+
 }

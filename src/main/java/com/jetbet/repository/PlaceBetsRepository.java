@@ -12,5 +12,7 @@ public interface PlaceBetsRepository extends JpaRepository<PlaceBetsBean, Long>{
 	
 	List<PlaceBetsBean> findByBetStatusOrderById(String betStatus);
 	
+	List<PlaceBetsBean> findByBetResultInAndBetSettlementOrderById(List<String> betResult, String betSettlement);
+	
 	List<PlaceBetsBean> findByUserIdAndBetResultOrderByIdDesc(String userId,String betResult);
 }

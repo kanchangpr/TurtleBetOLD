@@ -31,8 +31,8 @@ public class UserDetailsRequestDto {
 	private String parent;
 	
 	private int partnership;
-	private int oddsCommission;
-	private int sessionCommission;
+	private double oddsCommission;
+	private double sessionCommission;
 	private int betDelay;
 	private int sessionDelay;
 	private int userLimit;

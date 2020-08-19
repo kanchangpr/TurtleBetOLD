@@ -563,9 +563,7 @@ public class UserDao {
 					(rs, rowNum) -> new UserBean(rs.getLong("id"), rs.getString("user_id"), rs.getString("full_name"),
 							rs.getString("user_Role"), rs.getString("parent"), rs.getDate("Reg_Date"),
 							rs.getFloat("Odds_Commission"), rs.getFloat("Session_Commission"), rs.getInt("Bet_Delay"),
-							rs.getInt("Session_Delay"), rs.getLong("User_Limit"), rs.getDouble("Max_Profit"),
-							rs.getDouble("Max_Loss"), rs.getDouble("Odds_Max_Stake"),
-							rs.getDouble("Going_In_Play_Stake"), rs.getDouble("Session_Max_Stake"),
+							rs.getInt("Session_Delay"), rs.getLong("User_Limit"), 
 							rs.getDouble("chips"), rs.getString("isactive"), rs.getString("isuserlock"),
 							rs.getString("isbettinglock"), rs.getString("remarks"), rs.getDate("lastupdateddate"),
 							rs.getString("lastupdateby"), rs.getDate("createddate"), rs.getString("createdby")));
@@ -657,8 +655,8 @@ public class UserDao {
 				+ "]*************************INSIDE psPercentage CLASS UserDao*************************");
 		String userId = userDetailsRequestDto.getUserId().toUpperCase();
 		String fullName = userDetailsRequestDto.getFullName();
-		float oddsCommission = userDetailsRequestDto.getOddsCommission();
-		float sessionCommission = userDetailsRequestDto.getSessionCommission();
+		double oddsCommission = userDetailsRequestDto.getOddsCommission();
+		double sessionCommission = userDetailsRequestDto.getSessionCommission();
 		int betDelay = userDetailsRequestDto.getBetDelay();
 		int sessionDelay = userDetailsRequestDto.getSessionDelay();
 		long userLimit = userDetailsRequestDto.getUserLimit();
@@ -838,6 +836,7 @@ public class UserDao {
 		final String MATCH_ODDS = "Match Odds";
 		final String BET_STATUS = "ACTIVE";
 		final String BET_RESULT = "OPEN";
+		final String BET_SETTLEMENT = "NOT_INITIATED";
 		try {
 			String updateChipsSql = null;
 			String loginId = placeBetsBean.getLoginId();
@@ -892,6 +891,7 @@ public class UserDao {
 			placeBetsBean.setRemarks("Bet Placed by User " + userId);
 			placeBetsBean.setBetStatus(BET_STATUS);
 			placeBetsBean.setBetResult(BET_RESULT);
+			placeBetsBean.setBetSettlement(BET_SETTLEMENT);
 
 			LookupTableBean lookupTableRes = lookupTableRepository.findByLookupType(MINIMUM_STAKE);
 			Double minimumStake = Double.parseDouble(lookupTableRes.getLookupValue());
@@ -982,8 +982,10 @@ public class UserDao {
 								rs.getString("match_id"), rs.getString("match_name"), rs.getString("market_id"),
 								rs.getString("market_name"), rs.getLong("selection_id"), rs.getString("runner_name"),
 								rs.getDate("bet_place_date"), rs.getDouble("odds"), rs.getDouble("stake"),
-								rs.getDouble("liability"),rs.getDouble("profit"),rs.getDouble("loss"), rs.getString("isback"), rs.getString("islay"),
-								rs.getInt("psid"), rs.getString("remarks"),rs.getString("bet_status"), rs.getString("bet_result"), rs.getString("created_by"),
+								rs.getDouble("liability"),rs.getDouble("profit"),rs.getDouble("loss"),rs.getDouble("commision"),
+								rs.getDouble("admin_stakes"),rs.getDouble("sm_stakes"),rs.getDouble("master_stakes"),
+								rs.getString("isback"), rs.getString("islay"),
+								rs.getInt("psid"), rs.getString("remarks"),rs.getString("bet_status"), rs.getString("bet_result"), rs.getString("bet_settlement"),rs.getString("created_by"),
 								rs.getDate("created_date"), rs.getString("last_updated_by"),
 								rs.getDate("last_updated_date")));
 			}

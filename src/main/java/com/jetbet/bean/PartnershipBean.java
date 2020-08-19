@@ -27,7 +27,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "JB_PARTNISHIP_DETAILS")
+@Table(name = "JB_PARTNERSHIP_DETAILS")
 public class PartnershipBean {
 
 	@Id

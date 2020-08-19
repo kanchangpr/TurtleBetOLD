@@ -91,7 +91,7 @@ public class HttpUtil {
 
              ClientResponse clientResponse = webResource
                      .accept("application/json")
-                     .header("X-Application", "5tsF8QHfEw3n4Kp8")
+                     .header("X-Application", "B0RqC2v7teTOxehE")
                      .header("Content-Type", "application/x-www-form-urlencoded")
                      .post(ClientResponse.class);
 

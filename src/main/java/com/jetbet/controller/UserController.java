@@ -284,13 +284,6 @@ public class UserController {
 		return new ResponseEntity<List<PlaceBetsBean>>(response, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = ResourceConstants.CALCULATE_SETTLEMENT, method = RequestMethod.GET)
-	public ResponseEntity<List<PlaceBetsBean>> calculateSettlement(
-			@RequestParam(value = "userId", required = true) String userId) {
-		String transactionId = "TB" + UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
-		log.info("[" + transactionId + "]*************INSIDE userHome METHOD POST**************");
-		List<PlaceBetsBean> response = userService.openPlacedBets(userId, transactionId);
-		return new ResponseEntity<List<PlaceBetsBean>>(response, HttpStatus.OK);
-	}
-
+	
+	
 }
