@@ -23,9 +23,6 @@ public class JetBetApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(JetBetApplication.class, args);
 		System.out.println("Welcome to the springBoot.....");
-		
-		BetfairController bfController= new BetfairController();
-		bfController.getSessionToken();
 	}
 
 	@Bean

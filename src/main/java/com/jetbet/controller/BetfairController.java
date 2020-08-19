@@ -121,7 +121,7 @@ public class BetfairController {
 		//List<FancyBean> response=betfairService.getListOfOdds(applicationKey, sessionToken, userName, transactionId);
        // return new ResponseEntity<List<FancyBean>> (response,HttpStatus.OK);
 	}
-	
+	@Scheduled(fixedDelay = 61000)
 	@RequestMapping(value=ResourceConstants.GET_SESSION_TOKEN, method=RequestMethod.POST)
 	public ResponseEntity<SessionDetails> getSessionToken() {
 		String userName="shiltonpereira@live.com";
