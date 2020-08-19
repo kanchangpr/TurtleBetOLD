@@ -121,7 +121,7 @@ public class BetfairController {
 		//List<FancyBean> response=betfairService.getListOfOdds(applicationKey, sessionToken, userName, transactionId);
        // return new ResponseEntity<List<FancyBean>> (response,HttpStatus.OK);
 	}
-	@Scheduled(fixedDelay = 61000)
+	@Scheduled(fixedDelay = 3600000)
 	@RequestMapping(value=ResourceConstants.GET_SESSION_TOKEN, method=RequestMethod.POST)
 	public ResponseEntity<SessionDetails> getSessionToken() {
 		String userName="shiltonpereira@live.com";
@@ -142,7 +142,8 @@ public class BetfairController {
 	public List<SeriesMatchFancyResponseDto> getMarketCatalogue(@RequestParam(value="sportsId" ,required=true) String sportsId) {
 		String transactionId = "TB"+UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
 		log.info("["+transactionId+"]*************************INSIDE USER ROLE METHOD GET*************************");
-		
+		log.info("applicationKey:: "+applicationKey);
+		log.info("sessionToken:: "+sessionToken);
 		//ResponseEntity<SessionDetails> sessionDetails=getSessionToken();
 //		String applicationKey=sessionDetails.getBody().getProduct();
 //		String sessionToken=sessionDetails.getBody().getToken();
@@ -155,7 +156,8 @@ public class BetfairController {
 	public List<DashboardMatchListDto> dashboardMatchList() {
 		String transactionId = "TB"+UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
 		log.info("["+transactionId+"]*************************INSIDE USER ROLE METHOD GET*************************");
-		
+		log.info("applicationKey:: "+applicationKey);
+		log.info("sessionToken:: "+sessionToken);
 		//ResponseEntity<SessionDetails> sessionDetails=getSessionToken();
 //		String applicationKey=sessionDetails.getBody().getProduct();
 //		String sessionToken=sessionDetails.getBody().getToken();
@@ -170,7 +172,8 @@ public class BetfairController {
 			@RequestParam(value="selectionId" ,required=true) String selectionId) {
 		String transactionId = "TB"+UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
 		log.info("["+transactionId+"]*************************INSIDE USER ROLE METHOD GET*************************");
-		
+		log.info("applicationKey:: "+applicationKey);
+		log.info("sessionToken:: "+sessionToken);
 		//ResponseEntity<SessionDetails> sessionDetails=getSessionToken();
 //		String applicationKey=sessionDetails.getBody().getProduct();
 //		String sessionToken=sessionDetails.getBody().getToken();
@@ -181,6 +184,8 @@ public class BetfairController {
 	
 	
 	public void updateListOfSeries() {
+		log.info("applicationKey:: "+applicationKey);
+		log.info("sessionToken:: "+sessionToken);
 	//	ResponseEntity<SessionDetails> sessionDetails=getSessionToken();
 //		String applicationKey=sessionDetails.getBody().getProduct();
 //		String sessionToken=sessionDetails.getBody().getToken();
@@ -192,6 +197,8 @@ public class BetfairController {
 	
 	
 	public void updateListOfMatches() {
+		log.info("applicationKey:: "+applicationKey);
+		log.info("sessionToken:: "+sessionToken);
 	//	ResponseEntity<SessionDetails> sessionDetails=getSessionToken();
 //		String applicationKey=sessionDetails.getBody().getProduct();
 //		String sessionToken=sessionDetails.getBody().getToken();
@@ -203,6 +210,8 @@ public class BetfairController {
 	
 	
 	public void updateListOfOdds() {
+		log.info("applicationKey:: "+applicationKey);
+		log.info("sessionToken:: "+sessionToken);
 		//ResponseEntity<SessionDetails> sessionDetails=getSessionToken();
 //		String applicationKey=sessionDetails.getBody().getProduct();
 //		String sessionToken=sessionDetails.getBody().getToken();
@@ -214,6 +223,8 @@ public class BetfairController {
 	
 	@RequestMapping(value=ResourceConstants.DECLARE_RESULT, method=RequestMethod.GET)
 	public void declareResult() {
+		log.info("applicationKey:: "+applicationKey);
+		log.info("sessionToken:: "+sessionToken);
 	//	ResponseEntity<SessionDetails> sessionDetails=getSessionToken();
 //		String applicationKey=sessionDetails.getBody().getProduct();
 //		String sessionToken=sessionDetails.getBody().getToken();
@@ -225,6 +236,8 @@ public class BetfairController {
 	
 	@RequestMapping(value = ResourceConstants.CALCULATE_SETTLEMENT, method = RequestMethod.GET)
 	public void calculateProfitLoss() {
+		log.info("applicationKey:: "+applicationKey);
+		log.info("sessionToken:: "+sessionToken);
 		String transactionId = "TB" + UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
 		log.info("[" + transactionId + "]*************INSIDE userHome METHOD POST**************");
 		betfairService.calculateProfitLoss();
