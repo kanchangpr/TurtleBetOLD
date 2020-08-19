@@ -37,6 +37,10 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping(value="/Betfair")
 public class BetfairController {
 	
+	public static String applicationKey;
+	public static String sessionToken;
+	public static String status;
+	
 	@Autowired
 	BetfairService betfairService;
 	
@@ -47,13 +51,13 @@ public class BetfairController {
 	//public void getListOfSports() {
 		
 		log.info("Time of Execution: "+datetimeformatter.format(LocalDateTime.now()));
-		ResponseEntity<SessionDetails> sessionDetails=getSessionToken();
+	//	ResponseEntity<SessionDetails> sessionDetails=getSessionToken();
 //		String applicationKey="5tsF8QHfEw3n4Kp8";
 //		String sessionToken="PsszL+gNaXw+s7+MiHF7vk8HfFrz+oNeZaxO8l+GZGU=";
 //		String userName="KANCHAN";
 		
-		String applicationKey=sessionDetails.getBody().getProduct();
-		String sessionToken=sessionDetails.getBody().getToken();
+//		String applicationKey=sessionDetails.getBody().getProduct();
+//		String sessionToken=sessionDetails.getBody().getToken();
 		String userName=ResourceConstants.USER_NAME;
 		
 		String transactionId = "TB"+UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
@@ -69,9 +73,9 @@ public class BetfairController {
 //		String applicationKey="5tsF8QHfEw3n4Kp8";
 //		String sessionToken="PsszL+gNaXw+s7+MiHF7vk8HfFrz+oNeZaxO8l+GZGU=";
 //		String userName="KANCHAN";
-		ResponseEntity<SessionDetails> sessionDetails=getSessionToken();
-		String applicationKey=sessionDetails.getBody().getProduct();
-		String sessionToken=sessionDetails.getBody().getToken();
+	//	ResponseEntity<SessionDetails> sessionDetails=getSessionToken();
+//		String applicationKey=sessionDetails.getBody().getProduct();
+//		String sessionToken=sessionDetails.getBody().getToken();
 		String userName=ResourceConstants.USER_NAME;
 		String transactionId = "TB"+UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
 		log.info("["+transactionId+"]*************************INSIDE getListOfSeries METHOD GET*************************");
@@ -88,9 +92,9 @@ public class BetfairController {
 //		String applicationKey="5tsF8QHfEw3n4Kp8";
 //		String sessionToken="PsszL+gNaXw+s7+MiHF7vk8HfFrz+oNeZaxO8l+GZGU=";
 //		String userName="KANCHAN";
-		ResponseEntity<SessionDetails> sessionDetails=getSessionToken();
-		String applicationKey=sessionDetails.getBody().getProduct();
-		String sessionToken=sessionDetails.getBody().getToken();
+	//	ResponseEntity<SessionDetails> sessionDetails=getSessionToken();
+//		String applicationKey=sessionDetails.getBody().getProduct();
+//		String sessionToken=sessionDetails.getBody().getToken();
 		String userName=ResourceConstants.USER_NAME;
 		String transactionId = "TB"+UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
 		log.info("["+transactionId+"]*************************INSIDE getListOfMatches METHOD GET*************************");
@@ -107,9 +111,9 @@ public class BetfairController {
 //		String applicationKey="5tsF8QHfEw3n4Kp8";
 //		String sessionToken="PsszL+gNaXw+s7+MiHF7vk8HfFrz+oNeZaxO8l+GZGU=";
 //		String userName="KANCHAN";
-		ResponseEntity<SessionDetails> sessionDetails=getSessionToken();
-		String applicationKey=sessionDetails.getBody().getProduct();
-		String sessionToken=sessionDetails.getBody().getToken();
+		//ResponseEntity<SessionDetails> sessionDetails=getSessionToken();
+//		String applicationKey=sessionDetails.getBody().getProduct();
+//		String sessionToken=sessionDetails.getBody().getToken();
 		String userName=ResourceConstants.USER_NAME;
 		String transactionId = "TB"+UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
 		log.info("["+transactionId+"]*************************INSIDE getListOfOdds METHOD GET*************************");
@@ -124,8 +128,12 @@ public class BetfairController {
 		String password="Wsxedc@123";
 		String transactionId = "TB"+UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
 		log.info("["+transactionId+"]*************************INSIDE getSessionToken METHOD GET*************************");
+		
 		SessionDetails response=betfairService.getSessionToken(userName, password, transactionId);
-		log.info("response:: "+response);
+		applicationKey=response.getProduct();
+		sessionToken=response.getToken();
+		log.info("applicationKey:: "+applicationKey);
+		log.info("sessionToken:: "+sessionToken);
         return new ResponseEntity<SessionDetails> (response,HttpStatus.OK);
 	}
 	
@@ -135,9 +143,9 @@ public class BetfairController {
 		String transactionId = "TB"+UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
 		log.info("["+transactionId+"]*************************INSIDE USER ROLE METHOD GET*************************");
 		
-		ResponseEntity<SessionDetails> sessionDetails=getSessionToken();
-		String applicationKey=sessionDetails.getBody().getProduct();
-		String sessionToken=sessionDetails.getBody().getToken();
+		//ResponseEntity<SessionDetails> sessionDetails=getSessionToken();
+//		String applicationKey=sessionDetails.getBody().getProduct();
+//		String sessionToken=sessionDetails.getBody().getToken();
 		String userName=ResourceConstants.USER_NAME;
 		
 		return betfairService.getMarketCatalogue(sportsId,applicationKey,sessionToken,userName,transactionId);
@@ -148,9 +156,9 @@ public class BetfairController {
 		String transactionId = "TB"+UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
 		log.info("["+transactionId+"]*************************INSIDE USER ROLE METHOD GET*************************");
 		
-		ResponseEntity<SessionDetails> sessionDetails=getSessionToken();
-		String applicationKey=sessionDetails.getBody().getProduct();
-		String sessionToken=sessionDetails.getBody().getToken();
+		//ResponseEntity<SessionDetails> sessionDetails=getSessionToken();
+//		String applicationKey=sessionDetails.getBody().getProduct();
+//		String sessionToken=sessionDetails.getBody().getToken();
 		String userName=ResourceConstants.USER_NAME;
 		
 		return betfairService.dashboardMatchList(applicationKey,sessionToken,userName,transactionId);
@@ -163,9 +171,9 @@ public class BetfairController {
 		String transactionId = "TB"+UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
 		log.info("["+transactionId+"]*************************INSIDE USER ROLE METHOD GET*************************");
 		
-		ResponseEntity<SessionDetails> sessionDetails=getSessionToken();
-		String applicationKey=sessionDetails.getBody().getProduct();
-		String sessionToken=sessionDetails.getBody().getToken();
+		//ResponseEntity<SessionDetails> sessionDetails=getSessionToken();
+//		String applicationKey=sessionDetails.getBody().getProduct();
+//		String sessionToken=sessionDetails.getBody().getToken();
 		String userName=ResourceConstants.USER_NAME;
 		
 		return betfairService.getRunnersPrizeAndSize(marketId,selectionId,applicationKey,sessionToken,userName,transactionId);
@@ -173,9 +181,9 @@ public class BetfairController {
 	
 	
 	public void updateListOfSeries() {
-		ResponseEntity<SessionDetails> sessionDetails=getSessionToken();
-		String applicationKey=sessionDetails.getBody().getProduct();
-		String sessionToken=sessionDetails.getBody().getToken();
+	//	ResponseEntity<SessionDetails> sessionDetails=getSessionToken();
+//		String applicationKey=sessionDetails.getBody().getProduct();
+//		String sessionToken=sessionDetails.getBody().getToken();
 		String userName=ResourceConstants.USER_NAME;
 		String transactionId = "TB"+UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
 		log.info("["+transactionId+"]*************************INSIDE getListOfSeries METHOD GET*************************");
@@ -184,9 +192,9 @@ public class BetfairController {
 	
 	
 	public void updateListOfMatches() {
-		ResponseEntity<SessionDetails> sessionDetails=getSessionToken();
-		String applicationKey=sessionDetails.getBody().getProduct();
-		String sessionToken=sessionDetails.getBody().getToken();
+	//	ResponseEntity<SessionDetails> sessionDetails=getSessionToken();
+//		String applicationKey=sessionDetails.getBody().getProduct();
+//		String sessionToken=sessionDetails.getBody().getToken();
 		String userName=ResourceConstants.USER_NAME;
 		String transactionId = "TB"+UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
 		log.info("["+transactionId+"]*************************INSIDE getListOfMatches METHOD GET*************************");
@@ -195,9 +203,9 @@ public class BetfairController {
 	
 	
 	public void updateListOfOdds() {
-		ResponseEntity<SessionDetails> sessionDetails=getSessionToken();
-		String applicationKey=sessionDetails.getBody().getProduct();
-		String sessionToken=sessionDetails.getBody().getToken();
+		//ResponseEntity<SessionDetails> sessionDetails=getSessionToken();
+//		String applicationKey=sessionDetails.getBody().getProduct();
+//		String sessionToken=sessionDetails.getBody().getToken();
 		String userName=ResourceConstants.USER_NAME;
 		String transactionId = "TB"+UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
 		log.info("["+transactionId+"]*************************INSIDE getListOfOdds METHOD GET*************************");
@@ -206,9 +214,9 @@ public class BetfairController {
 	
 	@RequestMapping(value=ResourceConstants.DECLARE_RESULT, method=RequestMethod.GET)
 	public void declareResult() {
-		ResponseEntity<SessionDetails> sessionDetails=getSessionToken();
-		String applicationKey=sessionDetails.getBody().getProduct();
-		String sessionToken=sessionDetails.getBody().getToken();
+	//	ResponseEntity<SessionDetails> sessionDetails=getSessionToken();
+//		String applicationKey=sessionDetails.getBody().getProduct();
+//		String sessionToken=sessionDetails.getBody().getToken();
 		String userName=ResourceConstants.USER_NAME;
 		String transactionId = "TB"+UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
 		log.info("["+transactionId+"]*************************INSIDE getListOfOdds METHOD GET*************************");

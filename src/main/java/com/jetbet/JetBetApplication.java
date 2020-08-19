@@ -6,6 +6,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
+import com.jetbet.controller.BetfairController;
+
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.spi.DocumentationType;
@@ -21,6 +23,9 @@ public class JetBetApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(JetBetApplication.class, args);
 		System.out.println("Welcome to the springBoot.....");
+		
+		BetfairController bfController= new BetfairController();
+		bfController.getSessionToken();
 	}
 
 	@Bean
