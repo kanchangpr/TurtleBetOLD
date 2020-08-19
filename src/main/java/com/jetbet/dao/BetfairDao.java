@@ -696,6 +696,7 @@ public class BetfairDao {
 		for (int i = 0; i < placeBetsList.size(); i++) {
 			double profit=0.0;
 			double loss=0.0;
+			double netAmount=0.0;
 			double commision=0.0;
 			double adminStakes=0.0;
 			double smStakes=0.0;
@@ -731,12 +732,14 @@ public class BetfairDao {
 //					log.info("INSIDE ODDs IF");
 					commision=calcuateCommision(liability,oddCommision);
 					profit=calcuateCommision(liability,Double.parseDouble(df.format(100.0-oddCommision)));
+					netAmount=profit;
 //					log.info("commision:: "+commision);
 //					log.info("profit:: "+profit);
 				}else{
 //					log.info("INSIDE WON IF");
 					commision=calcuateCommision(liability,sessionCommision);
 					profit=calcuateCommision(liability,Double.parseDouble(df.format(100.0-oddCommision)));
+					netAmount=profit;
 //					log.info("commision:: "+commision);
 //					log.info("profit:: "+profit);
 				}
@@ -749,15 +752,17 @@ public class BetfairDao {
 			} else if(placeBetsBean.getBetResult().equalsIgnoreCase(ResourceConstants.LOST)) {
 //				log.info("INSIDE LOST IF");
 				loss=stake;
+				netAmount=-loss;
 //				log.info("loss:: "+loss);
-				adminStakes=calcuateCommision(loss,adminPer);
-				smStakes=calcuateCommision(loss,smPer);
-				masterStakes=calcuateCommision(loss,masterPer);
+				adminStakes=-calcuateCommision(loss,adminPer);
+				smStakes=-calcuateCommision(loss,smPer);
+				masterStakes=-calcuateCommision(loss,masterPer);
 			}
 			
 			placeBetsBean.setCommision(commision);
 			placeBetsBean.setProfit(profit);
 			placeBetsBean.setLoss(loss);
+			placeBetsBean.setNetAmount(netAmount);
 			placeBetsBean.setAdminStakes(adminStakes);
 			placeBetsBean.setSmStakes(smStakes);
 			placeBetsBean.setMasterStakes(masterStakes);

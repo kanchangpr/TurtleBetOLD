@@ -109,6 +109,9 @@ public class PlaceBetsBean {
 	@Column(name = "loss")
 	private double loss;
 	
+	@Column(name = "net_amount")
+	private double netAmount;
+	
 	@Column(name = "commision")
 	private double commision;
 	
