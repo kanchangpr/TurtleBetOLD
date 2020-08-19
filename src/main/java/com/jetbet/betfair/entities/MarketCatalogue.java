@@ -26,6 +26,6 @@ public class MarketCatalogue {
 	private EventType eventType;
 	private Competition competition;
 	private Event event;
-	private MarketBook marketBook;
+	private List<MarketBook> marketBook;
 
 }

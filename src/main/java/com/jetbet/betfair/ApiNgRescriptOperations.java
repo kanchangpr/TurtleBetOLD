@@ -108,6 +108,7 @@ public class ApiNgRescriptOperations extends ApiNgOperations {
 	public List<MarketCatalogue> listMarketCatalogue(MarketFilter filter, Set<MarketProjection> marketProjection,
 			MarketSort sort, String maxResult, String appKey, String ssoId) throws APINGException {
 		Map<String, Object> params = new HashMap<String, Object>();
+		List<MarketBook> marketBookList= new ArrayList<MarketBook>();
 		params.put(LOCALE, locale);
 		params.put(FILTER, filter);
 		params.put(SORT, sort);
@@ -139,7 +140,8 @@ public class ApiNgRescriptOperations extends ApiNgOperations {
 				String selectionId = container.get(i).getRunners().get(j).getSelectionId().toString();
 				MarketBook marketBook = listRunnersBook(marketId, selectionId, priceProjection, orderProjection,
 						matchProjection, currencyCode, appKey, ssoId);
-				container.get(i).setMarketBook(marketBook);
+				marketBookList.add(marketBook);
+				container.get(i).setMarketBook(marketBookList);
 			}
 		}
 
