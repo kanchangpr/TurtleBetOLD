@@ -24,7 +24,6 @@ import com.jetbet.dto.FancyControl;
 import com.jetbet.dto.FancyIdDto;
 import com.jetbet.dto.SportsControl;
 import com.jetbet.dto.UserResponseDto;
-import com.jetbet.dto.UserRolesResponseDto;
 import com.jetbet.repository.FancyRepository;
 import com.jetbet.repository.MatchRepository;
 import com.jetbet.repository.SeriesRepository;
