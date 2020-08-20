@@ -1,6 +1,7 @@
 package com.jetbet.dao;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -16,7 +17,9 @@ import com.jetbet.bean.MatchBean;
 import com.jetbet.bean.PlaceBetsBean;
 import com.jetbet.bean.SeriesBean;
 import com.jetbet.bean.SportsBean;
+import com.jetbet.bean.UserBean;
 import com.jetbet.controller.BetfairController;
+import com.jetbet.dto.BetSettlementDto;
 import com.jetbet.dto.FancyControl;
 import com.jetbet.dto.FancyIdDto;
 import com.jetbet.dto.SportsControl;
@@ -26,6 +29,7 @@ import com.jetbet.repository.FancyRepository;
 import com.jetbet.repository.MatchRepository;
 import com.jetbet.repository.SeriesRepository;
 import com.jetbet.repository.SportsRepository;
+import com.jetbet.repository.UserRepository;
 import com.jetbet.util.QueryListConstant;
 import com.jetbet.util.ResourceConstants;
 
@@ -49,6 +53,9 @@ public class AdminDao {
 
 	@Autowired
 	FancyRepository fancyRepository;
+	
+	@Autowired
+	UserRepository userRepository;
 
 	@Transactional
 	public UserResponseDto sportsControl(SportsControl sportsControlReq, String transactionId) {
@@ -110,11 +117,11 @@ public class AdminDao {
 					userResponseDto.setStatus(ResourceConstants.SUCCESS);
 					userResponseDto.setErrorMsg(ResourceConstants.UPDATED);
 					if (sportsControlReq.getOperation().equalsIgnoreCase(ResourceConstants.SPORTS_PAGE)) {
-							bfController.updateListOfSeries();
+						bfController.updateListOfSeries();
 					} else if (sportsControlReq.getOperation().equalsIgnoreCase(ResourceConstants.SERIES_PAGE)) {
-							bfController.updateListOfMatches();
+						bfController.updateListOfMatches();
 					} else if (sportsControlReq.getOperation().equalsIgnoreCase(ResourceConstants.MATCH_PAGE)) {
-							bfController.updateListOfOdds();
+						bfController.updateListOfOdds();
 					}
 				}
 			} else if (!errorCode && sportsControlReq.getIsActive().equalsIgnoreCase("N")) {
@@ -153,7 +160,7 @@ public class AdminDao {
 					jdbcTemplate.update(QueryListConstant.MATCH_CONTROL_FOR_MATCH_PAGE,
 							new Object[] { sportsControlReq.getIsActive(), sportsControlReq.getUserName(),
 									sportsControlReq.getOperationId() });
-					
+
 					jdbcTemplate.update(QueryListConstant.MATCH_CONTROL_FOR_FANCY_PAGE,
 							new Object[] { sportsControlReq.getIsActive(), sportsControlReq.getUserName(),
 									sportsControlReq.getOperationId() });
@@ -265,19 +272,21 @@ public class AdminDao {
 	}
 
 	@Transactional
-	public List<FancyBean> fancyList(String matchId,String fancyName,String transactionId) {
+	public List<FancyBean> fancyList(String matchId, String fancyName, String transactionId) {
 		log.info("[" + transactionId + "]**************INSIDE fancyList CLASS UserDao******************");
 		List<FancyBean> responseBeanList = new ArrayList<FancyBean>();
 		String getUserRolesSql = null;
-		
-		if(StringUtils.isBlank(matchId) && StringUtils.isBlank(fancyName) ) {
-			getUserRolesSql = QueryListConstant.GET_FANCY_LIST +" ORDER BY MATCH_NAME";
-		}else if(!StringUtils.isBlank(matchId) && StringUtils.isBlank(fancyName)) {
-			getUserRolesSql = QueryListConstant.GET_FANCY_LIST +" AND MATCH.MATCH_ID='"+matchId+"' ORDER BY MATCH_NAME";
-		}else if(!StringUtils.isBlank(matchId) && !StringUtils.isBlank(fancyName)) {
-			getUserRolesSql = QueryListConstant.GET_FANCY_LIST +" AND MATCH.MATCH_ID='"+matchId+"' AND FANCY.MARKET_TYPE='"+fancyName+"' ORDER BY MATCH_NAME";
+
+		if (StringUtils.isBlank(matchId) && StringUtils.isBlank(fancyName)) {
+			getUserRolesSql = QueryListConstant.GET_FANCY_LIST + " ORDER BY MATCH_NAME";
+		} else if (!StringUtils.isBlank(matchId) && StringUtils.isBlank(fancyName)) {
+			getUserRolesSql = QueryListConstant.GET_FANCY_LIST + " AND MATCH.MATCH_ID='" + matchId
+					+ "' ORDER BY MATCH_NAME";
+		} else if (!StringUtils.isBlank(matchId) && !StringUtils.isBlank(fancyName)) {
+			getUserRolesSql = QueryListConstant.GET_FANCY_LIST + " AND MATCH.MATCH_ID='" + matchId
+					+ "' AND FANCY.MARKET_TYPE='" + fancyName + "' ORDER BY MATCH_NAME";
 		}
-		
+
 		responseBeanList = jdbcTemplate.query(getUserRolesSql,
 				(rs, rowNum) -> new FancyBean(new FancyIdDto(rs.getString("market_type"), rs.getString("MATCH_NAME")),
 						rs.getInt("market_count"), rs.getString("series_id"), rs.getString("sports_id"),
@@ -288,15 +297,16 @@ public class AdminDao {
 
 	public UserResponseDto updateFancy(@Valid FancyControl fancyControl, String transactionId) {
 		log.info("[" + transactionId + "]**************INSIDE fancyList CLASS UserDao******************");
-		UserResponseDto userResponseDto=new UserResponseDto();
-		
-		String matchId=fancyControl.getMatchId();
-		String marketName=fancyControl.getMarketName();
-		String isActive=fancyControl.getIsActive();
-		String updatedBy=fancyControl.getUserName();
+		UserResponseDto userResponseDto = new UserResponseDto();
+
+		String matchId = fancyControl.getMatchId();
+		String marketName = fancyControl.getMarketName();
+		String isActive = fancyControl.getIsActive();
+		String updatedBy = fancyControl.getUserName();
 		log.info("[" + transactionId + "] ");
-		
-		int count = jdbcTemplate.update(QueryListConstant.UPDATE_FANCY_DETAIL, new Object[] { isActive, updatedBy,marketName ,matchId});
+
+		int count = jdbcTemplate.update(QueryListConstant.UPDATE_FANCY_DETAIL,
+				new Object[] { isActive, updatedBy, marketName, matchId });
 		if (count == 0) {
 			userResponseDto.setStatus(ResourceConstants.FAILED);
 			userResponseDto.setErrorCode(ResourceConstants.ERR_003);
@@ -305,23 +315,86 @@ public class AdminDao {
 			userResponseDto.setStatus(ResourceConstants.SUCCESS);
 			userResponseDto.setErrorMsg(ResourceConstants.UPDATED);
 		}
-		
+
 		return userResponseDto;
 	}
 
-	public List<PlaceBetsBean> openPlacedBetsBySports(String matchId,String marketId,String userId, String transactionId) {
-		List<PlaceBetsBean> placeBetsList= new ArrayList<PlaceBetsBean>();
+	public List<PlaceBetsBean> openPlacedBetsBySports(String matchId, String marketId, String userId,
+			String transactionId) {
+		List<PlaceBetsBean> placeBetsList = new ArrayList<PlaceBetsBean>();
 		placeBetsList = jdbcTemplate.query(QueryListConstant.OPEN_BET_FOR_MASTERS,
-				new Object[] { userId,matchId,marketId },
-				(rs, rowNum) -> new PlaceBetsBean(
-						rs.getString("user_id"), 
-						rs.getString("match_id"), rs.getString("match_name"), rs.getString("market_id"),
-						rs.getString("market_name"), rs.getLong("selection_id"), rs.getString("runner_name"),
-						rs.getDate("bet_place_date"), rs.getDouble("odds"), rs.getDouble("stake"),
-						rs.getDouble("liability"),
-						rs.getString("isback"), rs.getString("islay")));
+				new Object[] { userId, matchId, marketId },
+				(rs, rowNum) -> new PlaceBetsBean(rs.getString("user_id"), rs.getString("match_id"),
+						rs.getString("match_name"), rs.getString("market_id"), rs.getString("market_name"),
+						rs.getLong("selection_id"), rs.getString("runner_name"), rs.getDate("bet_place_date"),
+						rs.getDouble("odds"), rs.getDouble("stake"), rs.getDouble("liability"), rs.getString("isback"),
+						rs.getString("islay")));
 		log.info("[" + transactionId + "] responseBeanList:  " + placeBetsList);
 		return placeBetsList;
+	}
+
+	public List<BetSettlementDto> betSettlement(String accountType, String userId, String transactionId) {
+		
+		 String admin;
+		 String sm;
+		 String master;
+		 String sqlString = null;
+		List<UserBean> userDetails= new ArrayList<UserBean>();
+		java.util.Map<String,String> userParentMap=new HashMap<String,String>();
+		BetSettlementDto betSettlementRes= new BetSettlementDto();
+		List<BetSettlementDto> betSettlementResList= new ArrayList<BetSettlementDto>();
+		List<BetSettlementDto> betSettlementList= new ArrayList<BetSettlementDto>();
+		if(accountType.equalsIgnoreCase("MINUS")) {
+			sqlString=QueryListConstant.GET_BET_SETTLEMENT_DATA_MINUS;
+		}else if(accountType.equalsIgnoreCase("PLUS")) {
+			sqlString=QueryListConstant.GET_BET_SETTLEMENT_DATA_PLUS;
+		}
+		
+		betSettlementList = jdbcTemplate.query(sqlString,
+				new Object[] { userId },
+				(rs, rowNum) -> new BetSettlementDto(
+						rs.getString("USER_ID"), rs.getDouble("STAKES"), 
+						rs.getDouble("LIABILITY"),	rs.getDouble("PROFIT"),
+						rs.getDouble("LOSS"),
+						rs.getDouble("AMOUNT"),
+						rs.getDouble("COMMISION"),
+						rs.getDouble("ADMIN_STAKES"),
+						rs.getDouble("SM_STAKES"),
+						rs.getDouble("MASTER_STAKES")
+						));
+		log.info("[" + transactionId + "] betSettlementList:  " + betSettlementList);
+		for (int i = 0; i < betSettlementList.size(); i++) {
+			
+			userDetails = jdbcTemplate.query(QueryListConstant.GET_PARENT_LIST,
+					new Object[] { userId },
+					(rs, rowNum) -> new UserBean(
+							rs.getString("USER_ID"), rs.getString("USER_ROLE")
+							));
+			for (int j = 0; j < userDetails.size(); j++) {
+				userParentMap.put(userDetails.get(j).getUserRole(),userDetails.get(j).getUserId());
+			}
+			
+			admin=userParentMap.get("ADMIN");
+			sm=userParentMap.get("SUPERMASTER");
+			master=userParentMap.get("MASTER");
+			betSettlementRes.setAdmin(admin);
+			betSettlementRes.setSm(sm);
+			betSettlementRes.setMaster(master);
+			betSettlementRes.setUserId(betSettlementList.get(i).getUserId());
+			betSettlementRes.setStake(betSettlementList.get(i).getStake());
+			betSettlementRes.setLiability(betSettlementList.get(i).getLiability());
+			betSettlementRes.setProfit(betSettlementList.get(i).getProfit());
+			betSettlementRes.setLoss(betSettlementList.get(i).getLoss());
+			betSettlementRes.setAmount(betSettlementList.get(i).getAmount());
+			betSettlementRes.setCommision(betSettlementList.get(i).getCommision());
+			betSettlementRes.setAdminStakes(betSettlementList.get(i).getAdminStakes());
+			betSettlementRes.setSmStakes(betSettlementList.get(i).getSmStakes());
+			betSettlementRes.setMasterStakes(betSettlementList.get(i).getMasterStakes());
+			
+			betSettlementResList.add(betSettlementRes);
+		}
+		
+		return betSettlementResList;
 	}
 
 }

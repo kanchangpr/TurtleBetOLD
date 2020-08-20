@@ -13,6 +13,7 @@ import com.jetbet.bean.PlaceBetsBean;
 import com.jetbet.bean.SeriesBean;
 import com.jetbet.bean.SportsBean;
 import com.jetbet.dao.AdminDao;
+import com.jetbet.dto.BetSettlementDto;
 import com.jetbet.dto.FancyControl;
 import com.jetbet.dto.SportsControl;
 import com.jetbet.dto.UserResponseDto;
@@ -67,6 +68,12 @@ public class AdminServiceImpl implements AdminService{
 	public List<PlaceBetsBean> openPlacedBetsBySports(String matchId,String marketId,String userId, String transactionId) {
 		log.info("["+transactionId+"]*************************INSIDE openPlacedBetsBySports CLASS AdminServiceImpl*************************");
 		return adminDao.openPlacedBetsBySports(matchId,marketId,userId,transactionId);
+	}
+
+	@Override
+	public  List<BetSettlementDto> betSettlement(String accountType, String userId,String transactionId) {
+		log.info("["+transactionId+"]*************************INSIDE betSettlement CLASS AdminServiceImpl*************************");
+		return adminDao.betSettlement(accountType,userId,transactionId);
 	}
 
 }

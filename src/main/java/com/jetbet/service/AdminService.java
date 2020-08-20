@@ -11,6 +11,7 @@ import com.jetbet.bean.MatchBean;
 import com.jetbet.bean.PlaceBetsBean;
 import com.jetbet.bean.SeriesBean;
 import com.jetbet.bean.SportsBean;
+import com.jetbet.dto.BetSettlementDto;
 import com.jetbet.dto.FancyControl;
 import com.jetbet.dto.SportsControl;
 import com.jetbet.dto.UserResponseDto;
@@ -31,5 +32,7 @@ public interface AdminService {
 	UserResponseDto updateFancy(@Valid FancyControl fancyControl, String transactionId);
 
 	List<PlaceBetsBean> openPlacedBetsBySports(String matchId,String marketId,String userId, String transactionId);
+
+	 List<BetSettlementDto> betSettlement(String accountType,String userId, String transactionId);
 
 }

@@ -28,6 +28,12 @@ import lombok.Setter;
 @Entity
 @Table(name = "JB_USER_DETAILS")
 public class UserBean {
+	public UserBean(String userId, String userRole) {
+		super();
+		this.userId = userId;
+		this.userRole = userRole;
+	}
+
 	@Id
     @SequenceGenerator(name="jb_user_details_seq",sequenceName="jb_user_details_seq",allocationSize=1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE,generator="jb_user_details_seq")
