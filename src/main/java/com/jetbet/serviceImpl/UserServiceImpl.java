@@ -173,9 +173,9 @@ public class UserServiceImpl implements UserService{
 	}
 
 	@Override
-	public List<Object> userReport(String type, String userId, String fromDate, String toDate, String transactionId) {
+	public List<Object> userReport(String type, String userId, String fromDate, String toDate,String searchParam, String transactionId) {
 		log.info("["+transactionId+"]*************************INSIDE userReport CLASS UserServiceImpl*************************");
-		return userDao.userReport( type,  userId,  fromDate,  toDate,transactionId);
+		return userDao.userReport( type,  userId,  fromDate,  toDate, searchParam, transactionId);
 	}
 
 	@Override

@@ -73,7 +73,7 @@ public interface UserService {
 
 	UserResponseDto placeBets(@Valid PlaceBetsBean placeBetsBean, String transactionId);
 
-	List<Object> userReport(String type, String userId, String fromDate, String toDate, String transactionId);
+	List<Object> userReport(String type, String userId, String fromDate, String toDate,String searchParam, String transactionId);
 
 	List<UserHomeDto> userHome(String sportsId, String transactionId);
 

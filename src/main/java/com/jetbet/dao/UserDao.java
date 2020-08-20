@@ -107,7 +107,7 @@ public class UserDao {
 	}
 
 	@Transactional
-	public List<UserRolesResponseDto> getParentList(String userId,String role, String transactionId) {
+	public List<UserRolesResponseDto> getParentList(String userId, String role, String transactionId) {
 		log.info("[" + transactionId
 				+ "]*************************INSIDE addUserRole CLASS UserDao*************************");
 		log.info("[" + transactionId + "] Role: " + role);
@@ -563,10 +563,10 @@ public class UserDao {
 					(rs, rowNum) -> new UserBean(rs.getLong("id"), rs.getString("user_id"), rs.getString("full_name"),
 							rs.getString("user_Role"), rs.getString("parent"), rs.getDate("Reg_Date"),
 							rs.getFloat("Odds_Commission"), rs.getFloat("Session_Commission"), rs.getInt("Bet_Delay"),
-							rs.getInt("Session_Delay"), rs.getLong("User_Limit"), 
-							rs.getDouble("chips"), rs.getString("isactive"), rs.getString("isuserlock"),
-							rs.getString("isbettinglock"), rs.getString("remarks"), rs.getDate("lastupdateddate"),
-							rs.getString("lastupdateby"), rs.getDate("createddate"), rs.getString("createdby")));
+							rs.getInt("Session_Delay"), rs.getLong("User_Limit"), rs.getDouble("chips"),
+							rs.getString("isactive"), rs.getString("isuserlock"), rs.getString("isbettinglock"),
+							rs.getString("remarks"), rs.getDate("lastupdateddate"), rs.getString("lastupdateby"),
+							rs.getDate("createddate"), rs.getString("createdby")));
 		} else if (!StringUtils.isBlank(parent)) {
 			responseBeans = userRepository.findByParentOrderByFullName(parent.toUpperCase());
 		} else if (!StringUtils.isBlank(userId)) {
@@ -863,8 +863,8 @@ public class UserDao {
 			int psId = userDetail.getPartnership();
 			double chips = userDetail.getChips();
 			String isbetLock = userDetail.getIsBettingLock();
-			int sessionDelay= userDetail.getSessionDelay();
-			int betDelay= userDetail.getBetDelay();
+			int sessionDelay = userDetail.getSessionDelay();
+			int betDelay = userDetail.getBetDelay();
 
 			log.info("[" + transactionId + "] parent:  " + parent);
 			log.info("[" + transactionId + "] loginId:  " + loginId);
@@ -909,7 +909,7 @@ public class UserDao {
 							int updateChipsRowCount = jdbcTemplate.update(updateChipsSql,
 									new Object[] { balance, userId, userId });
 							log.info("[" + transactionId + "] updateChipsRowCount:: " + updateChipsRowCount);
-							
+
 							chipsBean.setUserId(userId);
 							chipsBean.setFromUser("BET_PLACED");
 							chipsBean.setBettingId(placeBetsResBean.getId());
@@ -920,11 +920,11 @@ public class UserDao {
 							chipsBean = chipsRepository.saveAndFlush(chipsBean);
 
 							log.info("[" + transactionId + "] chipsBean:: " + chipsBean);
-							
-							if(marketName.equalsIgnoreCase(MATCH_ODDS)) {
-								Thread.sleep(betDelay*1000);
-							}else {
-								Thread.sleep(sessionDelay*1000);
+
+							if (marketName.equalsIgnoreCase(MATCH_ODDS)) {
+								Thread.sleep(betDelay * 1000);
+							} else {
+								Thread.sleep(sessionDelay * 1000);
 							}
 							userResponseDto.setStatus(ResourceConstants.SUCCESS);
 							userResponseDto.setErrorMsg(ResourceConstants.BET_PLACED + placeBetsResBean.getId());
@@ -957,7 +957,8 @@ public class UserDao {
 		return userResponseDto;
 	}
 
-	public List<Object> userReport(String type, String userId, String fromDate, String toDate, String transactionId) {
+	public List<Object> userReport(String type, String userId, String fromDate, String toDate, String searchParam,
+			String transactionId) {
 		log.info("[" + transactionId + "]****************INSIDE userReport CLASS UserDao****************");
 		List<PlaceBetsBean> betHistory = new ArrayList<PlaceBetsBean>();
 		List<ChipsBean> accHistory = new ArrayList<ChipsBean>();
@@ -970,8 +971,9 @@ public class UserDao {
 
 		if (ResourceConstants.BetType.BET_HISTORY.equalsIgnoreCase(type)) {
 			log.info("[" + transactionId + "] Inside :  " + type);
-
-			if (StringUtils.isEmpty(fromDate) && StringUtils.isEmpty(toDate)) {
+			if (!StringUtils.isEmpty(searchParam) && searchParam.equalsIgnoreCase("betSettlement")) {
+				betHistory = placeBetsRepository.findByUserIdAndBetSettlementOrderByIdDesc(userId, "PENDING");
+			}else if (StringUtils.isEmpty(fromDate) && StringUtils.isEmpty(toDate)) {
 				betHistory = placeBetsRepository.findByUserIdOrderByIdDesc(userId);
 			} else {
 				betHistory = jdbcTemplate.query(QueryListConstant.BET_HISTORY_BY_DATE_RANGE,
@@ -982,11 +984,12 @@ public class UserDao {
 								rs.getString("match_id"), rs.getString("match_name"), rs.getString("market_id"),
 								rs.getString("market_name"), rs.getLong("selection_id"), rs.getString("runner_name"),
 								rs.getDate("bet_place_date"), rs.getDouble("odds"), rs.getDouble("stake"),
-								rs.getDouble("liability"),rs.getDouble("profit"),rs.getDouble("loss"),rs.getDouble("net_amount"),rs.getDouble("commision"),
-								rs.getDouble("admin_stakes"),rs.getDouble("sm_stakes"),rs.getDouble("master_stakes"),
-								rs.getString("isback"), rs.getString("islay"),
-								rs.getInt("psid"), rs.getString("remarks"),rs.getString("bet_status"), rs.getString("bet_result"), rs.getString("bet_settlement"),rs.getString("created_by"),
-								rs.getDate("created_date"), rs.getString("last_updated_by"),
+								rs.getDouble("liability"), rs.getDouble("profit"), rs.getDouble("loss"),
+								rs.getDouble("net_amount"), rs.getDouble("commision"), rs.getDouble("admin_stakes"),
+								rs.getDouble("sm_stakes"), rs.getDouble("master_stakes"), rs.getString("isback"),
+								rs.getString("islay"), rs.getInt("psid"), rs.getString("remarks"),
+								rs.getString("bet_status"), rs.getString("bet_result"), rs.getString("bet_settlement"),
+								rs.getString("created_by"), rs.getDate("created_date"), rs.getString("last_updated_by"),
 								rs.getDate("last_updated_date")));
 			}
 
@@ -1083,10 +1086,10 @@ public class UserDao {
 	public List<PlaceBetsBean> openPlacedBets(String userId, String transactionId) {
 		log.info("[" + transactionId + "]****************INSIDE userHome CLASS UserDao****************");
 		final String BET_RESULT = "OPEN";
-		List<PlaceBetsBean> placeBetsList= new ArrayList<PlaceBetsBean>();
-		
-		placeBetsList=placeBetsRepository.findByUserIdAndBetResultOrderByIdDesc(userId.toUpperCase(),BET_RESULT);
-		
+		List<PlaceBetsBean> placeBetsList = new ArrayList<PlaceBetsBean>();
+
+		placeBetsList = placeBetsRepository.findByUserIdAndBetResultOrderByIdDesc(userId.toUpperCase(), BET_RESULT);
+
 		return placeBetsList;
 	}
 

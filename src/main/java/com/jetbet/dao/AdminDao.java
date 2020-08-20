@@ -24,6 +24,7 @@ import com.jetbet.dto.FancyControl;
 import com.jetbet.dto.FancyIdDto;
 import com.jetbet.dto.SportsControl;
 import com.jetbet.dto.UserResponseDto;
+import com.jetbet.dto.UserRoleDto;
 import com.jetbet.repository.FancyRepository;
 import com.jetbet.repository.MatchRepository;
 import com.jetbet.repository.SeriesRepository;
@@ -338,9 +339,9 @@ public class AdminDao {
 		 String sm;
 		 String master;
 		 String sqlString = null;
-		List<UserBean> userDetails= new ArrayList<UserBean>();
+		List<UserRoleDto> userDetails= new ArrayList<UserRoleDto>();
 		java.util.Map<String,String> userParentMap=new HashMap<String,String>();
-		BetSettlementDto betSettlementRes= new BetSettlementDto();
+		
 		List<BetSettlementDto> betSettlementResList= new ArrayList<BetSettlementDto>();
 		List<BetSettlementDto> betSettlementList= new ArrayList<BetSettlementDto>();
 		if(accountType.equalsIgnoreCase("MINUS")) {
@@ -361,18 +362,21 @@ public class AdminDao {
 						rs.getDouble("SM_STAKES"),
 						rs.getDouble("MASTER_STAKES")
 						));
-		log.info("[" + transactionId + "] betSettlementList:  " + betSettlementList);
+//		log.info("[" + transactionId + "] betSettlementList:  " + betSettlementList);
 		for (int i = 0; i < betSettlementList.size(); i++) {
-			
+			BetSettlementDto betSettlementRes= new BetSettlementDto();
 			userDetails = jdbcTemplate.query(QueryListConstant.GET_PARENT_LIST,
-					new Object[] { userId },
-					(rs, rowNum) -> new UserBean(
+					new Object[] { betSettlementList.get(i).getUserId() },
+					(rs, rowNum) -> new UserRoleDto(
 							rs.getString("USER_ID"), rs.getString("USER_ROLE")
 							));
+//			log.info("userDetails:: "+userDetails);
 			for (int j = 0; j < userDetails.size(); j++) {
+//				log.info("userDetails.get(j).getUserRole():: "+userDetails.get(j).getUserRole());
+//				log.info("userDetails.get(j).getUserId():: "+userDetails.get(j).getUserId());
 				userParentMap.put(userDetails.get(j).getUserRole(),userDetails.get(j).getUserId());
 			}
-			
+//			log.info("[" + transactionId + "] userParentMap:  " + userParentMap);
 			admin=userParentMap.get("ADMIN");
 			sm=userParentMap.get("SUPERMASTER");
 			master=userParentMap.get("MASTER");
@@ -389,7 +393,7 @@ public class AdminDao {
 			betSettlementRes.setAdminStakes(betSettlementList.get(i).getAdminStakes());
 			betSettlementRes.setSmStakes(betSettlementList.get(i).getSmStakes());
 			betSettlementRes.setMasterStakes(betSettlementList.get(i).getMasterStakes());
-			
+//			log.info("[" + transactionId + "] betSettlementRes:  " + betSettlementRes);
 			betSettlementResList.add(betSettlementRes);
 		}
 		
