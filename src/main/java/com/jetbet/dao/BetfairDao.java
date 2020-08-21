@@ -10,6 +10,7 @@ import java.util.Set;
 
 import javax.transaction.Transactional;
 
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -80,16 +81,16 @@ public class BetfairDao {
 
 	@Autowired
 	private PlaceBetsRepository placeBetsRepository;
-	
+
 	@Autowired
 	private PartnershipRepository partnershipRepository;
-	
+
 	@Autowired
 	private UserRepository userRepository;
 
 	@Autowired
 	JdbcTemplate jdbcTemplate;
-	
+
 	public static DecimalFormat df = new DecimalFormat("0.00");
 
 	private ApiNgOperations rescriptOperations = ApiNgRescriptOperations.getInstance();
@@ -307,8 +308,13 @@ public class BetfairDao {
 		// ArrayList<MarketCatalogueBean>();
 		try {
 			String maxResults = "100";
+			List<SeriesBean> seriesList= new ArrayList<SeriesBean>();
+			if (StringUtils.isEmpty(sportsId)) {
+				seriesList = seriesRepository.findByIsActiveOrderBySportId("Y");
+			} else {
+				seriesList = seriesRepository.findBySportIdAndIsActiveOrderBySportId(sportsId, "Y");
+			}
 
-			List<SeriesBean> seriesList = seriesRepository.findBySportIdAndIsActiveOrderBySportId(sportsId, "Y");
 			for (int k = 0; k < seriesList.size(); k++) {
 				SeriesMatchFancyResponseDto seriesMatchFancyRes = new SeriesMatchFancyResponseDto();
 				List<MatchAndFancyDetailDto> matchAndFancyDetailList = new ArrayList<MatchAndFancyDetailDto>();
@@ -534,10 +540,10 @@ public class BetfairDao {
 			marketProjection.add(MarketProjection.MARKET_START_TIME);
 			marketProjection.add(MarketProjection.RUNNER_DESCRIPTION);
 
-			marketCatalogueResult=rescriptOperations.listMarketCatalogue(marketFilter, marketProjection,
+			marketCatalogueResult = rescriptOperations.listMarketCatalogue(marketFilter, marketProjection,
 					MarketSort.FIRST_TO_START, maxResults, applicationKey, sessionToken);
 
-			log.info("marketCatalogueResult:: "+marketCatalogueResult);
+			log.info("marketCatalogueResult:: " + marketCatalogueResult);
 			for (int j = 0; j < marketCatalogueResult.size(); j++) {
 				DashboardMatchListDto resBean = new DashboardMatchListDto();
 
@@ -551,16 +557,19 @@ public class BetfairDao {
 				if (marketCatalogueResult.get(j).getRunners().size() == 3) {
 					System.out.println("INSIDE IF marketCatalogueResult.get(j).getRunners().size(): "
 							+ marketCatalogueResult.get(j).getRunners().size());
-					resBean.setTeamABackPrize(marketCatalogueResult.get(j).getRunners().get(0).getRunner().getEx().getAvailableToBack().get(0).getPrice());
-					resBean.setTeamBBackPrize(marketCatalogueResult.get(j).getRunners().get(1).getRunner().getEx().getAvailableToBack().get(0).getPrice());
-					resBean.setDrawBackPrize(marketCatalogueResult.get(j).getRunners().get(2).getRunner().getEx().getAvailableToBack().get(0).getPrice());
+					resBean.setTeamABackPrize(marketCatalogueResult.get(j).getRunners().get(0).getRunner().getEx()
+							.getAvailableToBack().get(0).getPrice());
+					resBean.setTeamBBackPrize(marketCatalogueResult.get(j).getRunners().get(1).getRunner().getEx()
+							.getAvailableToBack().get(0).getPrice());
+					resBean.setDrawBackPrize(marketCatalogueResult.get(j).getRunners().get(2).getRunner().getEx()
+							.getAvailableToBack().get(0).getPrice());
 
 					resBean.setTeamABackSize(marketCatalogueResult.get(j).getRunners().get(0).getRunner().getEx()
 							.getAvailableToLay().get(0).getSize());
 					resBean.setTeamBBackSize(marketCatalogueResult.get(j).getRunners().get(1).getRunner().getEx()
 							.getAvailableToLay().get(0).getSize());
-					resBean.setDrawBackSize(marketCatalogueResult.get(j).getRunners().get(2).getRunner().getEx().getAvailableToLay()
-							.get(0).getSize());
+					resBean.setDrawBackSize(marketCatalogueResult.get(j).getRunners().get(2).getRunner().getEx()
+							.getAvailableToLay().get(0).getSize());
 
 					resBean.setTeamALayPrize(marketCatalogueResult.get(j).getRunners().get(0).getRunner().getEx()
 							.getAvailableToBack().get(0).getPrice());
@@ -569,12 +578,12 @@ public class BetfairDao {
 					resBean.setDrawLayPrize(marketCatalogueResult.get(j).getRunners().get(2).getRunner().getEx()
 							.getAvailableToBack().get(0).getPrice());
 
-					resBean.setTeamALaySize(marketCatalogueResult.get(j).getRunners().get(0).getRunner().getEx().getAvailableToLay()
-							.get(0).getSize());
-					resBean.setTeamBLaySize(marketCatalogueResult.get(j).getRunners().get(1).getRunner().getEx().getAvailableToLay()
-							.get(0).getSize());
-					resBean.setDrawLaySize(marketCatalogueResult.get(j).getRunners().get(2).getRunner().getEx().getAvailableToLay()
-							.get(0).getSize());
+					resBean.setTeamALaySize(marketCatalogueResult.get(j).getRunners().get(0).getRunner().getEx()
+							.getAvailableToLay().get(0).getSize());
+					resBean.setTeamBLaySize(marketCatalogueResult.get(j).getRunners().get(1).getRunner().getEx()
+							.getAvailableToLay().get(0).getSize());
+					resBean.setDrawLaySize(marketCatalogueResult.get(j).getRunners().get(2).getRunner().getEx()
+							.getAvailableToLay().get(0).getSize());
 
 					resBean.setTeamAId(marketCatalogueResult.get(j).getRunners().get(0).getSelectionId());
 					resBean.setTeamBId(marketCatalogueResult.get(j).getRunners().get(1).getSelectionId());
@@ -602,10 +611,10 @@ public class BetfairDao {
 					resBean.setTeamBLayPrize(marketCatalogueResult.get(j).getRunners().get(1).getRunner().getEx()
 							.getAvailableToBack().get(0).getPrice());
 
-					resBean.setTeamALaySize(marketCatalogueResult.get(j).getRunners().get(0).getRunner().getEx().getAvailableToLay()
-							.get(0).getSize());
-					resBean.setTeamBLaySize(marketCatalogueResult.get(j).getRunners().get(1).getRunner().getEx().getAvailableToLay()
-							.get(0).getSize());
+					resBean.setTeamALaySize(marketCatalogueResult.get(j).getRunners().get(0).getRunner().getEx()
+							.getAvailableToLay().get(0).getSize());
+					resBean.setTeamBLaySize(marketCatalogueResult.get(j).getRunners().get(1).getRunner().getEx()
+							.getAvailableToLay().get(0).getSize());
 
 					resBean.setTeamAId(marketCatalogueResult.get(j).getRunners().get(0).getSelectionId());
 					resBean.setTeamBId(marketCatalogueResult.get(j).getRunners().get(1).getSelectionId());
@@ -636,7 +645,7 @@ public class BetfairDao {
 	@Transactional
 	public void declareResult(String applicationKey, String sessionToken, String userName, String transactionId) {
 		log.info("[" + transactionId + "]##########Inside  declareResult#########");
-		
+
 		final String BET_STATUS = "ACTIVE";
 		try {
 			PriceProjection priceProjection = new PriceProjection();
@@ -659,106 +668,105 @@ public class BetfairDao {
 
 				List<MarketBook> runnerBook = rescriptOperations.listRunnersBook1(marketIds, selectionId,
 						priceProjection, orderProjection, matchProjection, currencyCode, applicationKey, sessionToken);
-				
-				String betResult=runnerBook.get(0).getRunners().get(0).getStatus();
-				
-				jdbcTemplate.update(QueryListConstant.UPDATE_BET_STATUS, new Object[] { betResult, selectionId.toString() , marketIds });
-				
+
+				String betResult = runnerBook.get(0).getRunners().get(0).getStatus();
+
+				jdbcTemplate.update(QueryListConstant.UPDATE_BET_STATUS,
+						new Object[] { betResult, selectionId.toString(), marketIds });
+
 //				log.info("betResult:: "+betResult);
 			}
-			int count=jdbcTemplate.update(QueryListConstant.UPDATE_BET_RESULT);
-			
+			int count = jdbcTemplate.update(QueryListConstant.UPDATE_BET_RESULT);
+
 //			log.info(count +" results updated");
-			
-			
+
 		} catch (APINGException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
 	}
-	
+
 	@Transactional
 	public void calculateProfitLoss() {
 		log.info("##########Inside  calculateProfitLoss#########");
 		List<PlaceBetsBean> placeBetsList = new ArrayList<PlaceBetsBean>();
-		
-		List<String> betResultList= new ArrayList<String>();
+
+		List<String> betResultList = new ArrayList<String>();
 		betResultList.add(ResourceConstants.WON);
 		betResultList.add(ResourceConstants.LOST);
-		
-		String betSettlement="NOT_INITIATED";
-		
-		placeBetsList = placeBetsRepository.findByBetResultInAndBetSettlementOrderById(betResultList,betSettlement);
-		
+
+		String betSettlement = "NOT_INITIATED";
+
+		placeBetsList = placeBetsRepository.findByBetResultInAndBetSettlementOrderById(betResultList, betSettlement);
+
 //		log.info("calculateProfitLoss:: "+placeBetsList);
-		
+
 		for (int i = 0; i < placeBetsList.size(); i++) {
-			double profit=0.0;
-			double loss=0.0;
-			double netAmount=0.0;
-			double commision=0.0;
-			double adminStakes=0.0;
-			double smStakes=0.0;
-			double masterStakes=0.0;
-			//String userId=placeBetsList.get(i).getUserId() ;
-			
+			double profit = 0.0;
+			double loss = 0.0;
+			double netAmount = 0.0;
+			double commision = 0.0;
+			double adminStakes = 0.0;
+			double smStakes = 0.0;
+			double masterStakes = 0.0;
+			// String userId=placeBetsList.get(i).getUserId() ;
+
 			PlaceBetsBean placeBetsBean = new PlaceBetsBean();
-			placeBetsBean=placeBetsList.get(i);
-			UserBean userDetail= userRepository.findByUserId(placeBetsBean.getUserId());
-			
-			PartnershipBean psDetails= partnershipRepository.findByUserId(placeBetsBean.getUserId());
-			
-			int adminPer=psDetails.getAdminStake();
-			int smPer=psDetails.getSupermasterStake();
-			int masterPer=psDetails.getMastrerStake();
-			
-			double oddCommision=userDetail.getOddsCommission();
-			double sessionCommision=userDetail.getSessionCommission();
-			double liability=placeBetsList.get(i).getLiability();
-			double stake=placeBetsList.get(i).getStake();
-			
+			placeBetsBean = placeBetsList.get(i);
+			UserBean userDetail = userRepository.findByUserId(placeBetsBean.getUserId());
+
+			PartnershipBean psDetails = partnershipRepository.findByUserId(placeBetsBean.getUserId());
+
+			int adminPer = psDetails.getAdminStake();
+			int smPer = psDetails.getSupermasterStake();
+			int masterPer = psDetails.getMastrerStake();
+
+			double oddCommision = userDetail.getOddsCommission();
+			double sessionCommision = userDetail.getSessionCommission();
+			double liability = placeBetsList.get(i).getLiability();
+			double stake = placeBetsList.get(i).getStake();
+
 //			log.info("oddCommision:: "+oddCommision);
 //			log.info("sessionCommision:: "+sessionCommision);
 //			log.info("liability:: "+liability);
 //			log.info("stake:: "+stake);
-			
+
 //			log.info("Market Name:: "+placeBetsBean.getMarketName().toUpperCase());
 //			log.info("Bet Result:: "+placeBetsBean.getBetResult());
-			
-			if(placeBetsBean.getBetResult().equalsIgnoreCase(ResourceConstants.WON)) {
+
+			if (placeBetsBean.getBetResult().equalsIgnoreCase(ResourceConstants.WON)) {
 //				log.info("INSIDE WON IF");
-				if(placeBetsBean.getMarketName().toUpperCase().contains("ODDS")) {
+				if (placeBetsBean.getMarketName().toUpperCase().contains("ODDS")) {
 //					log.info("INSIDE ODDs IF");
-					commision=calcuateCommision(liability,oddCommision);
-					profit=calcuateCommision(liability,Double.parseDouble(df.format(100.0-oddCommision)));
-					netAmount=profit;
+					commision = calcuateCommision(liability, oddCommision);
+					profit = calcuateCommision(liability, Double.parseDouble(df.format(100.0 - oddCommision)));
+					netAmount = profit;
 //					log.info("commision:: "+commision);
 //					log.info("profit:: "+profit);
-				}else{
+				} else {
 //					log.info("INSIDE WON IF");
-					commision=calcuateCommision(liability,sessionCommision);
-					profit=calcuateCommision(liability,Double.parseDouble(df.format(100.0-oddCommision)));
-					netAmount=profit;
+					commision = calcuateCommision(liability, sessionCommision);
+					profit = calcuateCommision(liability, Double.parseDouble(df.format(100.0 - oddCommision)));
+					netAmount = profit;
 //					log.info("commision:: "+commision);
 //					log.info("profit:: "+profit);
 				}
-				
-				adminStakes=calcuateCommision(profit,adminPer);
-				smStakes=calcuateCommision(profit,smPer);
-				masterStakes=calcuateCommision(profit,masterPer);
-				
-				
-			} else if(placeBetsBean.getBetResult().equalsIgnoreCase(ResourceConstants.LOST)) {
+
+				adminStakes = calcuateCommision(profit, adminPer);
+				smStakes = calcuateCommision(profit, smPer);
+				masterStakes = calcuateCommision(profit, masterPer);
+
+			} else if (placeBetsBean.getBetResult().equalsIgnoreCase(ResourceConstants.LOST)) {
 //				log.info("INSIDE LOST IF");
-				loss=stake;
-				netAmount=-loss;
+				loss = stake;
+				netAmount = -loss;
 //				log.info("loss:: "+loss);
-				adminStakes=-calcuateCommision(loss,adminPer);
-				smStakes=-calcuateCommision(loss,smPer);
-				masterStakes=-calcuateCommision(loss,masterPer);
+				adminStakes = -calcuateCommision(loss, adminPer);
+				smStakes = -calcuateCommision(loss, smPer);
+				masterStakes = -calcuateCommision(loss, masterPer);
 			}
-			
+
 			placeBetsBean.setCommision(commision);
 			placeBetsBean.setProfit(profit);
 			placeBetsBean.setLoss(loss);
@@ -767,9 +775,9 @@ public class BetfairDao {
 			placeBetsBean.setSmStakes(smStakes);
 			placeBetsBean.setMasterStakes(masterStakes);
 			placeBetsBean.setBetSettlement("PENDING");
-			
+
 			placeBetsRepository.saveAndFlush(placeBetsBean);
-			
+
 		}
 
 	}
@@ -777,34 +785,33 @@ public class BetfairDao {
 	public double calcuateCommision(double price, double percentage) {
 //		log.info("price:: "+price);
 //		log.info("percentage:: "+percentage);
-		double amount= Double.parseDouble(df.format(Double.parseDouble(df.format(percentage * price)) / 100));
+		double amount = Double.parseDouble(df.format(Double.parseDouble(df.format(percentage * price)) / 100));
 //		log.info("amount:: "+amount);
 		return amount;
 	}
 
-	public List<MarketCatalogue> dashboardDetails(String appKey, String ssoid, String matchId,
-			String marketType, String transactionId) {
+	public List<MarketCatalogue> dashboardDetails(String appKey, String ssoid, String matchId, String marketType,
+			String transactionId) {
 		this.applicationKey = appKey;
 		this.sessionToken = ssoid;
 		MarketFilter marketFilter;
 		String maxResults = "100";
-		
+
 		List<MarketCatalogue> marketCatalogueResult = new ArrayList<MarketCatalogue>();
 		try {
-		
-		Set<String> typesCode = new HashSet<String>();
-		typesCode.add(marketType);
-		Set<String> eventIds = new HashSet<String>();
-		eventIds.add(matchId);
 
-		marketFilter = new MarketFilter();
-		marketFilter.setEventIds(eventIds);
-		marketFilter.setMarketTypeCodes(typesCode);
-		Set<MarketProjection> marketProjection = new HashSet<MarketProjection>();
-		marketProjection.add(MarketProjection.MARKET_START_TIME);
-		marketProjection.add(MarketProjection.RUNNER_DESCRIPTION);
+			Set<String> typesCode = new HashSet<String>();
+			typesCode.add(marketType);
+			Set<String> eventIds = new HashSet<String>();
+			eventIds.add(matchId);
 
-		
+			marketFilter = new MarketFilter();
+			marketFilter.setEventIds(eventIds);
+			marketFilter.setMarketTypeCodes(typesCode);
+			Set<MarketProjection> marketProjection = new HashSet<MarketProjection>();
+			marketProjection.add(MarketProjection.MARKET_START_TIME);
+			marketProjection.add(MarketProjection.RUNNER_DESCRIPTION);
+
 			marketCatalogueResult = rescriptOperations.listMarketCatalogue(marketFilter, marketProjection,
 					MarketSort.FIRST_TO_START, maxResults, applicationKey, sessionToken);
 		} catch (APINGException e) {
@@ -813,5 +820,5 @@ public class BetfairDao {
 		}
 		return marketCatalogueResult;
 	}
-	
+
 }
