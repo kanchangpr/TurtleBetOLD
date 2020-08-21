@@ -90,6 +90,9 @@ public class PlaceBetsBean {
 	@Column(name = "runner_name", updatable = false)
 	private String runnerName;
 	
+	@Column(name = "MARKET_TYPE" , updatable = false)
+	private String marketType;
+	
 	@CreationTimestamp
 	@Column(name = "bet_place_date", updatable = false)
 	private Date betPlaceDate;

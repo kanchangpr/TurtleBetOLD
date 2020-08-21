@@ -982,7 +982,7 @@ public class UserDao {
 								rs.getString("user_id"), rs.getString("parent"), rs.getString("sports_id"),
 								rs.getString("sports_name"), rs.getString("series_id"), rs.getString("series_name"),
 								rs.getString("match_id"), rs.getString("match_name"), rs.getString("market_id"),
-								rs.getString("market_name"), rs.getLong("selection_id"), rs.getString("runner_name"),
+								rs.getString("market_name"), rs.getLong("selection_id"), rs.getString("runner_name"), rs.getString("MARKET_TYPE"),
 								rs.getDate("bet_place_date"), rs.getDouble("odds"), rs.getDouble("stake"),
 								rs.getDouble("liability"), rs.getDouble("profit"), rs.getDouble("loss"),
 								rs.getDouble("net_amount"), rs.getDouble("commision"), rs.getDouble("admin_stakes"),
