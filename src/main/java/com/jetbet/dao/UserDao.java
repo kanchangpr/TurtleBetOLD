@@ -951,8 +951,8 @@ public class UserDao {
 						}
 					}else {
 						userResponseDto.setStatus(ResourceConstants.FAILED);
-						userResponseDto.setErrorCode(ResourceConstants.ERR_004);
-						userResponseDto.setErrorMsg(ResourceConstants.INSUFFICIENT_AMOUNT);
+						userResponseDto.setErrorCode(ResourceConstants.ERR_015);
+						userResponseDto.setErrorMsg(ResourceConstants.ODDS_MISMATCHED);
 					}
 					
 				} else {
