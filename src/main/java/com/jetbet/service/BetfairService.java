@@ -9,6 +9,7 @@ import com.jetbet.bean.MarketCatalogueBean;
 import com.jetbet.bean.MatchBean;
 import com.jetbet.bean.SeriesBean;
 import com.jetbet.bean.SportsBean;
+import com.jetbet.betfair.entities.MarketCatalogue;
 import com.jetbet.dto.DashboardMatchListDto;
 import com.jetbet.dto.RunnerPriceAndSize;
 import com.jetbet.dto.SeriesMatchFancyResponseDto;
@@ -38,5 +39,8 @@ public interface BetfairService {
 	void declareResult(String applicationKey, String sessionToken, String userName, String transactionId);
 
 	void calculateProfitLoss();
+
+	List<MarketCatalogue> dashboardDetails(String applicationKey, String sessionToken, String matchId,
+			String marketType, String transactionId);
 
 }

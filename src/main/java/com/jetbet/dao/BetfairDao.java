@@ -781,5 +781,37 @@ public class BetfairDao {
 //		log.info("amount:: "+amount);
 		return amount;
 	}
+
+	public List<MarketCatalogue> dashboardDetails(String appKey, String ssoid, String matchId,
+			String marketType, String transactionId) {
+		this.applicationKey = appKey;
+		this.sessionToken = ssoid;
+		MarketFilter marketFilter;
+		String maxResults = "100";
+		
+		List<MarketCatalogue> marketCatalogueResult = new ArrayList<MarketCatalogue>();
+		try {
+		
+		Set<String> typesCode = new HashSet<String>();
+		typesCode.add(marketType);
+		Set<String> eventIds = new HashSet<String>();
+		eventIds.add(matchId);
+
+		marketFilter = new MarketFilter();
+		marketFilter.setEventIds(eventIds);
+		marketFilter.setMarketTypeCodes(typesCode);
+		Set<MarketProjection> marketProjection = new HashSet<MarketProjection>();
+		marketProjection.add(MarketProjection.MARKET_START_TIME);
+		marketProjection.add(MarketProjection.RUNNER_DESCRIPTION);
+
+		
+			marketCatalogueResult = rescriptOperations.listMarketCatalogue(marketFilter, marketProjection,
+					MarketSort.FIRST_TO_START, maxResults, applicationKey, sessionToken);
+		} catch (APINGException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return marketCatalogueResult;
+	}
 	
 }

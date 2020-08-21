@@ -10,6 +10,7 @@ import com.jetbet.bean.MarketCatalogueBean;
 import com.jetbet.bean.MatchBean;
 import com.jetbet.bean.SeriesBean;
 import com.jetbet.bean.SportsBean;
+import com.jetbet.betfair.entities.MarketCatalogue;
 import com.jetbet.dao.BetfairDao;
 import com.jetbet.dto.DashboardMatchListDto;
 import com.jetbet.dto.RunnerPriceAndSize;
@@ -84,5 +85,12 @@ public class BetfairServiceImpl implements BetfairService{
 	@Override
 	public void calculateProfitLoss() {
 		betfairDao.calculateProfitLoss();
+	}
+
+	@Override
+	public List<MarketCatalogue> dashboardDetails(String applicationKey, String sessionToken, String matchId,
+			String marketType, String transactionId) {
+		log.info("["+transactionId+"]*************************INSIDE getMatchOdds CLASS AdminServiceImpl*************************");
+		return betfairDao.dashboardDetails(applicationKey, sessionToken, matchId,marketType,transactionId);
 	}
 }

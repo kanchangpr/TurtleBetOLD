@@ -22,6 +22,7 @@ import com.jetbet.bean.MatchBean;
 import com.jetbet.bean.PlaceBetsBean;
 import com.jetbet.bean.SeriesBean;
 import com.jetbet.bean.SportsBean;
+import com.jetbet.betfair.entities.MarketCatalogue;
 import com.jetbet.dto.DashboardMatchListDto;
 import com.jetbet.dto.RunnerPriceAndSize;
 import com.jetbet.dto.SeriesMatchFancyResponseDto;
@@ -152,7 +153,7 @@ public class BetfairController {
 		return betfairService.getMarketCatalogue(sportsId,applicationKey,sessionToken,userName,transactionId);
 	}
 	
-	@RequestMapping(value=ResourceConstants.USER_DASHBOARD, method=RequestMethod.GET)
+	//@RequestMapping(value=ResourceConstants.USER_DASHBOARD, method=RequestMethod.GET)
 	public List<DashboardMatchListDto> dashboardMatchList() {
 		String transactionId = "TB"+UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
 		log.info("["+transactionId+"]*************************INSIDE USER ROLE METHOD GET*************************");
@@ -195,6 +196,18 @@ public class BetfairController {
 		betfairService.getListOfSeries(applicationKey, sessionToken, userName, transactionId);
 	}
 	
+	
+
+	@RequestMapping(value=ResourceConstants.USER_DASHBOARD, method=RequestMethod.GET)
+	public List<MarketCatalogue> dashboardDetails(
+			@RequestParam(value="matchId" ,required=true) String matchId,
+			@RequestParam(value="marketType" ,required=true) String marketType) {
+		String transactionId = "TB"+UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
+		log.info("["+transactionId+"]*************************INSIDE USER ROLE METHOD GET*************************");
+		log.info("applicationKey:: "+applicationKey);
+		log.info("sessionToken:: "+sessionToken);
+		return betfairService.dashboardDetails(applicationKey,sessionToken,matchId,marketType,transactionId);
+	}
 	
 	public void updateListOfMatches() {
 		log.info("applicationKey:: "+applicationKey);
