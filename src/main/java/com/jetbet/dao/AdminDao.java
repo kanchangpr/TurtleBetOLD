@@ -62,7 +62,7 @@ public class AdminDao {
 		log.info("[" + transactionId
 				+ "]*************************INSIDE addUserRole CLASS UserDao*************************");
 		UserResponseDto userResponseDto = new UserResponseDto();
-		BetfairController bfController = new BetfairController();
+		BetfairDao bfDao = new BetfairDao();
 		Boolean errorCode = false;
 		String sqlString = null;
 		String tableName = null;
@@ -117,11 +117,11 @@ public class AdminDao {
 					userResponseDto.setStatus(ResourceConstants.SUCCESS);
 					userResponseDto.setErrorMsg(ResourceConstants.UPDATED);
 					if (sportsControlReq.getOperation().equalsIgnoreCase(ResourceConstants.SPORTS_PAGE)) {
-						bfController.updateListOfSeries();
+						bfDao.updateListOfSeries(ResourceConstants.USER_NAME,transactionId);
 					} else if (sportsControlReq.getOperation().equalsIgnoreCase(ResourceConstants.SERIES_PAGE)) {
-						bfController.updateListOfMatches();
+						bfDao.updateListOfMatches(ResourceConstants.USER_NAME,transactionId);
 					} else if (sportsControlReq.getOperation().equalsIgnoreCase(ResourceConstants.MATCH_PAGE)) {
-						bfController.updateListOfOdds();
+						bfDao.updateListOfOdds(ResourceConstants.USER_NAME,transactionId);
 					}
 				}
 			} else if (!errorCode && sportsControlReq.getIsActive().equalsIgnoreCase("N")) {
