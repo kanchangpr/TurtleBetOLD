@@ -102,6 +102,9 @@ public class ResourceConstants {
 	public static final String ERR_014="ERR_14";
 	public static final String MINIMUM_STAKE_ERROR="Minimum Stake should be ";
 	
+	public static final String ERR_015="ERR_15";
+	public static final String ODDS_MISMATCHED="Odds Mismatched!!!";
+	
 	public static final String BET_PLACED="Bet Placed Successfully!! Bet ID: ";
 	
 	public static final String ERR_EXCEPTION="ERR_EXEPCTION";
@@ -154,5 +157,6 @@ public class ResourceConstants {
 	public static String checkNulString(String aString) {
 		return StringUtils.isBlank(aString) ? "" : aString;
 	}
+	
 	
 }

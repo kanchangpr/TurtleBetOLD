@@ -831,6 +831,8 @@ public class UserDao {
 	public UserResponseDto placeBets(@Valid PlaceBetsBean placeBetsBean, String transactionId) {
 		log.info("[" + transactionId + "]****************INSIDE placeBets CLASS UserDao****************");
 		UserResponseDto userResponseDto = new UserResponseDto();
+		BetfairDao bfDao= new BetfairDao();
+		
 		ChipsBean chipsBean = new ChipsBean();
 		final String MINIMUM_STAKE = "MINIMUM_STAKE";
 		final String MATCH_ODDS = "Match Odds";
@@ -857,7 +859,15 @@ public class UserDao {
 			String isback = placeBetsBean.getIsback();
 			String isLay = placeBetsBean.getIsLay();
 			String createdBy = placeBetsBean.getCreatedBy();
-
+			String isBackLay="";
+			if(isback.equalsIgnoreCase("Y")) {
+				isBackLay="BACK";
+			}else if(isLay.equalsIgnoreCase("Y")){
+				isBackLay="LAY";
+			}
+			
+			Double runnerPrize= bfDao.getRunnersPrizeAndSize(marketId, selectionId, isBackLay, transactionId);
+			log.info("runnerPrize:: "+runnerPrize);
 			UserBean userDetail = userRepository.findFirst1ByUserId(userId.toUpperCase());
 			String parent = userDetail.getParent();
 			int psId = userDetail.getPartnership();
@@ -897,47 +907,54 @@ public class UserDao {
 			Double minimumStake = Double.parseDouble(lookupTableRes.getLookupValue());
 			if (isbetLock.equalsIgnoreCase("N")) {
 				if (stake >= minimumStake) {
-					if (stake <= chips) {
-						PlaceBetsBean placeBetsResBean = placeBetsRepository.saveAndFlush(placeBetsBean);
-						if (placeBetsResBean.getUserId().equalsIgnoreCase(userId)) {
+					if(odds==runnerPrize) {
+						if (stake <= chips) {
+							PlaceBetsBean placeBetsResBean = placeBetsRepository.saveAndFlush(placeBetsBean);
+							if (placeBetsResBean.getUserId().equalsIgnoreCase(userId)) {
 
-							log.info("[" + transactionId + "] placeBetsResBean:: " + placeBetsResBean);
+								log.info("[" + transactionId + "] placeBetsResBean:: " + placeBetsResBean);
 
-							double balance = Double.parseDouble(df.format(chips - stake));
+								double balance = Double.parseDouble(df.format(chips - stake));
 
-							updateChipsSql = QueryListConstant.UPDATE_USER_CHIPS;
-							int updateChipsRowCount = jdbcTemplate.update(updateChipsSql,
-									new Object[] { balance, userId, userId });
-							log.info("[" + transactionId + "] updateChipsRowCount:: " + updateChipsRowCount);
+								updateChipsSql = QueryListConstant.UPDATE_USER_CHIPS;
+								int updateChipsRowCount = jdbcTemplate.update(updateChipsSql,
+										new Object[] { balance, userId, userId });
+								log.info("[" + transactionId + "] updateChipsRowCount:: " + updateChipsRowCount);
 
-							chipsBean.setUserId(userId);
-							chipsBean.setFromUser("BET_PLACED");
-							chipsBean.setBettingId(placeBetsResBean.getId());
-							chipsBean.setDebit(stake);
-							chipsBean.setTotalChips(balance);
-							chipsBean.setCreatedBy(userId);
-							chipsBean.setRemarks("Placed Bet on runner " + runnerName + " for " + stake);
-							chipsBean = chipsRepository.saveAndFlush(chipsBean);
+								chipsBean.setUserId(userId);
+								chipsBean.setFromUser("BET_PLACED");
+								chipsBean.setBettingId(placeBetsResBean.getId());
+								chipsBean.setDebit(stake);
+								chipsBean.setTotalChips(balance);
+								chipsBean.setCreatedBy(userId);
+								chipsBean.setRemarks("Placed Bet on runner " + runnerName + " for " + stake);
+								chipsBean = chipsRepository.saveAndFlush(chipsBean);
 
-							log.info("[" + transactionId + "] chipsBean:: " + chipsBean);
+								log.info("[" + transactionId + "] chipsBean:: " + chipsBean);
 
-							if (marketName.equalsIgnoreCase(MATCH_ODDS)) {
-								Thread.sleep(betDelay * 1000);
+								if (marketName.equalsIgnoreCase(MATCH_ODDS)) {
+									Thread.sleep(betDelay * 1000);
+								} else {
+									Thread.sleep(sessionDelay * 1000);
+								}
+								userResponseDto.setStatus(ResourceConstants.SUCCESS);
+								userResponseDto.setErrorMsg(ResourceConstants.BET_PLACED + placeBetsResBean.getId());
 							} else {
-								Thread.sleep(sessionDelay * 1000);
+								userResponseDto.setStatus(ResourceConstants.FAILED);
+								userResponseDto.setErrorCode(ResourceConstants.ERR_002);
+								userResponseDto.setErrorMsg(ResourceConstants.INSERTION_FAILED);
 							}
-							userResponseDto.setStatus(ResourceConstants.SUCCESS);
-							userResponseDto.setErrorMsg(ResourceConstants.BET_PLACED + placeBetsResBean.getId());
 						} else {
 							userResponseDto.setStatus(ResourceConstants.FAILED);
-							userResponseDto.setErrorCode(ResourceConstants.ERR_002);
-							userResponseDto.setErrorMsg(ResourceConstants.INSERTION_FAILED);
+							userResponseDto.setErrorCode(ResourceConstants.ERR_004);
+							userResponseDto.setErrorMsg(ResourceConstants.INSUFFICIENT_AMOUNT);
 						}
-					} else {
+					}else {
 						userResponseDto.setStatus(ResourceConstants.FAILED);
 						userResponseDto.setErrorCode(ResourceConstants.ERR_004);
 						userResponseDto.setErrorMsg(ResourceConstants.INSUFFICIENT_AMOUNT);
 					}
+					
 				} else {
 					userResponseDto.setStatus(ResourceConstants.FAILED);
 					userResponseDto.setErrorCode(ResourceConstants.ERR_013);

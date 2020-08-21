@@ -263,6 +263,42 @@ public class ApiNgRescriptOperations extends ApiNgOperations {
 		return container;
 
 	}
+	
+	@Override
+	public Double runnerPrizeAndSize(String marketIds, Long selectionId, PriceProjection priceProjection,
+			OrderProjection orderProjection, MatchProjection matchProjection, String currencyCode, String isBackLay, String appKey,
+			String ssoId) throws APINGException {
+		Double runnerPrize=0.0;
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put(LOCALE, locale);
+		params.put(MARKET_ID, marketIds);
+		params.put(SELECTION_ID, selectionId);
+		params.put(PRICE_PROJECTION, priceProjection);
+		params.put(ORDER_PROJECTION, orderProjection);
+		params.put(MATCH_PROJECTION, matchProjection);
+		String result = getInstance().makeRequest(ApiNgOperation.LISTRUNNERSBOOK.getOperationName(), params, appKey,
+				ssoId);
+		if (ApiNGDemo.isDebug())
+			System.out.println("\nResponse: " + result);
+
+		List<MarketBook> container = JsonConverter.convertFromJson(result, new TypeToken<List<MarketBook>>() {
+		}.getType());
+		
+		if(container.size()>0) {
+			if(container.get(0).getRunners().size()>0) {
+				if(container.get(0).getRunners().get(0).getEx().getAvailableToBack().size()>0) {
+					if(isBackLay.equalsIgnoreCase("BACK")) {
+						runnerPrize=container.get(0).getRunners().get(0).getEx().getAvailableToBack().get(0).getPrice();
+					}else if(isBackLay.equalsIgnoreCase("LAY")) {
+						runnerPrize=container.get(0).getRunners().get(0).getEx().getAvailableToLay().get(0).getPrice();
+					}
+				}
+			}
+		}
+
+		return runnerPrize;
+
+	}
 
 	@Override
 	public SessionDetails getSessionToken(String userName, String password, String transactionId) {

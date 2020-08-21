@@ -90,6 +90,9 @@ public class BetfairDao {
 
 	@Autowired
 	JdbcTemplate jdbcTemplate;
+	
+	public static String appKey;
+	public static String ssToken;
 
 	public static DecimalFormat df = new DecimalFormat("0.00");
 
@@ -507,6 +510,10 @@ public class BetfairDao {
 	@Transactional
 	public SessionDetails getSessionToken(String userName, String password, String transactionId) {
 		SessionDetails response = rescriptOperations.getSessionToken(userName, password, transactionId);
+		appKey=response.getProduct();
+		ssToken=response.getToken();
+		log.info("applicationKey in Dao:: "+appKey);
+		log.info("sessionToken in dao:: "+ssToken);
 		return response;
 	}
 
@@ -636,10 +643,24 @@ public class BetfairDao {
 		return null;
 	}
 
-	public RunnerPriceAndSize getRunnersPrizeAndSize(String marketId, String selectionId, String applicationKey,
-			String sessionToken, String userName, String transactionId) {
-		// TODO Auto-generated method stub
-		return null;
+	public Double getRunnersPrizeAndSize(String marketId, Long selectionId, String isBackLay, String transactionId) {
+		Double runnerPrize=0.0;
+		PriceProjection priceProjection = new PriceProjection();
+		Set<PriceData> priceData = new HashSet<PriceData>();
+		priceData.add(PriceData.EX_BEST_OFFERS);
+		priceData.add(PriceData.EX_ALL_OFFERS);
+		priceProjection.setPriceData(priceData);
+		OrderProjection orderProjection = null;
+		MatchProjection matchProjection = null;
+		String currencyCode = null;
+
+		try {
+			runnerPrize=rescriptOperations.runnerPrizeAndSize(marketId, selectionId, priceProjection, orderProjection, matchProjection, currencyCode, isBackLay, appKey, ssToken);
+		} catch (APINGException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return runnerPrize;
 	}
 
 	@Transactional
