@@ -62,6 +62,12 @@ public class UserAuthDao {
 						responseBean.setErrorCode(ApplicationConstants.ERROR_CODE_004);
 						responseBean.setErrorMsg(ApplicationConstants.ERROR_MSG_004);
 					}
+					if(userBean1.getIsPwdUpdated().equalsIgnoreCase("N")){
+						isValid=false;
+						responseBean.setStatus(ApplicationConstants.FAILED);
+						responseBean.setErrorCode(ApplicationConstants.ERROR_CODE_006);
+						responseBean.setErrorMsg(ApplicationConstants.ERROR_MSG_006);
+					}
 					if(isValid) {
 						
 						userLoginBean.setUserId(userBean1.getUserId());

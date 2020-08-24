@@ -76,20 +76,24 @@ public class UserBean {
 	@Column(name = "User_Limit")
 	private long userLimit;
 	
-//	@Column(name = "Max_Profit")
-//	private double maxProfit;
-//	
-//	@Column(name = "Max_Loss")
-//	private double maxLoss;
-//	
-//	@Column(name = "Odds_Max_Stake")
-//	private double oddsMaxStake;
-//	
-//	@Column(name = "Going_In_Play_Stake")
-//	private double goingInPlayStake;
-//	
-//	@Column(name = "Session_Max_Stake")
-//	private double sessionMaxStake;
+	
+	
+	@Column(name = "credit_limit")
+	private double creditLimit;
+	
+	@Column(name = "balance")
+	private double balance;
+	
+	@Column(name = "liability")
+	private double liability;
+	
+	@Column(name = "profit_loss")
+	private double prifitLoss;
+	
+	@Column(name = "is_pwd_updated")
+	private String isPwdUpdated;
+	
+	
 	
 	@Column(name = "chips" , updatable=false)
 	private double chips;
@@ -119,6 +123,9 @@ public class UserBean {
 	
 	@Column(name = "createdby" , updatable=false)
 	private String createdBy;
+	
+	
+	
 
 	public UserBean(Long id, String userId, String fullName, String userRole, String parent, Date regDate,
 			double oddsCommission, double sessionCommission, int betDelay, int sessionDelay, long userLimit,

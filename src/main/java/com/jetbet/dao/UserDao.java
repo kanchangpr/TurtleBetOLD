@@ -138,7 +138,7 @@ public class UserDao {
 		log.info("[" + transactionId + "] PARENT: " + userBean.getParent());
 		log.info("[" + transactionId + "] REMARKS: " + userBean.getRemarks());
 		log.info("[" + transactionId + "] CREATED_BY: " + userBean.getCreatedBy());
-
+		userBean.setIsPwdUpdated("N");
 		String userId = userBean.getUserId();
 		String userParent = userBean.getParent();
 		String userRole = userBean.getUserRole();
@@ -212,9 +212,19 @@ public class UserDao {
 						PartnershipBean psBeanRes = partnershipRepository.saveAndFlush(psBean);
 						if (psBeanRes.getUserId() == userBean.getUserId()) {
 
+							StakesBean stakesBean=new StakesBean();
 							userBean.setPartnership(psBeanRes.getId());
 							UserBean userRes = userRepository.save(userBean);
 
+							stakesBean.setUserId(userBean.getUserId());
+							stakesBean.setStake1(ResourceConstants.Stakes.STAKE1);
+							stakesBean.setStake1(ResourceConstants.Stakes.STAKE2);
+							stakesBean.setStake1(ResourceConstants.Stakes.STAKE3);
+							stakesBean.setStake1(ResourceConstants.Stakes.STAKE4);
+							stakesBean.setStake1(ResourceConstants.Stakes.STAKE5);
+							stakesBean.setCreatedBy(createdBy);
+							stakesRepository.save(stakesBean);
+							
 							if (userRes.getUserId() == userBean.getUserId()) {
 								userResponseDto.setStatus(ResourceConstants.SUCCESS);
 								userResponseDto.setErrorMsg(ResourceConstants.INSERTED);
@@ -812,14 +822,20 @@ public class UserDao {
 	}
 
 	@Transactional
-	public Double getLiability(double odds, double stakes, String transactionId) {
+	public Double getLiability(String isBackLay,double odds, double stakes, String transactionId) {
 		log.info("[" + transactionId + "]****************INSIDE getLiability CLASS UserDao****************");
 		// DecimalFormat df = new DecimalFormat("0.00");
 		log.info("[" + transactionId + "] odds:  " + odds);
 		log.info("[" + transactionId + "] stakes:  " + stakes);
-
-		double total = odds * stakes;
-		double liability = Double.parseDouble(df.format(total - stakes));
+		double liability=0.0;
+		double total=0.0;
+		
+		if (isBackLay.equalsIgnoreCase(ResourceConstants.LAY)) {
+			total = odds * stakes;
+			liability = Double.parseDouble(df.format(total - stakes));
+		} else if (isBackLay.equalsIgnoreCase(ResourceConstants.BACK)) {
+			liability = stakes;
+		}
 
 		log.info("[" + transactionId + "] total:  " + total);
 		log.info("[" + transactionId + "] liability:  " + liability);
@@ -835,6 +851,7 @@ public class UserDao {
 		
 		ChipsBean chipsBean = new ChipsBean();
 		final String MINIMUM_STAKE = "MINIMUM_STAKE";
+		final String IS_UNMATCHED_OPEN = "IS_UNMATCHED_OPEN";
 		final String MATCH_ODDS = "Match Odds";
 		final String BET_STATUS = "ACTIVE";
 		final String BET_RESULT = "OPEN";
@@ -904,11 +921,13 @@ public class UserDao {
 			placeBetsBean.setBetSettlement(BET_SETTLEMENT);
 
 			LookupTableBean lookupTableRes = lookupTableRepository.findByLookupType(MINIMUM_STAKE);
+			LookupTableBean isUnMatched = lookupTableRepository.findByLookupType(IS_UNMATCHED_OPEN);
 			Double minimumStake = Double.parseDouble(lookupTableRes.getLookupValue());
+			String isUnMatchedOpen = isUnMatched.getLookupValue();
 			if (isbetLock.equalsIgnoreCase("N")) {
 				if (stake >= minimumStake) {
 					if(odds==runnerPrize) {
-						if (stake <= chips) {
+						if (stake <= chips ) {
 							PlaceBetsBean placeBetsResBean = placeBetsRepository.saveAndFlush(placeBetsBean);
 							if (placeBetsResBean.getUserId().equalsIgnoreCase(userId)) {
 

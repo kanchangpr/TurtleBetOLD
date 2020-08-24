@@ -76,6 +76,28 @@ public class JwtAuthenticationRestController {
 		}
 	}
 
+	@RequestMapping(value = "${jwt.invalidate.token.uri}", method = RequestMethod.GET)
+	public ResponseEntity<?> invalidateAuthToken(HttpServletRequest request) {
+		String authToken = request.getHeader(tokenHeader);
+		final String token = authToken.substring(7);
+		String username = jwtTokenUtil.getUsernameFromToken(token);
+		String userRole = jwtTokenUtil.getAudienceFromToken(token);
+		String userParent = jwtTokenUtil.getIssuerFromToken(token);
+		System.out.println("username: "+username);
+		System.out.println("userRole: "+userRole);
+		System.out.println("userParent: "+userParent);
+		final UserDetails userDetails = jwtInMemoryUserDetailsService
+				.loadUserByUsername(username);
+		if (jwtTokenUtil.canTokenBeRefreshed(token)) {
+			JwtTokenResponse jwtTokenResponse=new JwtTokenResponse(token,username,userRole,userParent);
+			//JwtTokenResponse jwtTokenResponse=new JwtTokenResponse(token,username);
+			String refreshedToken = jwtTokenUtil.refreshToken(token);
+			return ResponseEntity.ok(jwtTokenResponse);
+		} else {
+			return ResponseEntity.badRequest().body(null);
+		}
+	}
+	
 	@ExceptionHandler({ AuthenticationException.class })
 	public ResponseEntity<String> handleAuthenticationException(AuthenticationException e) {
 		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());

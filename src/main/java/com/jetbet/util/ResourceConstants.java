@@ -154,8 +154,19 @@ public class ResourceConstants {
 	public static final String WON  ="WON";
 	public static final String LOST  ="LOST";
 	
+	public static final String BACK  ="BACK";
+	public static final String LAY  ="LAY";
+	
 	public static String checkNulString(String aString) {
 		return StringUtils.isBlank(aString) ? "" : aString;
+	}
+	
+	public class Stakes{
+		public static final double STAKE1=1000;
+		public static final double STAKE2=2000;
+		public static final double STAKE3=3000;
+		public static final double STAKE4=4000;
+		public static final double STAKE5=5000;
 	}
 	
 	

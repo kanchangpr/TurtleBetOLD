@@ -248,11 +248,12 @@ public class UserController {
 	}
 
 	@RequestMapping(value = ResourceConstants.LIABILITY, method = RequestMethod.GET)
-	public ResponseEntity<Double> getLiability(@RequestParam(value = "odds", required = true) double odds,
+	public ResponseEntity<Double> getLiability(@RequestParam(value = "isBackLay", required = true) String isBackLay,
+			@RequestParam(value = "odds", required = true) double odds,
 			@RequestParam(value = "stakes", required = true) double stakes) {
 		String transactionId = "TB" + UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
 		log.info("[" + transactionId + "]*************INSIDE chipsBalance METHOD POST**************");
-		Double response = userService.getLiability(odds,stakes, transactionId);
+		Double response = userService.getLiability(isBackLay,odds,stakes, transactionId);
 		return new ResponseEntity<Double>(response, HttpStatus.OK);
 	}
 	

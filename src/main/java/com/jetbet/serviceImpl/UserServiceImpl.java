@@ -161,9 +161,9 @@ public class UserServiceImpl implements UserService{
 	}
 
 	@Override
-	public Double getLiability(double odds, double stakes, String transactionId) {
+	public Double getLiability(String isBackLay, double odds, double stakes, String transactionId) {
 		log.info("["+transactionId+"]*************************INSIDE getLiability CLASS UserServiceImpl*************************");
-		return userDao.getLiability(odds,stakes,transactionId);
+		return userDao.getLiability(isBackLay,odds,stakes,transactionId);
 	}
 
 	@Override

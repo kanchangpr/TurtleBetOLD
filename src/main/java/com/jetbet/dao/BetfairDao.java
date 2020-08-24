@@ -923,6 +923,7 @@ public class BetfairDao {
 					commision = calcuateCommision(liability, oddCommision);
 					profit = calcuateCommision(liability, Double.parseDouble(df.format(100.0 - oddCommision)));
 					netAmount = profit;
+					masterStakes = calcuateCommision(profit, masterPer);
 //					log.info("commision:: "+commision);
 //					log.info("profit:: "+profit);
 				} else {
@@ -930,13 +931,15 @@ public class BetfairDao {
 					commision = calcuateCommision(liability, sessionCommision);
 					profit = calcuateCommision(liability, Double.parseDouble(df.format(100.0 - oddCommision)));
 					netAmount = profit;
+					masterStakes = calcuateCommision(profit, masterPer);
+					masterStakes=masterStakes+commision;
 //					log.info("commision:: "+commision);
 //					log.info("profit:: "+profit);
 				}
 
 				adminStakes = calcuateCommision(profit, adminPer);
 				smStakes = calcuateCommision(profit, smPer);
-				masterStakes = calcuateCommision(profit, masterPer);
+				
 
 			} else if (placeBetsBean.getBetResult().equalsIgnoreCase(ResourceConstants.LOST)) {
 //				log.info("INSIDE LOST IF");

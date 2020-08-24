@@ -31,6 +31,7 @@ import com.jetbet.service.BetfairService;
 import com.jetbet.util.ResourceConstants;
 
 import lombok.extern.slf4j.Slf4j;
+import reactor.core.publisher.Flux;
 
 @CrossOrigin(origins = "*")
 @Slf4j
@@ -139,7 +140,7 @@ public class BetfairController {
 	}
 	
 
-	@RequestMapping(value=ResourceConstants.MARKET_CATALOGUE, method=RequestMethod.GET)
+	@RequestMapping(value=ResourceConstants.MARKET_CATALOGUE, method=RequestMethod.GET, produces = "text/event-stream")
 	public List<SeriesMatchFancyResponseDto> getMarketCatalogue(@RequestParam(value="sportsId" ,required=false) String sportsId) {
 		String transactionId = "TB"+UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
 		log.info("["+transactionId+"]*************************INSIDE USER ROLE METHOD GET*************************");

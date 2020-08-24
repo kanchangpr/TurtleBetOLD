@@ -69,7 +69,7 @@ public interface UserService {
 
 	StakesBean updateStakesDetails(@Valid StakesBean stakesBean, String transactionId);
 
-	Double getLiability(double odds, double stakes, String transactionId);
+	Double getLiability(String isBackLay,double odds, double stakes, String transactionId);
 
 	UserResponseDto placeBets(@Valid PlaceBetsBean placeBetsBean, String transactionId);
 
