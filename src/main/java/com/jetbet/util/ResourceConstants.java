@@ -126,6 +126,7 @@ public class ResourceConstants {
 		public static final String BET_HISTORY="BetHisotry";
 		public static final String ACCOUNT_HISTORY="AccountHisotry";
 		public static final String LOGIN_HISTORY="LoginHisotry";
+		public static final String PROFIT_AND_LOSS_HISTORY="PLHisotry";
 	}
 	
 	public static final String SPORTS_PAGE="SPORTS_PAGE";

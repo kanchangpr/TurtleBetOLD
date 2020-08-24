@@ -1065,9 +1065,32 @@ public class UserDao {
 			for (int i = 0; i < loginHistory.size(); i++) {
 				resObjects.add(loginHistory.get(i));
 			}
-		} else {
+		} else if (ResourceConstants.BetType.PROFIT_AND_LOSS_HISTORY.equalsIgnoreCase(type)) {
+			log.info("[" + transactionId + "] Inside :  " + type);
+			if (StringUtils.isEmpty(fromDate) && StringUtils.isEmpty(toDate)) {
+				betHistory = placeBetsRepository.findByUserIdAndBetResultNotOrderByIdDesc(userId,"OPEN");
+			} else {
+				betHistory = jdbcTemplate.query(QueryListConstant.PROFIT_AND_LOSS_HISTORY_BY_DATE_RANGE,
+						new Object[] { fromDate, toDate, userId },
+						(rs, rowNum) -> new PlaceBetsBean(rs.getLong("id"), rs.getString("login_id"),
+								rs.getString("user_id"), rs.getString("parent"), rs.getString("sports_id"),
+								rs.getString("sports_name"), rs.getString("series_id"), rs.getString("series_name"),
+								rs.getString("match_id"), rs.getString("match_name"), rs.getString("market_id"),
+								rs.getString("market_name"), rs.getLong("selection_id"), rs.getString("runner_name"), rs.getString("MARKET_TYPE"),
+								rs.getDate("bet_place_date"), rs.getDouble("odds"), rs.getDouble("stake"),
+								rs.getDouble("liability"), rs.getDouble("profit"), rs.getDouble("loss"),
+								rs.getDouble("net_amount"), rs.getDouble("commision"), rs.getDouble("admin_stakes"),
+								rs.getDouble("sm_stakes"), rs.getDouble("master_stakes"), rs.getString("isback"),
+								rs.getString("islay"), rs.getInt("psid"), rs.getString("remarks"),
+								rs.getString("bet_status"), rs.getString("bet_result"), rs.getString("bet_settlement"),
+								rs.getString("created_by"), rs.getDate("created_date"), rs.getString("last_updated_by"),
+								rs.getDate("last_updated_date")));
+			}
 
-		}
+			for (int i = 0; i < betHistory.size(); i++) {
+				resObjects.add(betHistory.get(i));
+			}
+		} 
 
 		log.info("betHistory:: " + betHistory);
 		log.info("accHistory:: " + accHistory);
