@@ -485,7 +485,7 @@ public class UserDao {
 			String passwoord = changePasswordDto.getPassword();
 			String confirmPass = changePasswordDto.getConfirmPassword();
 			if (passwoord.equals(confirmPass)) {
-				String updatePasswordSql = QueryListConstant.UPDATE_PASSWORD_SQL;
+				String updatePasswordSql = QueryListConstant.RESET_PASSWORD_SQL;
 				int updatePasswordCount = jdbcTemplate.update(updatePasswordSql,
 						new Object[] { confirmPass, loggedInUserString, userId });
 				log.info("[" + transactionId + "] updatePasswordCount:: " + updatePasswordCount);
