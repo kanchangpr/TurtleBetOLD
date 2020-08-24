@@ -62,13 +62,9 @@ public class UserAuthDao {
 						responseBean.setErrorCode(ApplicationConstants.ERROR_CODE_004);
 						responseBean.setErrorMsg(ApplicationConstants.ERROR_MSG_004);
 					}
-					if(userBean1.getIsPwdUpdated().equalsIgnoreCase("N")){
-						isValid=false;
-						responseBean.setStatus(ApplicationConstants.FAILED);
-						responseBean.setErrorCode(ApplicationConstants.ERROR_CODE_006);
-						responseBean.setErrorMsg(ApplicationConstants.ERROR_MSG_006);
-					}
+					
 					if(isValid) {
+						
 						
 						userLoginBean.setUserId(userBean1.getUserId());
 						userLoginBean.setUserRole(userBean1.getUserRole());
@@ -80,12 +76,20 @@ public class UserAuthDao {
 						authenticationRequest.setUsername(userLoginBean.getUserId());
 						final String token = jwtTokenUtil.generateTokenUsingData(userLoginBean.getUserId(),userLoginBean.getUserRole(),userLoginBean.getUserParent());
 						log.info("token::"+token);
-						responseBean.setStatus(ApplicationConstants.SUCCESS);
-						responseBean.setErrorMsg(ApplicationConstants.ERROR_MSG_005);
+						if(userBean1.getIsPwdUpdated().equalsIgnoreCase("N")) {
+							responseBean.setStatus(ApplicationConstants.FAILED);
+							responseBean.setErrorCode(ApplicationConstants.ERROR_CODE_006);
+							responseBean.setErrorMsg(ApplicationConstants.ERROR_MSG_006);
+						}else {
+							responseBean.setStatus(ApplicationConstants.SUCCESS);
+							responseBean.setErrorMsg(ApplicationConstants.ERROR_MSG_005);
+							responseBean.setUserName(userLoginBean.getUserId());
+							responseBean.setUserRole(userLoginBean.getUserRole());
+							responseBean.setUserParent(userLoginBean.getUserParent());
+						}
+						
 						responseBean.setToken(token);
-						responseBean.setUserName(userLoginBean.getUserId());
-						responseBean.setUserRole(userLoginBean.getUserRole());
-						responseBean.setUserParent(userLoginBean.getUserParent());
+						
 					}
 				}else {
 					responseBean.setStatus(ApplicationConstants.FAILED);
