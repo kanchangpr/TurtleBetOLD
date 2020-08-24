@@ -140,7 +140,7 @@ public class BetfairController {
 	}
 	
 
-	@RequestMapping(value=ResourceConstants.MARKET_CATALOGUE, method=RequestMethod.GET, produces = "text/event-stream")
+	@RequestMapping(value=ResourceConstants.MARKET_CATALOGUE, method=RequestMethod.GET)
 	public List<SeriesMatchFancyResponseDto> getMarketCatalogue(@RequestParam(value="sportsId" ,required=false) String sportsId) {
 		String transactionId = "TB"+UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
 		log.info("["+transactionId+"]*************************INSIDE USER ROLE METHOD GET*************************");
