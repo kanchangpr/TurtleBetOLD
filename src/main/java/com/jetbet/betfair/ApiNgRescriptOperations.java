@@ -165,12 +165,11 @@ public class ApiNgRescriptOperations extends ApiNgOperations {
 
 		List<MarketCatalogue> container = JsonConverter.convertFromJson(result, new TypeToken<List<MarketCatalogue>>() {
 		}.getType());
-		String marketId;
-		List<String> marketIds =new ArrayList<String>();
+		
 		Map<Long,String> runnerNameMap= new HashMap<Long,String>();
 		List<MarketBook> marketBook = new ArrayList<MarketBook>();
 		for (int i = 0; i < container.size(); i++) {
-
+			List<String> marketIds =new ArrayList<String>();
 			PriceProjection priceProjection = new PriceProjection();
 			Set<PriceData> priceData = new HashSet<PriceData>();
 			priceData.add(PriceData.EX_BEST_OFFERS);
@@ -186,7 +185,8 @@ public class ApiNgRescriptOperations extends ApiNgOperations {
 				runnerNameMap.put(container.get(i).getRunners().get(j).getSelectionId(), container.get(i).getRunners().get(j).getRunnerName());
 			}
 			
-			marketId = container.get(i).getMarketId();
+			String marketId = container.get(i).getMarketId();
+			log.info("marketId:: "+marketId);
 			marketIds.add(marketId);
 			log.info("marketIds:: "+marketIds);
 			marketBook =listMarketBook(marketIds, priceProjection, orderProjection, matchProjection, currencyCode, appKey, ssoId);
