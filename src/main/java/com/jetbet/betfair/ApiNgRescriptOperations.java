@@ -167,6 +167,7 @@ public class ApiNgRescriptOperations extends ApiNgOperations {
 		}.getType());
 		List<String> marketIds =new ArrayList<String>();
 		Map<Long,String> runnerNameMap= new HashMap<Long,String>();
+		List<MarketBook> marketBook = new ArrayList<MarketBook>();
 		for (int i = 0; i < container.size(); i++) {
 
 			PriceProjection priceProjection = new PriceProjection();
@@ -186,7 +187,7 @@ public class ApiNgRescriptOperations extends ApiNgOperations {
 			
 			String marketId = container.get(i).getMarketId();
 			marketIds.add(marketId);
-			List<MarketBook> marketBook =listMarketBook(marketIds, priceProjection, orderProjection, matchProjection, currencyCode, appKey, ssoId);
+			marketBook =listMarketBook(marketIds, priceProjection, orderProjection, matchProjection, currencyCode, appKey, ssoId);
 			for (int k = 0; k < marketBook.size(); k++) {
 				for (int j = 0; j < marketBook.get(k).getRunners().size(); j++) {
 					//marketBook.get(0).getRunners().get(j).getSelectionId();
