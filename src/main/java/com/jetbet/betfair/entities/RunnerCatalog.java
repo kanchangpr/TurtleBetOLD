@@ -24,5 +24,5 @@ public class RunnerCatalog {
 	//private ExchangePrices ex;
 	private Runner runner;
 	private String status;
-	private MarketBook marketBook;
+	
 }

@@ -105,7 +105,7 @@ public class ApiNgRescriptOperations extends ApiNgOperations {
 
 	}
 
-	public List<MarketCatalogue> listMarketCatalogue(MarketFilter filter, Set<MarketProjection> marketProjection,
+	/*public List<MarketCatalogue> listMarketCatalogue(MarketFilter filter, Set<MarketProjection> marketProjection,
 			MarketSort sort, String maxResult, String appKey, String ssoId) throws APINGException {
 		Map<String, Object> params = new HashMap<String, Object>();
 		List<MarketBook> marketBookList= new ArrayList<MarketBook>();
@@ -123,7 +123,7 @@ public class ApiNgRescriptOperations extends ApiNgOperations {
 		List<MarketCatalogue> container = JsonConverter.convertFromJson(result, new TypeToken<List<MarketCatalogue>>() {
 		}.getType());
 
-		/*for (int i = 0; i < container.size(); i++) {
+		for (int i = 0; i < container.size(); i++) {
 
 			PriceProjection priceProjection = new PriceProjection();
 			Set<PriceData> priceData = new HashSet<PriceData>();
@@ -142,7 +142,54 @@ public class ApiNgRescriptOperations extends ApiNgOperations {
 						matchProjection, currencyCode, appKey, ssoId);
 				container.get(i).getRunners().get(j).setMarketBook(marketBook);
 			}
-		}*/
+		}
+
+		return container;
+
+	}*/
+	
+	public List<MarketCatalogue> listMarketCatalogue(MarketFilter filter, Set<MarketProjection> marketProjection,
+			MarketSort sort, String maxResult, String appKey, String ssoId) throws APINGException {
+		Map<String, Object> params = new HashMap<String, Object>();
+		List<MarketBook> marketBookList= new ArrayList<MarketBook>();
+		params.put(LOCALE, locale);
+		params.put(FILTER, filter);
+		params.put(SORT, sort);
+		params.put(MAX_RESULT, maxResult);
+		params.put(MARKET_PROJECTION, marketProjection);
+		String result = getInstance().makeRequest(ApiNgOperation.LISTMARKETCATALOGUE.getOperationName(), params, appKey,
+				ssoId);
+		log.info("MarketCatalogue: " + result);
+		if (ApiNGDemo.isDebug())
+			System.out.println("\nResponse: " + result);
+
+		List<MarketCatalogue> container = JsonConverter.convertFromJson(result, new TypeToken<List<MarketCatalogue>>() {
+		}.getType());
+List<String> marketIds =new ArrayList<String>();
+		for (int i = 0; i < container.size(); i++) {
+
+			PriceProjection priceProjection = new PriceProjection();
+			Set<PriceData> priceData = new HashSet<PriceData>();
+			priceData.add(PriceData.EX_BEST_OFFERS);
+			priceData.add(PriceData.EX_ALL_OFFERS);
+			priceProjection.setPriceData(priceData);
+			OrderProjection orderProjection = null;
+			MatchProjection matchProjection = null;
+			String currencyCode = null;
+
+			String marketId = container.get(i).getMarketId();
+			marketIds.add(marketId);
+			List<MarketBook> marketBook =listMarketBook(marketIds, priceProjection, orderProjection, matchProjection, currencyCode, appKey, ssoId);
+			//int runnersSize = container.get(i).getRunners().size();
+			//for (int j = 0; j < runnersSize; j++) {
+			//	String selectionId = container.get(i).getRunners().get(j).getSelectionId().toString();
+			//	MarketBook marketBook = listRunnersBook(marketId, selectionId, priceProjection, orderProjection,
+			//			matchProjection, currencyCode, appKey, ssoId);
+			//	container.get(i).getRunners().get(j).setMarketBook(marketBook);
+			//}
+			
+			container.get(i).setMarketBook(marketBook);
+		}
 
 		return container;
 

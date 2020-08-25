@@ -17,6 +17,7 @@ import lombok.ToString;
 @ToString
 public class Runner {
 	private Long selectionId;
+	private String runnerName;
 	private Double handicap;
 	private String status;
 	private Double adjustmentFactor;
