@@ -196,14 +196,14 @@ public class ApiNgRescriptOperations extends ApiNgOperations {
 				for (int j = 0; j < marketBook.get(k).getRunners().size(); j++) {
 					//marketBook.get(0).getRunners().get(j).getSelectionId();
 					
-					if(marketBook.get(k).getRunners().get(j).getEx().getAvailableToBack().size()==0 && marketBook.get(k).getRunners().get(j).getEx().getAvailableToLay().size()==0) {
+					if(marketBook.get(k).getRunners().get(j).getEx().getAvailableToBack().size()>0 && marketBook.get(k).getRunners().get(j).getEx().getAvailableToLay().size()>0) {
 						marketBook.get(k).getRunners().get(j).setRunnerName(runnerNameMap.get(marketBook.get(k).getRunners().get(j).getSelectionId()));
-						Runner runner = new Runner();
-						runnerList.add(runner);
+						runnerList.add(marketBook.get(k).getRunners().get(j));
 					}
 				}
 				marketBook.get(k).setRunners(runnerList);
 			}
+			
 				
 			//int runnersSize = container.get(i).getRunners().size();
 			//for (int j = 0; j < runnersSize; j++) {
@@ -214,6 +214,7 @@ public class ApiNgRescriptOperations extends ApiNgOperations {
 			//}
 			
 			container.get(i).setMarketBook(marketBook);
+			container.get(i).setRunners(null);
 		}
 
 		return container;
