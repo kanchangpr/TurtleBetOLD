@@ -187,10 +187,10 @@ public class ApiNgRescriptOperations extends ApiNgOperations {
 			String marketId = container.get(i).getMarketId();
 			marketIds.add(marketId);
 			List<MarketBook> marketBook =listMarketBook(marketIds, priceProjection, orderProjection, matchProjection, currencyCode, appKey, ssoId);
-			for (int k = 0; i < marketBook.size(); i++) {
+			for (int k = 0; k < marketBook.size(); k++) {
 				for (int j = 0; j < marketBook.get(k).getRunners().size(); j++) {
 					//marketBook.get(0).getRunners().get(j).getSelectionId();
-					marketBook.get(k).getRunners().get(j).setRunnerName(runnerNameMap.get(marketBook.get(0).getRunners().get(j).getSelectionId()));
+					marketBook.get(k).getRunners().get(j).setRunnerName(runnerNameMap.get(marketBook.get(k).getRunners().get(j).getSelectionId()));
 				}
 			}
 				
