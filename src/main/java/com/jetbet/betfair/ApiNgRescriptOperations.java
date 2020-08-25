@@ -159,7 +159,7 @@ public class ApiNgRescriptOperations extends ApiNgOperations {
 		params.put(MARKET_PROJECTION, marketProjection);
 		String result = getInstance().makeRequest(ApiNgOperation.LISTMARKETCATALOGUE.getOperationName(), params, appKey,
 				ssoId);
-		log.info("MarketCatalogue: " + result);
+		//log.info("MarketCatalogue: " + result);
 		if (ApiNGDemo.isDebug())
 			System.out.println("\nResponse: " + result);
 
@@ -186,11 +186,11 @@ public class ApiNgRescriptOperations extends ApiNgOperations {
 			}
 			
 			String marketId = container.get(i).getMarketId();
-			log.info("marketId:: "+marketId);
+			//log.info("marketId:: "+marketId);
 			marketIds.add(marketId);
-			log.info("marketIds:: "+marketIds);
+			//log.info("marketIds:: "+marketIds);
 			marketBook =listMarketBook(marketIds, priceProjection, orderProjection, matchProjection, currencyCode, appKey, ssoId);
-			log.info("marketBook:: "+marketBook);
+			//log.info("marketBook:: "+marketBook);
 			for (int k = 0; k < marketBook.size(); k++) {
 				for (int j = 0; j < marketBook.get(k).getRunners().size(); j++) {
 					//marketBook.get(0).getRunners().get(j).getSelectionId();
