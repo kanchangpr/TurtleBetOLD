@@ -165,7 +165,7 @@ public class ApiNgRescriptOperations extends ApiNgOperations {
 
 		List<MarketCatalogue> container = JsonConverter.convertFromJson(result, new TypeToken<List<MarketCatalogue>>() {
 		}.getType());
-List<String> marketIds =new ArrayList<String>();
+		List<String> marketIds =new ArrayList<String>();
 		for (int i = 0; i < container.size(); i++) {
 
 			PriceProjection priceProjection = new PriceProjection();
@@ -176,10 +176,23 @@ List<String> marketIds =new ArrayList<String>();
 			OrderProjection orderProjection = null;
 			MatchProjection matchProjection = null;
 			String currencyCode = null;
-
+			int runnersSize = container.get(i).getRunners().size();
+			Map<Long,String> runnerNameMap= new HashMap<Long,String>();
+			for (int j = 0; j < runnersSize; j++) {
+				//String selectionId = container.get(i).getRunners().get(j).getSelectionId().toString();
+				runnerNameMap.put(container.get(i).getRunners().get(j).getSelectionId(), container.get(i).getRunners().get(j).getRunnerName());
+			}
+			
 			String marketId = container.get(i).getMarketId();
 			marketIds.add(marketId);
 			List<MarketBook> marketBook =listMarketBook(marketIds, priceProjection, orderProjection, matchProjection, currencyCode, appKey, ssoId);
+			if(marketBook.size()>0) {
+				for (int j = 0; j < marketBook.get(0).getRunners().size(); j++) {
+					//marketBook.get(0).getRunners().get(j).getSelectionId();
+					marketBook.get(0).getRunners().get(j).setRunnerName(runnerNameMap.get(marketBook.get(0).getRunners().get(j).getSelectionId()));
+				}
+				
+			}
 			//int runnersSize = container.get(i).getRunners().size();
 			//for (int j = 0; j < runnersSize; j++) {
 			//	String selectionId = container.get(i).getRunners().get(j).getSelectionId().toString();
