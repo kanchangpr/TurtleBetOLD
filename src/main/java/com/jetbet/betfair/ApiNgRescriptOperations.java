@@ -180,11 +180,15 @@ public class ApiNgRescriptOperations extends ApiNgOperations {
 			String currencyCode = null;
 			int runnersSize = container.get(i).getRunners().size();
 			
+			
+			
 			for (int j = 0; j < runnersSize; j++) {
+				
 				//String selectionId = container.get(i).getRunners().get(j).getSelectionId().toString();
 				runnerNameMap.put(container.get(i).getRunners().get(j).getSelectionId(), container.get(i).getRunners().get(j).getRunnerName());
+				
 			}
-			
+			log.info("runnerNameMap:: "+runnerNameMap);
 			String marketId = container.get(i).getMarketId();
 			//log.info("marketId:: "+marketId);
 			marketIds.add(marketId);
@@ -196,19 +200,24 @@ public class ApiNgRescriptOperations extends ApiNgOperations {
 				log.info("marketBook.get(k).getRunners().size():: "+marketBook.get(k).getRunners().size());
 				for (int j = 0; j < marketBook.get(k).getRunners().size(); j++) {
 					//marketBook.get(0).getRunners().get(j).getSelectionId();
-					log.info("marketBook.get(k).getRunners().get(j):: "+marketBook.get(k).getRunners().get(j));
-					if(marketBook.get(k).getRunners().get(j).getEx().getAvailableToBack().size()>0 && marketBook.get(k).getRunners().get(j).getEx().getAvailableToLay().size()>0) {
+					
+					if(marketBook.get(k).getRunners().get(j).getEx().getAvailableToBack().size()>0 || marketBook.get(k).getRunners().get(j).getEx().getAvailableToLay().size()>0) {
+						log.info("Runner NAme:: "+runnerNameMap.get(marketBook.get(k).getRunners().get(j).getSelectionId()));
 						marketBook.get(k).getRunners().get(j).setRunnerName(runnerNameMap.get(marketBook.get(k).getRunners().get(j).getSelectionId()));
 						runnerList.add(marketBook.get(k).getRunners().get(j));
 					}
+					
+					
 				}
 				marketBook.get(k).setRunners(runnerList);
+				log.info("marketBook.get(k).getRunners():: "+marketBook.get(k).getRunners());
+				
 				log.info("marketBook.get(k):: "+marketBook.get(k));
-				/*
-				 * if(marketBook.get(k).getRunners().size()>0) {
-				 * marketBookList.add(marketBook.get(k));
-				 * log.info("marketBook.get(k):: "+marketBook.get(k)); }
-				 */
+				 if(marketBook.get(k).getRunners().size()>0) {
+				 marketBookList.add(marketBook.get(k));
+				 log.info("marketBook.get(k):: "+marketBook.get(k)); 
+				 }
+				
 			}
 			
 				
