@@ -334,8 +334,63 @@ public class AdminDao {
 	}
 
 	public List<BetSettlementDto> betSettlement(String accountType, String userId, String transactionId) {
+		String sqlString = null;
+		UserBean userDetail = userRepository.findByUserId(userId.toUpperCase());
+		String role= userDetail.getUserRole();
+		List<BetSettlementDto> betSettlementList= new ArrayList<BetSettlementDto>();
 		
-		 String admin;
+		if(role.equalsIgnoreCase(ResourceConstants.MASTER)) {
+			if(accountType.equalsIgnoreCase("MINUS")) {
+				sqlString=QueryListConstant.GET_SETTLEMENT_FOR_MASTER_MINUS;
+			}else if(accountType.equalsIgnoreCase("PLUS")) {
+				sqlString=QueryListConstant.GET_SETTLEMENT_FOR_MASTER_PLUS;
+			} 
+			
+			betSettlementList = jdbcTemplate.query(sqlString,
+					new Object[] { userId.toUpperCase() },
+					(rs, rowNum) -> new BetSettlementDto(
+							rs.getString("USER_ID"), 
+							rs.getDouble("AMOUNT"),
+							rs.getDouble("ADMIN_STAKES"),
+							rs.getDouble("SM_STAKES"),
+							rs.getDouble("MASTER_STAKES")
+							));
+			
+		}else if(role.equalsIgnoreCase(ResourceConstants.SUPERMASTER)) {
+			if(accountType.equalsIgnoreCase("MINUS")) {
+				sqlString=QueryListConstant.GET_SETTLEMENT_FOR_SM_MINUS;
+			}else if(accountType.equalsIgnoreCase("PLUS")) {
+				sqlString=QueryListConstant.GET_SETTLEMENT_FOR_SM_PLUS;
+			}
+			
+			betSettlementList = jdbcTemplate.query(sqlString,
+					new Object[] { userId.toUpperCase() },
+					(rs, rowNum) -> new BetSettlementDto(
+							rs.getString("USER_ID"), 
+							rs.getDouble("MASTER_STAKES"),
+							rs.getDouble("ADMIN_STAKES"),
+							rs.getDouble("SM_STAKES")
+							));
+			
+		}else if(role.equalsIgnoreCase(ResourceConstants.ADMIN)) {
+			if(accountType.equalsIgnoreCase("MINUS")) {
+				sqlString=QueryListConstant.GET_SETTLEMENT_FOR_ADMIN_MINUS;
+			}else if(accountType.equalsIgnoreCase("PLUS")) {
+				sqlString=QueryListConstant.GET_SETTLEMENT_FOR_ADMIN_PLUS;
+			}
+			
+			betSettlementList = jdbcTemplate.query(sqlString,
+					new Object[] { userId.toUpperCase() },
+					(rs, rowNum) -> new BetSettlementDto(
+							rs.getString("USER_ID"), 
+							rs.getDouble("SM_STAKES"),
+							rs.getDouble("ADMIN_STAKES")
+							));
+		}
+		
+		return betSettlementList;
+		
+		/* String admin;
 		 String sm;
 		 String master;
 		 String sqlString = null;
@@ -362,7 +417,6 @@ public class AdminDao {
 						rs.getDouble("SM_STAKES"),
 						rs.getDouble("MASTER_STAKES")
 						));
-//		log.info("[" + transactionId + "] betSettlementList:  " + betSettlementList);
 		for (int i = 0; i < betSettlementList.size(); i++) {
 			BetSettlementDto betSettlementRes= new BetSettlementDto();
 			userDetails = jdbcTemplate.query(QueryListConstant.GET_PARENT_LIST,
@@ -370,13 +424,9 @@ public class AdminDao {
 					(rs, rowNum) -> new UserRoleDto(
 							rs.getString("USER_ID"), rs.getString("USER_ROLE")
 							));
-//			log.info("userDetails:: "+userDetails);
 			for (int j = 0; j < userDetails.size(); j++) {
-//				log.info("userDetails.get(j).getUserRole():: "+userDetails.get(j).getUserRole());
-//				log.info("userDetails.get(j).getUserId():: "+userDetails.get(j).getUserId());
 				userParentMap.put(userDetails.get(j).getUserRole(),userDetails.get(j).getUserId());
 			}
-//			log.info("[" + transactionId + "] userParentMap:  " + userParentMap);
 			admin=userParentMap.get("ADMIN");
 			sm=userParentMap.get("SUPERMASTER");
 			master=userParentMap.get("MASTER");
@@ -393,11 +443,10 @@ public class AdminDao {
 			betSettlementRes.setAdminStakes(betSettlementList.get(i).getAdminStakes());
 			betSettlementRes.setSmStakes(betSettlementList.get(i).getSmStakes());
 			betSettlementRes.setMasterStakes(betSettlementList.get(i).getMasterStakes());
-//			log.info("[" + transactionId + "] betSettlementRes:  " + betSettlementRes);
 			betSettlementResList.add(betSettlementRes);
 		}
 		
-		return betSettlementResList;
+		return betSettlementResList;*/
 	}
 
 }

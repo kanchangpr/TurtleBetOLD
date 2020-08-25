@@ -17,19 +17,31 @@ public class BetSettlementDto {
 	private String userId;
 	private double stake;
 	private double liability;
-	public BetSettlementDto(String userId, double stake, double liability, double profit, double loss, double amount,
-			double commision, double adminStakes, double smStakes, double masterStakes) {
+	public BetSettlementDto(String userId,  double amount,
+			 double adminStakes, double smStakes, double masterStakes) {
 		super();
 		this.userId = userId;
-		this.stake = stake;
-		this.liability = liability;
-		this.profit = profit;
-		this.loss = loss;
 		this.amount = amount;
-		this.commision = commision;
 		this.adminStakes = adminStakes;
 		this.smStakes = smStakes;
 		this.masterStakes = masterStakes;
+	}
+	
+	public BetSettlementDto(String userId,  double amount,
+			 double adminStakes, double smStakes) {
+		super();
+		this.userId = userId;
+		this.amount = amount;
+		this.adminStakes = adminStakes;
+		this.smStakes = smStakes;
+	}
+	
+	public BetSettlementDto(String userId,  double amount,
+			 double adminStakes) {
+		super();
+		this.userId = userId;
+		this.amount = amount;
+		this.adminStakes = adminStakes;
 	}
 	private double profit;
 	private double loss;
