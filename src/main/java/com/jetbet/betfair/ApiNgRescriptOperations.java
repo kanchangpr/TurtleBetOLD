@@ -215,7 +215,6 @@ public class ApiNgRescriptOperations extends ApiNgOperations {
 			if(container.get(i).getMarketBook().size()>0) {
 				container.get(i).setMarketBook(marketBook);
 			}
-			
 			container.get(i).setRunners(null);
 		}
 
