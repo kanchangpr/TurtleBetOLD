@@ -1008,7 +1008,11 @@ public class UserDao {
 		if (ResourceConstants.BetType.BET_HISTORY.equalsIgnoreCase(type)) {
 			log.info("[" + transactionId + "] Inside :  " + type);
 			if (!StringUtils.isEmpty(searchParam) && searchParam.equalsIgnoreCase("betSettlement")) {
-				betHistory = placeBetsRepository.findByUserIdAndBetSettlementOrderByIdDesc(userId, "PENDING");
+				List<String> userList = jdbcTemplate.query(QueryListConstant.GET_USER_LIST,
+						new Object[] { userId.toUpperCase() },
+						(rs, rowNum) -> new String(rs.getString("USER_ID")));
+				log.info("userList:: "+userList);
+				betHistory = placeBetsRepository.findByUserIdInAndBetSettlementOrderByUserIdDesc(userList, "PENDING");
 			}else if (StringUtils.isEmpty(fromDate) && StringUtils.isEmpty(toDate)) {
 				betHistory = placeBetsRepository.findByUserIdOrderByIdDesc(userId);
 			} else {

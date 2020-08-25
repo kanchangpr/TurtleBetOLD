@@ -33,6 +33,11 @@ public class UserBean {
 		this.userId = userId;
 		this.userRole = userRole;
 	}
+	
+	public UserBean(String userId) {
+		super();
+		this.userId = userId;
+	}
 
 	@Id
     @SequenceGenerator(name="jb_user_details_seq",sequenceName="jb_user_details_seq",allocationSize=1)
