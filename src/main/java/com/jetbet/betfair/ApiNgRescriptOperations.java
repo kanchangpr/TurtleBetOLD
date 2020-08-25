@@ -188,21 +188,22 @@ public class ApiNgRescriptOperations extends ApiNgOperations {
 			String marketId = container.get(i).getMarketId();
 			//log.info("marketId:: "+marketId);
 			marketIds.add(marketId);
-			//log.info("marketIds:: "+marketIds);
+			log.info("marketIds:: "+marketIds);
 			marketBook =listMarketBook(marketIds, priceProjection, orderProjection, matchProjection, currencyCode, appKey, ssoId);
-			//log.info("marketBook:: "+marketBook);
+			log.info("marketBook:: "+marketBook);
 			for (int k = 0; k < marketBook.size(); k++) {
 				List<Runner> runnerList= new ArrayList<Runner>();
+				log.info("marketBook.get(k).getRunners().size():: "+marketBook.get(k).getRunners().size());
 				for (int j = 0; j < marketBook.get(k).getRunners().size(); j++) {
 					//marketBook.get(0).getRunners().get(j).getSelectionId();
-					
+					log.info("marketBook.get(k).getRunners().get(j):: "+marketBook.get(k).getRunners().get(j));
 					if(marketBook.get(k).getRunners().get(j).getEx().getAvailableToBack().size()>0 && marketBook.get(k).getRunners().get(j).getEx().getAvailableToLay().size()>0) {
 						marketBook.get(k).getRunners().get(j).setRunnerName(runnerNameMap.get(marketBook.get(k).getRunners().get(j).getSelectionId()));
 						runnerList.add(marketBook.get(k).getRunners().get(j));
 					}
 				}
 				marketBook.get(k).setRunners(runnerList);
-				//log.info("marketBook.get(k).getRunners().size():: "+marketBook.get(k).getRunners().size());
+				log.info("marketBook.get(k):: "+marketBook.get(k));
 				/*
 				 * if(marketBook.get(k).getRunners().size()>0) {
 				 * marketBookList.add(marketBook.get(k));
