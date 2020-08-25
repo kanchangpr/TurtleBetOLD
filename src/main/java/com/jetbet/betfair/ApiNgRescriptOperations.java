@@ -187,7 +187,9 @@ public class ApiNgRescriptOperations extends ApiNgOperations {
 			
 			String marketId = container.get(i).getMarketId();
 			marketIds.add(marketId);
+			log.info("marketIds:: "+marketIds);
 			marketBook =listMarketBook(marketIds, priceProjection, orderProjection, matchProjection, currencyCode, appKey, ssoId);
+			log.info("marketBook:: "+marketBook);
 			for (int k = 0; k < marketBook.size(); k++) {
 				for (int j = 0; j < marketBook.get(k).getRunners().size(); j++) {
 					//marketBook.get(0).getRunners().get(j).getSelectionId();
