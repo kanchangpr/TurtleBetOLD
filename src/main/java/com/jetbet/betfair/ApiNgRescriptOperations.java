@@ -166,6 +166,7 @@ public class ApiNgRescriptOperations extends ApiNgOperations {
 		List<MarketCatalogue> container = JsonConverter.convertFromJson(result, new TypeToken<List<MarketCatalogue>>() {
 		}.getType());
 		List<String> marketIds =new ArrayList<String>();
+		Map<Long,String> runnerNameMap= new HashMap<Long,String>();
 		for (int i = 0; i < container.size(); i++) {
 
 			PriceProjection priceProjection = new PriceProjection();
@@ -177,7 +178,7 @@ public class ApiNgRescriptOperations extends ApiNgOperations {
 			MatchProjection matchProjection = null;
 			String currencyCode = null;
 			int runnersSize = container.get(i).getRunners().size();
-			Map<Long,String> runnerNameMap= new HashMap<Long,String>();
+			
 			for (int j = 0; j < runnersSize; j++) {
 				//String selectionId = container.get(i).getRunners().get(j).getSelectionId().toString();
 				runnerNameMap.put(container.get(i).getRunners().get(j).getSelectionId(), container.get(i).getRunners().get(j).getRunnerName());
