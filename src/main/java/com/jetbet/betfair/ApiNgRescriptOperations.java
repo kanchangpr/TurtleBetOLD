@@ -202,8 +202,10 @@ public class ApiNgRescriptOperations extends ApiNgOperations {
 					}
 				}
 				marketBook.get(k).setRunners(runnerList);
+				log.info("marketBook.get(k).getRunners().size():: "+marketBook.get(k).getRunners().size());
 				if(marketBook.get(k).getRunners().size()>0) {
-					marketBook.add(marketBook.get(k));
+					marketBookList.add(marketBook.get(k));
+					log.info("marketBook.get(k):: "+marketBook.get(k));
 				}
 			}
 			
@@ -215,7 +217,7 @@ public class ApiNgRescriptOperations extends ApiNgOperations {
 			//			matchProjection, currencyCode, appKey, ssoId);
 			//	container.get(i).getRunners().get(j).setMarketBook(marketBook);
 			//}
-			container.get(i).setMarketBook(marketBook);
+			container.get(i).setMarketBook(marketBookList);
 			container.get(i).setRunners(null);
 		}
 

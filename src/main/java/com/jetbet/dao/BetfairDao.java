@@ -542,7 +542,7 @@ public class BetfairDao {
 						marketCatalogueResult = rescriptOperations.listMarketCatalogue(marketFilter, marketProjection,
 								MarketSort.FIRST_TO_START, maxResults, applicationKey, sessionToken);
 						if (marketCatalogueResult.size() == 0) {
-							log.info("INSIDE IF");
+							//log.info("INSIDE IF");
 							matchAndFancyDetailDto.setMarketCatalogueRes(new ArrayList<MarketCatalogue>());
 						} else {
 							matchAndFancyDetailDto.setMarketCatalogueRes(marketCatalogueResult);
@@ -554,7 +554,7 @@ public class BetfairDao {
 				}
 				seriesMatchFancyResList.add(seriesMatchFancyRes);
 			}
-			log.info("seriesMatchFancyResList: " + seriesMatchFancyResList);
+			//log.info("seriesMatchFancyResList: " + seriesMatchFancyResList);
 		} catch (APINGException e) {
 			e.printStackTrace();
 		}
