@@ -192,10 +192,17 @@ public class ApiNgRescriptOperations extends ApiNgOperations {
 			marketBook =listMarketBook(marketIds, priceProjection, orderProjection, matchProjection, currencyCode, appKey, ssoId);
 			//log.info("marketBook:: "+marketBook);
 			for (int k = 0; k < marketBook.size(); k++) {
+				List<Runner> runnerList= new ArrayList<Runner>();
 				for (int j = 0; j < marketBook.get(k).getRunners().size(); j++) {
 					//marketBook.get(0).getRunners().get(j).getSelectionId();
-					marketBook.get(k).getRunners().get(j).setRunnerName(runnerNameMap.get(marketBook.get(k).getRunners().get(j).getSelectionId()));
+					
+					if(marketBook.get(k).getRunners().get(j).getEx().getAvailableToBack().size()==0 && marketBook.get(k).getRunners().get(j).getEx().getAvailableToLay().size()==0) {
+						marketBook.get(k).getRunners().get(j).setRunnerName(runnerNameMap.get(marketBook.get(k).getRunners().get(j).getSelectionId()));
+						Runner runner = new Runner();
+						runnerList.add(runner);
+					}
 				}
+				marketBook.get(k).setRunners(runnerList);
 			}
 				
 			//int runnersSize = container.get(i).getRunners().size();
