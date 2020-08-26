@@ -228,7 +228,7 @@ public class ApiNgRescriptOperations extends ApiNgOperations {
 			//			matchProjection, currencyCode, appKey, ssoId);
 			//	container.get(i).getRunners().get(j).setMarketBook(marketBook);
 			//}
-			container.get(i).setMarketBook(marketBook);
+			container.get(i).setMarketBook(marketBookList);
 			container.get(i).setRunners(null);
 		}
 
