@@ -218,10 +218,10 @@ public class UserDao {
 
 							stakesBean.setUserId(userBean.getUserId());
 							stakesBean.setStake1(ResourceConstants.Stakes.STAKE1);
-							stakesBean.setStake1(ResourceConstants.Stakes.STAKE2);
-							stakesBean.setStake1(ResourceConstants.Stakes.STAKE3);
-							stakesBean.setStake1(ResourceConstants.Stakes.STAKE4);
-							stakesBean.setStake1(ResourceConstants.Stakes.STAKE5);
+							stakesBean.setStake2(ResourceConstants.Stakes.STAKE2);
+							stakesBean.setStake3(ResourceConstants.Stakes.STAKE3);
+							stakesBean.setStake4(ResourceConstants.Stakes.STAKE4);
+							stakesBean.setStake5(ResourceConstants.Stakes.STAKE5);
 							stakesBean.setCreatedBy(createdBy);
 							stakesRepository.save(stakesBean);
 							
