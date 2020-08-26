@@ -22,6 +22,7 @@ import com.jetbet.util.ApplicationConstants;
 
 import lombok.extern.slf4j.Slf4j;
 
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/Auth")
 @Slf4j

@@ -38,7 +38,7 @@ import com.jetbet.util.ResourceConstants;
 
 import lombok.extern.slf4j.Slf4j;
 
-@CrossOrigin(origins = "http://localhost:8080")
+@CrossOrigin(origins = "*")
 @Slf4j
 @RestController
 @RequestMapping(value = "/User")
