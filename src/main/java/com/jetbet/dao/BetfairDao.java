@@ -800,9 +800,9 @@ public class BetfairDao {
 		placeBetsList = placeBetsRepository.findByBetResultInAndBetSettlementOrderByUserId(betResultList, betSettlement);
 
 //		log.info("calculateProfitLoss:: "+placeBetsList);
-		boolean masterInsertFlag=true;
-		boolean smInsertFlag=true;
-		boolean adminInsertFlag=true;
+//		boolean masterInsertFlag=true;
+//		boolean smInsertFlag=true;
+//		boolean adminInsertFlag=true;
 		for (int i = 0; i < placeBetsList.size(); i++) {
 			double profit = 0.0;
 			double loss = 0.0;
@@ -982,32 +982,32 @@ public class BetfairDao {
 			}
 			
 			
-			if(!prevUser.equalsIgnoreCase(currUser)){
-				masterInsertFlag=true;
-				smInsertFlag=true;
-				adminInsertFlag=true;
-			}
-			log.info("index:: "+i);
-			log.info("prevUser:: "+prevUser);
-			log.info("currUser:: "+currUser);
+//			if(!prevUser.equalsIgnoreCase(currUser)){
+//				masterInsertFlag=true;
+//				smInsertFlag=true;
+//				adminInsertFlag=true;
+//			}
+//			log.info("index:: "+i);
+//			log.info("prevUser:: "+prevUser);
+//			log.info("currUser:: "+currUser);
+//			
+//			Long masterPLExistCount = placeBetsRepository.countByUserIdAndBetSettlementOrderById(master, betSettlement);
+//			Long smPLExistCount = placeBetsRepository.countByUserIdAndBetSettlementOrderById(sm, betSettlement);
+//			Long adminPLExistCount = placeBetsRepository.countByUserIdAndBetSettlementOrderById(admin, betSettlement);
+//			
+//			log.info("masterPLExistCount:: "+masterPLExistCount);
+//			log.info("smPLExistCount:: "+smPLExistCount);
+//			log.info("adminPLExistCount:: "+adminPLExistCount);
 			
-			Long masterPLExistCount = placeBetsRepository.countByUserIdAndBetSettlementOrderById(master, betSettlement);
-			Long smPLExistCount = placeBetsRepository.countByUserIdAndBetSettlementOrderById(sm, betSettlement);
-			Long adminPLExistCount = placeBetsRepository.countByUserIdAndBetSettlementOrderById(admin, betSettlement);
-			
-			log.info("masterPLExistCount:: "+masterPLExistCount);
-			log.info("smPLExistCount:: "+smPLExistCount);
-			log.info("adminPLExistCount:: "+adminPLExistCount);
-			
-			if(masterPLExistCount>0 || !masterInsertFlag) {
-				log.info("inside master update:: ");
-				//update
-				jdbcTemplate.update(QueryListConstant.UPDATE_PARENT_PROFIT_LOSS,
-						new Object[] { masterStakes, 0,smStakes,adminStakes, userId });
-			}else if(masterPLExistCount<=0 && masterInsertFlag){
-				log.info("inside master insert:: ");
-				//insert
-				masterInsertFlag=false;
+//			if(masterPLExistCount>0 || !masterInsertFlag) {
+//				log.info("inside master update:: ");
+//				//update
+//				jdbcTemplate.update(QueryListConstant.UPDATE_PARENT_PROFIT_LOSS,
+//						new Object[] { masterStakes, 0,smStakes,adminStakes, userId });
+//			}else if(masterPLExistCount<=0 && masterInsertFlag){
+//				log.info("inside master insert:: ");
+//				//insert
+//				masterInsertFlag=false;
 				betBeanForMaster.setLoginId(master);
 				betBeanForMaster.setUserId(master);
 				betBeanForMaster.setParent(sm);
@@ -1015,38 +1015,38 @@ public class BetfairDao {
 				betBeanForMaster.setAdminStakes(adminStakes);
 				betBeanForMaster.setSmStakes(smStakes);
 				placeBetsRepository.saveAndFlush(betBeanForMaster);
-			}
-			if(smPLExistCount>0 || !smInsertFlag) {
-				log.info("inside sm update:: ");
-				//update
-				jdbcTemplate.update(QueryListConstant.UPDATE_PARENT_PROFIT_LOSS,
-						new Object[] { smStakes, 0,0,adminStakes, master });
-			}else if(smPLExistCount<=0 && smInsertFlag) {
-				log.info("inside sm insert:: ");
-				//insert
-				smInsertFlag=false;
+//			}
+//			if(smPLExistCount>0 || !smInsertFlag) {
+//				log.info("inside sm update:: ");
+//				//update
+//				jdbcTemplate.update(QueryListConstant.UPDATE_PARENT_PROFIT_LOSS,
+//						new Object[] { smStakes, 0,0,adminStakes, master });
+//			}else if(smPLExistCount<=0 && smInsertFlag) {
+//				log.info("inside sm insert:: ");
+//				//insert
+//				smInsertFlag=false;
 				betBeanForSM.setLoginId(sm);
 				betBeanForSM.setUserId(sm);
 				betBeanForSM.setParent(admin);
 				betBeanForSM.setNetAmount(smStakes);
 				betBeanForSM.setAdminStakes(adminStakes);
 				placeBetsRepository.saveAndFlush(betBeanForSM);
-			}
-			if(adminPLExistCount>0 || !adminInsertFlag) {
-				log.info("inside admin update:: ");
-				//update
-				jdbcTemplate.update(QueryListConstant.UPDATE_PARENT_PROFIT_LOSS,
-						new Object[] { adminStakes, 0,0,0, sm });
-			}else if(adminPLExistCount<=0 && adminInsertFlag) {
-				log.info("inside admin insert:: ");
-				//insert
-				adminInsertFlag=false;
+//			}
+//			if(adminPLExistCount>0 || !adminInsertFlag) {
+//				log.info("inside admin update:: ");
+//				//update
+//				jdbcTemplate.update(QueryListConstant.UPDATE_PARENT_PROFIT_LOSS,
+//						new Object[] { adminStakes, 0,0,0, sm });
+//			}else if(adminPLExistCount<=0 && adminInsertFlag) {
+//				log.info("inside admin insert:: ");
+//				//insert
+//				adminInsertFlag=false;
 				betBeanForAdmin.setLoginId(admin);
 				betBeanForAdmin.setUserId(admin);
 				betBeanForAdmin.setParent("1");
 				betBeanForAdmin.setNetAmount(adminStakes);
 				placeBetsRepository.saveAndFlush(betBeanForAdmin);
-			}
+//			}
 			
 			
 			
