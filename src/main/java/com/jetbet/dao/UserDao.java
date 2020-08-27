@@ -465,7 +465,7 @@ public class UserDao {
 			ChipsDto chipsDto = new ChipsDto();
 			chipsDto.setUserRole(row.get("USER_ROLE").toString());
 			chipsDto.setToUser(row.get("USER_ID").toString());
-			chipsDto.setChips(Long.parseLong(row.get("AVAIL_BALANCE").toString()));
+			chipsDto.setChips(Double.parseDouble(row.get("AVAIL_BALANCE").toString()));
 			chipsList.add(chipsDto);
 		}
 		log.info("[" + transactionId + "] chipsMap:: " + chipsMap);
