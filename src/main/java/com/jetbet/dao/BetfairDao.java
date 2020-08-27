@@ -853,6 +853,9 @@ public class BetfairDao {
 			placeBetsBean.setAdminStakes(adminStakes);
 			placeBetsBean.setSmStakes(smStakes);
 			placeBetsBean.setMasterStakes(masterStakes);
+			placeBetsBean.setAdminSettle("N");
+			placeBetsBean.setSmSettle("N");
+			placeBetsBean.setMasterSettle("N");
 			placeBetsBean.setBetSettlement("PENDING");
 
 			placeBetsRepository.saveAndFlush(placeBetsBean);

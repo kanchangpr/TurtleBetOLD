@@ -127,6 +127,15 @@ public class PlaceBetsBean {
 	@Column(name = "master_stakes")
 	private double masterStakes;
 	
+	@Column(name = "admin_settle")
+	private String adminSettle;
+	
+	@Column(name = "sm_settle")
+	private String smSettle;
+	
+	@Column(name = "master_settle")
+	private String masterSettle;
+	
 	@Column(name = "isback" , updatable = false)
 	private String isback;
 	
