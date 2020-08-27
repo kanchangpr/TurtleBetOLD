@@ -895,6 +895,7 @@ public class BetfairDao {
 			placeBetsRepository.saveAndFlush(placeBetsBean);
 			
 			final String NA="NA";
+			final String N="N";
 			final double ZERO_DOUBLE=0;
 			final long ZERO_LONG=0;
 			final int ZERO_INT=0;
@@ -912,8 +913,8 @@ public class BetfairDao {
 			betBeanForParent.setOdds(ZERO_DOUBLE);
 			betBeanForParent.setStake(ZERO_DOUBLE);
 			betBeanForParent.setLiability(ZERO_DOUBLE);
-			betBeanForParent.setIsback(NA);
-			betBeanForParent.setIsLay(NA);
+			betBeanForParent.setIsback(N);
+			betBeanForParent.setIsLay(N);
 			betBeanForParent.setPsId(ZERO_INT);
 			betBeanForParent.setCreatedBy(ResourceConstants.USER_NAME);
 			betBeanForParent.setBetStatus(NA);
