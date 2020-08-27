@@ -58,6 +58,7 @@ import com.jetbet.repository.SportsRepository;
 import com.jetbet.repository.UserRepository;
 import com.jetbet.util.QueryListConstant;
 import com.jetbet.util.ResourceConstants;
+import com.sun.istack.FinalArrayList;
 
 import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
@@ -893,31 +894,103 @@ public class BetfairDao {
 
 			placeBetsRepository.saveAndFlush(placeBetsBean);
 			
+			final String NA="NA";
+			final double ZERO_DOUBLE=0;
+			final long ZERO_LONG=0;
+			final int ZERO_INT=0;
+			
+			PlaceBetsBean betBeanForParent = new PlaceBetsBean();
+			
+			betBeanForParent.setSportsId(NA);
+			betBeanForParent.setSportsName(NA);
+			betBeanForParent.setSeriesId(NA);
+			betBeanForParent.setSeriesName(NA);
+			betBeanForParent.setMatchId(NA);
+			betBeanForParent.setMatchName(NA);
+			betBeanForParent.setSelectionId(ZERO_LONG);
+			betBeanForParent.setRunnerName(NA);
+			betBeanForParent.setOdds(ZERO_DOUBLE);
+			betBeanForParent.setStake(ZERO_DOUBLE);
+			betBeanForParent.setLiability(ZERO_DOUBLE);
+			betBeanForParent.setIsback(NA);
+			betBeanForParent.setIsLay(NA);
+			betBeanForParent.setPsId(ZERO_INT);
+			betBeanForParent.setCreatedBy(ResourceConstants.USER_NAME);
+			betBeanForParent.setBetStatus(NA);
+			betBeanForParent.setBetResult(NA);
+			
 			String admin=userParentMap.get("ADMIN");
 			String sm=userParentMap.get("SUPERMASTER");
 			String master=userParentMap.get("MASTER");
+			placeBetsBean.setBetSettlement("PENDING");
 			
-			double availBalUser=userDetail.getAvailBalance();
-			double profitLossUser=userDetail.getPrifitLoss();
 			
-			UserBean masterDetail = userRepository.findByUserId(master);
-			double availBalMaster=masterDetail.getAvailBalance();
-			double profitLossMaster=masterDetail.getPrifitLoss();
 			
-			UserBean smDetail = userRepository.findByUserId(sm);
-			double availBalSM=smDetail.getAvailBalance();
-			double profitLossSM=smDetail.getPrifitLoss();
+			Long masterPLExistCount = placeBetsRepository.countByUserIdAndBetSettlementOrderById(master, betSettlement);
+			Long smPLExistCount = placeBetsRepository.countByUserIdAndBetSettlementOrderById(sm, betSettlement);
+			Long adminPLExistCount = placeBetsRepository.countByUserIdAndBetSettlementOrderById(admin, betSettlement);
 			
-			UserBean adminDetail = userRepository.findByUserId(admin);
-			double availBalAdmin=adminDetail.getAvailBalance();
-			double profitLossAdmin=adminDetail.getPrifitLoss();
+			if(masterPLExistCount>0) {
+				//update
+				jdbcTemplate.update(QueryListConstant.UPDATE_PARENT_PROFIT_LOSS,
+						new Object[] { masterStakes, 0,smStakes,adminStakes, userId });
+			}else {
+				//insert
+				betBeanForParent.setLoginId(master);
+				betBeanForParent.setUserId(master);
+				betBeanForParent.setParent(sm);
+				betBeanForParent.setNetAmount(masterStakes);
+				betBeanForParent.setAdminStakes(adminStakes);
+				betBeanForParent.setSmStakes(smStakes);
+				placeBetsRepository.saveAndFlush(betBeanForParent);
+			}
+			if(smPLExistCount>0) {
+				//update
+				jdbcTemplate.update(QueryListConstant.UPDATE_PARENT_PROFIT_LOSS,
+						new Object[] { smStakes, 0,0,adminStakes, userId });
+			}else {
+				//insert
+				betBeanForParent.setLoginId(sm);
+				betBeanForParent.setUserId(sm);
+				betBeanForParent.setParent(admin);
+				betBeanForParent.setNetAmount(smStakes);
+				betBeanForParent.setAdminStakes(adminStakes);
+				placeBetsRepository.saveAndFlush(betBeanForParent);
+			}
+			if(adminPLExistCount>0) {
+				//update
+				jdbcTemplate.update(QueryListConstant.UPDATE_PARENT_PROFIT_LOSS,
+						new Object[] { adminStakes, 0,0,0, userId });
+			}else {
+				//insert
+				betBeanForParent.setLoginId(admin);
+				betBeanForParent.setUserId(admin);
+				betBeanForParent.setParent("1");
+				betBeanForParent.setNetAmount(adminStakes);
+				placeBetsRepository.saveAndFlush(betBeanForParent);
+			}
+			
+			
+			
+			jdbcTemplate.update(QueryListConstant.UPDATE_AVAIL_BAL_AND_PROFIT_LOSS,
+					new Object[] { netAmount,netAmount, netAmount, userId });
+			
+			jdbcTemplate.update(QueryListConstant.UPDATE_AVAIL_BAL_AND_PROFIT_LOSS,
+					new Object[] { masterStakes,masterStakes, masterStakes, master });
+			
+			jdbcTemplate.update(QueryListConstant.UPDATE_AVAIL_BAL_AND_PROFIT_LOSS,
+					new Object[] { smStakes,smStakes, smStakes, sm });
+			
+			jdbcTemplate.update(QueryListConstant.UPDATE_AVAIL_BAL_AND_PROFIT_LOSS,
+					new Object[] { adminStakes,adminStakes, adminStakes, admin });
+			
 			
 //			double availBalUser = 0.0;
 //			double availBalMaster = 0.0;
 //			double availBalSM = 0.0;
 //			double availBalAdmin = 0.0;
 			// User
-			profitLossUser=profitLossUser+netAmount;
+			/*	profitLossUser=profitLossUser+netAmount;
 			if(availBalUser+netAmount<0) {
 				availBalUser=0.0;
 			}else {
@@ -950,23 +1023,18 @@ public class BetfairDao {
 			}else {
 				availBalAdmin=availBalAdmin+adminStakes;
 			}
+			*/
+			/*double availBalUser=userDetail.getAvailBalance();
 			
+			UserBean masterDetail = userRepository.findByUserId(master);
+			double availBalMaster=masterDetail.getAvailBalance();
 			
-			String updateAvailBalAndPLForUser = QueryListConstant.UPDATE_AVAIL_BAL_AND_PROFIT_LOSS;
-			jdbcTemplate.update(updateAvailBalAndPLForUser,
-					new Object[] { availBalUser, profitLossUser, userId });
+			UserBean smDetail = userRepository.findByUserId(sm);
+			double availBalSM=smDetail.getAvailBalance();
 			
-			String updateAvailBalAndPLForMaster = QueryListConstant.UPDATE_AVAIL_BAL_AND_PROFIT_LOSS;
-			jdbcTemplate.update(updateAvailBalAndPLForMaster,
-					new Object[] { availBalMaster, profitLossMaster, master });
+			UserBean adminDetail = userRepository.findByUserId(admin);
+			double availBalAdmin=adminDetail.getAvailBalance();*/
 			
-			String updateAvailBalAndPLForSM = QueryListConstant.UPDATE_AVAIL_BAL_AND_PROFIT_LOSS;
-			jdbcTemplate.update(updateAvailBalAndPLForSM,
-					new Object[] { availBalSM, profitLossSM, sm });
-			
-			String updateAvailBalAndPLForAdmin = QueryListConstant.UPDATE_AVAIL_BAL_AND_PROFIT_LOSS;
-			jdbcTemplate.update(updateAvailBalAndPLForAdmin,
-					new Object[] { availBalAdmin, profitLossAdmin, admin });
 			
 
 		}
