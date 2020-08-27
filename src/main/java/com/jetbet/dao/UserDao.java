@@ -890,7 +890,7 @@ public class UserDao {
 			UserBean userDetail = userRepository.findFirst1ByUserId(userId.toUpperCase());
 			String parent = userDetail.getParent();
 			int psId = userDetail.getPartnership();
-			double chips = userDetail.getChips();
+			double chips = userDetail.getAvailBalance();
 			double userLiab = userDetail.getLiability();
 			String isbetLock = userDetail.getIsBettingLock();
 			int sessionDelay = userDetail.getSessionDelay();
