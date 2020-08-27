@@ -3,6 +3,7 @@ package com.jetbet.dao;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
@@ -459,13 +460,35 @@ public class AdminDao {
 		log.info("[" + transactionId + "] loggedInUser:: "+loggedInUser);
 		UserResponseDto userResponseDto= new UserResponseDto();
 		try {
+			
+//			List<UserRoleDto> userDetails= new ArrayList<UserRoleDto>();
+//			Map<String,String> userParentMap=new HashMap<String,String>();
+//			userDetails = jdbcTemplate.query(QueryListConstant.GET_PARENT_LIST,
+//					new Object[] { userId },
+//					(rs, rowNum) -> new UserRoleDto(
+//							rs.getString("USER_ID"), rs.getString("USER_ROLE")
+//							));
+//			for (int j = 0; j < userDetails.size(); j++) {
+//				userParentMap.put(userDetails.get(j).getUserRole().toUpperCase(),userDetails.get(j).getUserId().toUpperCase());
+//			}
+//			
+//			UserBean userDet= userRepository.findByUserId(userId);
+//			UserBean masterDet= userRepository.findByUserId(userParentMap.get("MASTER"));
+//			UserBean smDet= userRepository.findByUserId(userParentMap.get("SUPERMASTER"));
+//			
+//			double userPL=userDet.getPrifitLoss();
+//			double masterPL=masterDet.getPrifitLoss();
+//			double smPL=smDet.getPrifitLoss();
+//			
+//			if((userPL==0 && masterPL==0)||(masterPL==0 && smPL))
+			
 			int userUpdateCount=jdbcTemplate.update(QueryListConstant.RESET_USER_TABLE_ON_SETTLEMENT,
 					new Object[] { loggedInUser, userId});
 			
 			int betUpdateCount=jdbcTemplate.update(QueryListConstant.RESET_BET_TABLE_ON_SETTLEMENT,
 					new Object[] { loggedInUser, remarks, userId});
 			
-			if(userUpdateCount>0 && betUpdateCount>0) {
+			if(userUpdateCount>0 ) {
 				userResponseDto.setStatus(ResourceConstants.SUCCESS);
 				userResponseDto.setErrorMsg(ResourceConstants.SETTLEMENT_SUCCESS);
 			}else {
