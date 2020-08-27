@@ -359,11 +359,11 @@ public class UserDao {
 			log.info("[" + transactionId + "] depositWithdrawChipst: " + depositWithdrawChips);
 
 			UserBean fromUserRes = userRepository.findFirst1ByUserId(fromUser);
-			currentChipsInFromUserAcc = fromUserRes.getChips();
+			currentChipsInFromUserAcc = fromUserRes.getAvailLimit();
 			log.info("[" + transactionId + "] Chips in From User Account: " + currentChipsInFromUserAcc);
 
 			UserBean toUserRes = userRepository.findFirst1ByUserId(toUser);
-			currentChipsInToUserAcc = toUserRes.getChips();
+			currentChipsInToUserAcc = toUserRes.getAvailLimit();
 			log.info("[" + transactionId + "] Chips in To User Account: " + currentChipsInToUserAcc);
 
 			if (actString.equalsIgnoreCase(ResourceConstants.DEPOSIT)) {
@@ -431,8 +431,8 @@ public class UserDao {
 				FromUserAccBeanRes = chipsRepository.saveAndFlush(FromUserAccBean);
 
 				if (updateFromUserAccChipsrowCount > 0 && updateToUserAccChipsrowCount > 0
-						&& toUserAccBeanRes.getTotalChips() == toUserAccBeanRes.getTotalChips()
-						&& FromUserAccBeanRes.getTotalChips() == FromUserAccBeanRes.getTotalChips()) {
+						&& toUserAccBeanRes.getTotalChips() == toUserAccBean.getTotalChips()
+						&& FromUserAccBeanRes.getTotalChips() == FromUserAccBean.getTotalChips()) {
 					userResponseDto.setStatus(ResourceConstants.SUCCESS);
 					userResponseDto.setErrorMsg(returnMsgString);
 				} else {
