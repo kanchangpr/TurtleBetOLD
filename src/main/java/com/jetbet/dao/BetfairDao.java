@@ -973,14 +973,14 @@ public class BetfairDao {
 			String master=userParentMap.get("MASTER");
 			placeBetsBean.setBetSettlement("PENDING");
 			
-			String prevUser;
-			String currUser = placeBetsList.get(i).getUserId();
-			if(i==0) {
-				prevUser=currUser;
-			}else {
-				prevUser=placeBetsList.get(i-1).getUserId();
-			}
-			
+//			String prevUser;
+//			String currUser = placeBetsList.get(i).getUserId();
+//			if(i==0) {
+//				prevUser=currUser;
+//			}else {
+//				prevUser=placeBetsList.get(i-1).getUserId();
+//			}
+//			
 			
 //			if(!prevUser.equalsIgnoreCase(currUser)){
 //				masterInsertFlag=true;
