@@ -756,10 +756,10 @@ public class BetfairDao {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
+		calculateProfitLoss();
 	}
 
-	@Transactional
+	
 	public void calculateProfitLoss() {
 		log.info("##########Inside  calculateProfitLoss#########");
 		List<PlaceBetsBean> placeBetsList = new ArrayList<PlaceBetsBean>();

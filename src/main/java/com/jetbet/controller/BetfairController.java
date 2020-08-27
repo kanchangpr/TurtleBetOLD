@@ -235,7 +235,9 @@ public class BetfairController {
 		betfairService.getListOfOdds(applicationKey, sessionToken, userName, transactionId);
 	}
 	
-	@RequestMapping(value=ResourceConstants.DECLARE_RESULT, method=RequestMethod.GET)
+	
+	//@RequestMapping(value=ResourceConstants.DECLARE_RESULT, method=RequestMethod.GET)
+	@Scheduled(fixedDelay = 300000)
 	public void declareResult() {
 		log.info("applicationKey:: "+applicationKey);
 		log.info("sessionToken:: "+sessionToken);
