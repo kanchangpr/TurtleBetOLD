@@ -337,57 +337,73 @@ public class AdminDao {
 	public List<BetSettlementDto> betSettlement(String accountType, String userId, String transactionId) {
 		String sqlString = null;
 		UserBean userDetail = userRepository.findByUserId(userId.toUpperCase());
-		String role= userDetail.getUserRole();
+		//String role= userDetail.getUserRole();
 		List<BetSettlementDto> betSettlementList= new ArrayList<BetSettlementDto>();
 		
-		if(role.equalsIgnoreCase(ResourceConstants.MASTER)) {
-			if(accountType.equalsIgnoreCase("MINUS")) {
-				sqlString=QueryListConstant.GET_SETTLEMENT_FOR_MASTER_MINUS;
-			}else if(accountType.equalsIgnoreCase("PLUS")) {
-				sqlString=QueryListConstant.GET_SETTLEMENT_FOR_MASTER_PLUS;
-			} 
-			
-			betSettlementList = jdbcTemplate.query(sqlString,
-					new Object[] { userId.toUpperCase() },
-					(rs, rowNum) -> new BetSettlementDto(
-							rs.getString("USER_ID"), 
-							rs.getDouble("AMOUNT"),
-							rs.getDouble("ADMIN_STAKES"),
-							rs.getDouble("SM_STAKES"),
-							rs.getDouble("MASTER_STAKES")
-							));
-			
-		}else if(role.equalsIgnoreCase(ResourceConstants.SUPERMASTER)) {
-			if(accountType.equalsIgnoreCase("MINUS")) {
-				sqlString=QueryListConstant.GET_SETTLEMENT_FOR_SM_MINUS;
-			}else if(accountType.equalsIgnoreCase("PLUS")) {
-				sqlString=QueryListConstant.GET_SETTLEMENT_FOR_SM_PLUS;
-			}
-			
-			betSettlementList = jdbcTemplate.query(sqlString,
-					new Object[] { userId.toUpperCase() },
-					(rs, rowNum) -> new BetSettlementDto(
-							rs.getString("USER_ID"), 
-							rs.getDouble("MASTER_STAKES"),
-							rs.getDouble("ADMIN_STAKES"),
-							rs.getDouble("SM_STAKES")
-							));
-			
-		}else if(role.equalsIgnoreCase(ResourceConstants.ADMIN)) {
-			if(accountType.equalsIgnoreCase("MINUS")) {
-				sqlString=QueryListConstant.GET_SETTLEMENT_FOR_ADMIN_MINUS;
-			}else if(accountType.equalsIgnoreCase("PLUS")) {
-				sqlString=QueryListConstant.GET_SETTLEMENT_FOR_ADMIN_PLUS;
-			}
-			
-			betSettlementList = jdbcTemplate.query(sqlString,
-					new Object[] { userId.toUpperCase() },
-					(rs, rowNum) -> new BetSettlementDto(
-							rs.getString("USER_ID"), 
-							rs.getDouble("SM_STAKES"),
-							rs.getDouble("ADMIN_STAKES")
-							));
+		if(accountType.equalsIgnoreCase("MINUS")) {
+			sqlString=QueryListConstant.GET_SETTLEMENT_MINUS;
+		}else if(accountType.equalsIgnoreCase("PLUS")) {
+			sqlString=QueryListConstant.GET_SETTLEMENT_PLUS;
 		}
+		
+		betSettlementList = jdbcTemplate.query(sqlString,
+				new Object[] { userId.toUpperCase() },
+				(rs, rowNum) -> new BetSettlementDto(
+						rs.getString("USER_ID"), 
+						rs.getDouble("AMOUNT"),
+						rs.getDouble("MASTER_STAKES"),
+						rs.getDouble("SM_STAKES"),
+						rs.getDouble("ADMIN_STAKES")
+						));
+		
+//		if(role.equalsIgnoreCase(ResourceConstants.MASTER)) {
+//			if(accountType.equalsIgnoreCase("MINUS")) {
+//				sqlString=QueryListConstant.GET_SETTLEMENT_FOR_MASTER_MINUS;
+//			}else if(accountType.equalsIgnoreCase("PLUS")) {
+//				sqlString=QueryListConstant.GET_SETTLEMENT_FOR_MASTER_PLUS;
+//			} 
+//			
+//			betSettlementList = jdbcTemplate.query(sqlString,
+//					new Object[] { userId.toUpperCase() },
+//					(rs, rowNum) -> new BetSettlementDto(
+//							rs.getString("USER_ID"), 
+//							rs.getDouble("AMOUNT"),
+//							rs.getDouble("ADMIN_STAKES"),
+//							rs.getDouble("SM_STAKES"),
+//							rs.getDouble("MASTER_STAKES")
+//							));
+//			
+//		}else if(role.equalsIgnoreCase(ResourceConstants.SUPERMASTER)) {
+//			if(accountType.equalsIgnoreCase("MINUS")) {
+//				sqlString=QueryListConstant.GET_SETTLEMENT_FOR_SM_MINUS;
+//			}else if(accountType.equalsIgnoreCase("PLUS")) {
+//				sqlString=QueryListConstant.GET_SETTLEMENT_FOR_SM_PLUS;
+//			}
+//			
+//			betSettlementList = jdbcTemplate.query(sqlString,
+//					new Object[] { userId.toUpperCase() },
+//					(rs, rowNum) -> new BetSettlementDto(
+//							rs.getString("USER_ID"), 
+//							rs.getDouble("MASTER_STAKES"),
+//							rs.getDouble("ADMIN_STAKES"),
+//							rs.getDouble("SM_STAKES")
+//							));
+//			
+//		}else if(role.equalsIgnoreCase(ResourceConstants.ADMIN)) {
+//			if(accountType.equalsIgnoreCase("MINUS")) {
+//				sqlString=QueryListConstant.GET_SETTLEMENT_FOR_ADMIN_MINUS;
+//			}else if(accountType.equalsIgnoreCase("PLUS")) {
+//				sqlString=QueryListConstant.GET_SETTLEMENT_FOR_ADMIN_PLUS;
+//			}
+//			
+//			betSettlementList = jdbcTemplate.query(sqlString,
+//					new Object[] { userId.toUpperCase() },
+//					(rs, rowNum) -> new BetSettlementDto(
+//							rs.getString("USER_ID"), 
+//							rs.getDouble("SM_STAKES"),
+//							rs.getDouble("ADMIN_STAKES")
+//							));
+//		}
 		
 		return betSettlementList;
 		
