@@ -7,6 +7,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.jetbet.bean.MatchBean;
 
 public interface MatchRepository extends JpaRepository<MatchBean, String>{
+	List<MatchBean> findByMatchIdAndIsActive(String matchId,String isActive);
+	
 	List<MatchBean> findByIsActive(String isActive);
 	
 	List<MatchBean> findBySportId(String sportId);

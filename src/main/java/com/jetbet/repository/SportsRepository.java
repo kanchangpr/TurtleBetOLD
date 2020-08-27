@@ -10,6 +10,8 @@ public interface SportsRepository extends JpaRepository<SportsBean, String>{
 	
 	List<SportsBean> findByIsActiveOrderBySportsName(String isActive);
 	
+	List<SportsBean> findByIsActiveAndSportsTypeIdOrderBySportsName(String sportsTypeId,String isActive);
+	
 	long countBySportsTypeId (String sportsTypeId);
 	
 }

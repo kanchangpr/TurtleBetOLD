@@ -14,5 +14,7 @@ public interface SeriesRepository extends JpaRepository<SeriesBean, String>{
 	
 	List<SeriesBean> findBySportIdAndIsActiveOrderBySportId(String sportId,String isActive);
 	
+	List<SeriesBean> findBySeriesIdAndIsActiveOrderBySportId(String seriesId,String isActive);
+	
 	List<SeriesBean> findBySportIdOrderBySportId(String sportId);
 }

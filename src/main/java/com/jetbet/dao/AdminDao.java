@@ -118,11 +118,11 @@ public class AdminDao {
 					userResponseDto.setStatus(ResourceConstants.SUCCESS);
 					userResponseDto.setErrorMsg(ResourceConstants.UPDATED);
 					if (sportsControlReq.getOperation().equalsIgnoreCase(ResourceConstants.SPORTS_PAGE)) {
-						bfDao.updateListOfSeries(ResourceConstants.USER_NAME,transactionId);
+						bfDao.updateListOfSeries(ResourceConstants.USER_NAME, sportsControlReq.getOperationId() ,transactionId);
 					} else if (sportsControlReq.getOperation().equalsIgnoreCase(ResourceConstants.SERIES_PAGE)) {
-						bfDao.updateListOfMatches(ResourceConstants.USER_NAME,transactionId);
+						bfDao.updateListOfMatches(ResourceConstants.USER_NAME, sportsControlReq.getOperationId() ,transactionId);
 					} else if (sportsControlReq.getOperation().equalsIgnoreCase(ResourceConstants.MATCH_PAGE)) {
-						bfDao.updateListOfOdds(ResourceConstants.USER_NAME,transactionId);
+						bfDao.updateListOfOdds(ResourceConstants.USER_NAME, sportsControlReq.getOperationId() ,transactionId);
 					}
 				}
 			} else if (!errorCode && sportsControlReq.getIsActive().equalsIgnoreCase("N")) {
