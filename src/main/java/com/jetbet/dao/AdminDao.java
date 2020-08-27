@@ -519,7 +519,7 @@ public class AdminDao {
 					String sqlString="UPDATE JETBET.JB_BET_DETAILS SET BET_SETTLEMENT='SETTLED' , SM_SETTLE='Y', "
 							+ "LAST_UPDATED_DATE=CURRENT_TIMESTAMP , LAST_UPDATED_BY=?, REMARKS=? WHERE USER_ID=?";
 					jdbcTemplate.update(sqlString,
-							new Object[] { loggedInUser, remarks, userId});
+							new Object[] { loggedInUser, remarks, userDetails.get(j)});
 					
 				}else if(userBean.getUserRole().equalsIgnoreCase(ResourceConstants.MASTER)) {
 					log.info("In SM userDetails::: "+userDetails.get(j));
@@ -527,7 +527,7 @@ public class AdminDao {
 					String sqlString="UPDATE JETBET.JB_BET_DETAILS SET BET_SETTLEMENT='SETTLED' , MASTER_SETTLE='Y', "
 							+ "LAST_UPDATED_DATE=CURRENT_TIMESTAMP , LAST_UPDATED_BY=?, REMARKS=? WHERE USER_ID=?";
 					jdbcTemplate.update(sqlString,
-							new Object[] { loggedInUser, remarks, userId});
+							new Object[] { loggedInUser, remarks, userDetails.get(j)});
 					
 				} else if(userBean.getUserRole().equalsIgnoreCase(ResourceConstants.USER)) {
 					log.info("In Master userDetails::: "+userDetails.get(j));
@@ -535,7 +535,7 @@ public class AdminDao {
 					String sqlString="UPDATE JETBET.JB_BET_DETAILS SET BET_SETTLEMENT='SETTLED' , ADMIN_SETTLE='Y', "
 							+ "LAST_UPDATED_DATE=CURRENT_TIMESTAMP , LAST_UPDATED_BY=?, REMARKS=? WHERE USER_ID=?";
 					jdbcTemplate.update(sqlString,
-							new Object[] { loggedInUser, remarks, userId});
+							new Object[] { loggedInUser, remarks, userDetails.get(j)});
 					
 				} 
 				
