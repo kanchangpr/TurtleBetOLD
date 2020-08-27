@@ -128,7 +128,7 @@ public class AdminController {
 			@RequestParam(value = "loggedInUser", required = false) String loggedInUser) {
 		String transactionId = "TB" + UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
 		log.info("[" + transactionId
-				+ "]*************************INSIDE getListOfEventType METHOD GET*************************");
+				+ "]*************************INSIDE settlement METHOD GET*************************");
 		UserResponseDto response = adminService.settlement(chips,remarks, userId,loggedInUser, transactionId);
 		return new ResponseEntity<UserResponseDto>(response, HttpStatus.OK);
 	}

@@ -463,7 +463,7 @@ public class AdminDao {
 					new Object[] { loggedInUser, userId});
 			
 			int betUpdateCount=jdbcTemplate.update(QueryListConstant.RESET_BET_TABLE_ON_SETTLEMENT,
-					new Object[] { loggedInUser, remarks, chips});
+					new Object[] { loggedInUser, remarks, userId});
 			
 			if(userUpdateCount>0 && betUpdateCount>0) {
 				userResponseDto.setStatus(ResourceConstants.SUCCESS);
