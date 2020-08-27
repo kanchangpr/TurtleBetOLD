@@ -831,45 +831,33 @@ public class BetfairDao {
 			double sessionCommision = userDetail.getSessionCommission();
 			double liability = placeBetsList.get(i).getLiability();
 			double stake = placeBetsList.get(i).getStake();
-
-//			log.info("oddCommision:: "+oddCommision);
-//			log.info("sessionCommision:: "+sessionCommision);
-//			log.info("liability:: "+liability);
-//			log.info("stake:: "+stake);
-
-//			log.info("Market Name:: "+placeBetsBean.getMarketName().toUpperCase());
-//			log.info("Bet Result:: "+placeBetsBean.getBetResult());
-
+			double odds = placeBetsList.get(i).getOdds();
+			double total=0.0;
 			if (placeBetsBean.getBetResult().equalsIgnoreCase(ResourceConstants.WON)) {
-//				log.info("INSIDE WON IF");
 				if (placeBetsBean.getMarketName().toUpperCase().contains("ODDS")) {
-//					log.info("INSIDE ODDs IF");
-					commision = calcuateCommision(liability, oddCommision);
-					profit = calcuateCommision(liability, Double.parseDouble(df.format(100.0 - oddCommision)));
+					total = odds * stake;
+					profit = Double.parseDouble(df.format(total - stake));
+					commision = calcuateCommision(profit, oddCommision);
+					profit =  Double.parseDouble(df.format(profit - commision));
 					netAmount = profit;
-					masterStakes = calcuateCommision(profit, masterPer);
-//					log.info("commision:: "+commision);
-//					log.info("profit:: "+profit);
 				} else {
-//					log.info("INSIDE WON IF");
-					commision = calcuateCommision(liability, sessionCommision);
-					profit = calcuateCommision(liability, Double.parseDouble(df.format(100.0 - oddCommision)));
+					commision = calcuateCommision(stake, sessionCommision);
+					profit = Double.parseDouble(df.format(stake + commision));
 					netAmount = profit;
-					masterStakes = calcuateCommision(profit, masterPer);
-					masterStakes=masterStakes+commision;
-//					log.info("commision:: "+commision);
-//					log.info("profit:: "+profit);
 				}
-
+				masterStakes = calcuateCommision(profit, masterPer);
 				adminStakes = calcuateCommision(profit, adminPer);
 				smStakes = calcuateCommision(profit, smPer);
 				
-
 			} else if (placeBetsBean.getBetResult().equalsIgnoreCase(ResourceConstants.LOST)) {
-//				log.info("INSIDE LOST IF");
-				loss = stake;
-				netAmount = -loss;
-//				log.info("loss:: "+loss);
+				if (placeBetsBean.getMarketName().toUpperCase().contains("ODDS")) {
+					loss=liability;
+					netAmount = -loss;
+				}else {
+					commision = calcuateCommision(liability, sessionCommision);
+					loss = Double.parseDouble(df.format(liability-commision));
+					netAmount = -loss;
+				}
 				adminStakes = -calcuateCommision(loss, adminPer);
 				smStakes = -calcuateCommision(loss, smPer);
 				masterStakes = -calcuateCommision(loss, masterPer);
