@@ -3,6 +3,7 @@ package com.jetbet.dao;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -46,6 +47,7 @@ import com.jetbet.dto.MatchAndFancyDetailDto;
 import com.jetbet.dto.RunnerPriceAndSize;
 import com.jetbet.dto.SeriesMatchFancyResponseDto;
 import com.jetbet.dto.SessionDetails;
+import com.jetbet.dto.UserRoleDto;
 import com.jetbet.repository.FancyRepository;
 import com.jetbet.repository.MarketCatalogueRepository;
 import com.jetbet.repository.MatchRepository;
@@ -696,9 +698,6 @@ public class BetfairDao {
 				eventIds.add(fancyList.get(i).getFancyId().getMatchId());
 			}
 
-			// log.info("[" + transactionId + "] MatchID: " + matchId + " Market Type: " +
-			// marketType);
-
 			marketFilter = new MarketFilter();
 			marketFilter.setEventIds(eventIds);
 			marketFilter.setMarketTypeCodes(typesCode);
@@ -709,88 +708,6 @@ public class BetfairDao {
 
 			marketCatalogueResult = rescriptOperations.listMarketCatalogue(marketFilter, marketProjection,
 					MarketSort.FIRST_TO_START, maxResults, applicationKey, sessionToken);
-
-			log.info("marketCatalogueResult:: " + marketCatalogueResult);
-			for (int j = 0; j < marketCatalogueResult.size(); j++) {
-				DashboardMatchListDto resBean = new DashboardMatchListDto();
-
-				resBean.setMatchId(marketCatalogueResult.get(j).getEvent().getId());
-				resBean.setMatchName(marketCatalogueResult.get(j).getEvent().getName());
-				resBean.setMatchOpenDate(marketCatalogueResult.get(j).getEvent().getOpenDate());
-				resBean.setMarketId(marketCatalogueResult.get(j).getMarketId());
-				resBean.setMarketType(marketCatalogueResult.get(j).getMarketName());
-				System.out.println("INSIDE IF marketCatalogueResult.get(j).getRunners().size(): "
-						+ marketCatalogueResult.get(j).getRunners().size());
-				if (marketCatalogueResult.get(j).getRunners().size() == 3) {
-					System.out.println("INSIDE IF marketCatalogueResult.get(j).getRunners().size(): "
-							+ marketCatalogueResult.get(j).getRunners().size());
-					resBean.setTeamABackPrize(marketCatalogueResult.get(j).getRunners().get(0).getRunner().getEx()
-							.getAvailableToBack().get(0).getPrice());
-					resBean.setTeamBBackPrize(marketCatalogueResult.get(j).getRunners().get(1).getRunner().getEx()
-							.getAvailableToBack().get(0).getPrice());
-					resBean.setDrawBackPrize(marketCatalogueResult.get(j).getRunners().get(2).getRunner().getEx()
-							.getAvailableToBack().get(0).getPrice());
-
-					resBean.setTeamABackSize(marketCatalogueResult.get(j).getRunners().get(0).getRunner().getEx()
-							.getAvailableToLay().get(0).getSize());
-					resBean.setTeamBBackSize(marketCatalogueResult.get(j).getRunners().get(1).getRunner().getEx()
-							.getAvailableToLay().get(0).getSize());
-					resBean.setDrawBackSize(marketCatalogueResult.get(j).getRunners().get(2).getRunner().getEx()
-							.getAvailableToLay().get(0).getSize());
-
-					resBean.setTeamALayPrize(marketCatalogueResult.get(j).getRunners().get(0).getRunner().getEx()
-							.getAvailableToBack().get(0).getPrice());
-					resBean.setTeamBLayPrize(marketCatalogueResult.get(j).getRunners().get(1).getRunner().getEx()
-							.getAvailableToBack().get(0).getPrice());
-					resBean.setDrawLayPrize(marketCatalogueResult.get(j).getRunners().get(2).getRunner().getEx()
-							.getAvailableToBack().get(0).getPrice());
-
-					resBean.setTeamALaySize(marketCatalogueResult.get(j).getRunners().get(0).getRunner().getEx()
-							.getAvailableToLay().get(0).getSize());
-					resBean.setTeamBLaySize(marketCatalogueResult.get(j).getRunners().get(1).getRunner().getEx()
-							.getAvailableToLay().get(0).getSize());
-					resBean.setDrawLaySize(marketCatalogueResult.get(j).getRunners().get(2).getRunner().getEx()
-							.getAvailableToLay().get(0).getSize());
-
-					resBean.setTeamAId(marketCatalogueResult.get(j).getRunners().get(0).getSelectionId());
-					resBean.setTeamBId(marketCatalogueResult.get(j).getRunners().get(1).getSelectionId());
-					resBean.setDrawId(marketCatalogueResult.get(j).getRunners().get(2).getSelectionId());
-
-					resBean.setTeamA(marketCatalogueResult.get(j).getRunners().get(0).getRunnerName());
-					resBean.setTeamB(marketCatalogueResult.get(j).getRunners().get(1).getRunnerName());
-					resBean.setDraw(marketCatalogueResult.get(j).getRunners().get(2).getRunnerName());
-
-				} else if (marketCatalogueResult.get(j).getRunners().size() == 2) {
-					System.out.println("INSIDE ELSE marketCatalogueResult.get(j).getRunners().size(): "
-							+ marketCatalogueResult.get(j).getRunners().size());
-					resBean.setTeamABackPrize(marketCatalogueResult.get(j).getRunners().get(0).getRunner().getEx()
-							.getAvailableToBack().get(0).getPrice());
-					resBean.setTeamBBackPrize(marketCatalogueResult.get(j).getRunners().get(1).getRunner().getEx()
-							.getAvailableToBack().get(0).getPrice());
-
-					resBean.setTeamABackSize(marketCatalogueResult.get(j).getRunners().get(0).getRunner().getEx()
-							.getAvailableToLay().get(0).getSize());
-					resBean.setTeamBBackSize(marketCatalogueResult.get(j).getRunners().get(1).getRunner().getEx()
-							.getAvailableToLay().get(0).getSize());
-
-					resBean.setTeamALayPrize(marketCatalogueResult.get(j).getRunners().get(0).getRunner().getEx()
-							.getAvailableToBack().get(0).getPrice());
-					resBean.setTeamBLayPrize(marketCatalogueResult.get(j).getRunners().get(1).getRunner().getEx()
-							.getAvailableToBack().get(0).getPrice());
-
-					resBean.setTeamALaySize(marketCatalogueResult.get(j).getRunners().get(0).getRunner().getEx()
-							.getAvailableToLay().get(0).getSize());
-					resBean.setTeamBLaySize(marketCatalogueResult.get(j).getRunners().get(1).getRunner().getEx()
-							.getAvailableToLay().get(0).getSize());
-
-					resBean.setTeamAId(marketCatalogueResult.get(j).getRunners().get(0).getSelectionId());
-					resBean.setTeamBId(marketCatalogueResult.get(j).getRunners().get(1).getSelectionId());
-
-					resBean.setTeamA(marketCatalogueResult.get(j).getRunners().get(0).getRunnerName());
-					resBean.setTeamB(marketCatalogueResult.get(j).getRunners().get(1).getRunnerName());
-				}
-				resBeanList.add(resBean);
-			}
 
 		} catch (APINGException e) {
 			e.printStackTrace();
@@ -891,13 +808,17 @@ public class BetfairDao {
 			double adminStakes = 0.0;
 			double smStakes = 0.0;
 			double masterStakes = 0.0;
+			
 			// String userId=placeBetsList.get(i).getUserId() ;
 
 			PlaceBetsBean placeBetsBean = new PlaceBetsBean();
 			placeBetsBean = placeBetsList.get(i);
-			UserBean userDetail = userRepository.findByUserId(placeBetsBean.getUserId());
+			String userId=placeBetsBean.getUserId().toUpperCase();
+			UserBean userDetail = userRepository.findByUserId(userId);
 
-			PartnershipBean psDetails = partnershipRepository.findByUserId(placeBetsBean.getUserId());
+			
+			
+			PartnershipBean psDetails = partnershipRepository.findByUserId(userId);
 
 			int adminPer = psDetails.getAdminStake();
 			int smPer = psDetails.getSupermasterStake();
@@ -950,7 +871,17 @@ public class BetfairDao {
 				smStakes = -calcuateCommision(loss, smPer);
 				masterStakes = -calcuateCommision(loss, masterPer);
 			}
-
+			List<UserRoleDto> userDetails= new ArrayList<UserRoleDto>();
+			Map<String,String> userParentMap=new HashMap<String,String>();
+			userDetails = jdbcTemplate.query(QueryListConstant.GET_PARENT_LIST,
+					new Object[] { userId },
+					(rs, rowNum) -> new UserRoleDto(
+							rs.getString("USER_ID"), rs.getString("USER_ROLE")
+							));
+			for (int j = 0; j < userDetails.size(); j++) {
+				userParentMap.put(userDetails.get(j).getUserRole().toUpperCase(),userDetails.get(j).getUserId().toUpperCase());
+			}
+			
 			placeBetsBean.setCommision(commision);
 			placeBetsBean.setProfit(profit);
 			placeBetsBean.setLoss(loss);
@@ -961,6 +892,85 @@ public class BetfairDao {
 			placeBetsBean.setBetSettlement("PENDING");
 
 			placeBetsRepository.saveAndFlush(placeBetsBean);
+			
+			String admin=userParentMap.get("ADMIN");
+			String sm=userParentMap.get("SUPERMASTER");
+			String master=userParentMap.get("MASTER");
+			
+			double currBalUser=userDetail.getAvailBalance();
+			
+			UserBean masterDetail = userRepository.findByUserId(master);
+			double currBalMaster=masterDetail.getAvailBalance();
+			
+			UserBean smDetail = userRepository.findByUserId(sm);
+			double currBalSM=smDetail.getAvailBalance();
+			
+			UserBean adminDetail = userRepository.findByUserId(admin);
+			double currBalAdmin=adminDetail.getAvailBalance();
+			
+			double availBalUser = 0.0;
+			double profitLossUser = 0.0;
+			double availBalMaster = 0.0;
+			double profitLossMaster = 0.0;
+			double availBalSM = 0.0;
+			double profitLossSM = 0.0;
+			double availBalAdmin = 0.0;
+			double profitLossAdmin = 0.0;
+			// User
+			profitLossUser=netAmount;
+			if(currBalUser+netAmount<0) {
+				availBalUser=0.0;
+			}else {
+				availBalUser=currBalUser+netAmount;
+			}
+			
+			
+			// Master
+			profitLossMaster=masterStakes;
+			if(currBalMaster+masterStakes<0) {
+				availBalMaster=0.0;
+			}else {
+				availBalMaster=currBalMaster+masterStakes;
+			}
+			
+			
+			// Super Master
+			profitLossSM=smStakes;
+			if(currBalSM+smStakes<0) {
+				availBalSM=0.0;
+			}else {
+				availBalSM=currBalSM+smStakes;
+			}
+			
+			
+			// Admin
+			profitLossAdmin=adminStakes;
+			if(currBalAdmin+adminStakes<0) {
+				availBalAdmin=0.0;
+			}else {
+				availBalAdmin=currBalAdmin+adminStakes;
+			}
+			
+			
+			String updateAvailBalAndPLForUser = QueryListConstant.UPDATE_AVAIL_BAL_AND_PROFIT_LOSS;
+			jdbcTemplate.update(updateAvailBalAndPLForUser,
+					new Object[] { availBalUser, profitLossUser, userId });
+			
+			String updateAvailBalAndPLForMaster = QueryListConstant.UPDATE_AVAIL_BAL_AND_PROFIT_LOSS;
+			jdbcTemplate.update(updateAvailBalAndPLForMaster,
+					new Object[] { availBalMaster, profitLossMaster, master });
+			
+			String updateAvailBalAndPLForSM = QueryListConstant.UPDATE_AVAIL_BAL_AND_PROFIT_LOSS;
+			jdbcTemplate.update(updateAvailBalAndPLForSM,
+					new Object[] { availBalSM, profitLossSM, sm });
+			
+			String updateAvailBalAndPLForAdmin = QueryListConstant.UPDATE_AVAIL_BAL_AND_PROFIT_LOSS;
+			jdbcTemplate.update(updateAvailBalAndPLForAdmin,
+					new Object[] { availBalAdmin, profitLossAdmin, admin });
+			
+			
+
+			
 
 		}
 

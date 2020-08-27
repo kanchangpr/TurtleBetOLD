@@ -935,6 +935,7 @@ public class UserDao {
 
 								double balance = Double.parseDouble(df.format(chips - stake));
 
+								
 								updateChipsSql = QueryListConstant.UPDATE_USER_CHIPS;
 								int updateChipsRowCount = jdbcTemplate.update(updateChipsSql,
 										new Object[] { balance, userId, userId });

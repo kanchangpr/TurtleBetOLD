@@ -83,11 +83,11 @@ public class UserBean {
 	
 	
 	
-	@Column(name = "credit_limit")
-	private double creditLimit;
+	@Column(name = "avail_limit")
+	private double availLimit;
 	
-	@Column(name = "balance")
-	private double balance;
+	@Column(name = "avail_balance")
+	private double availBalance;
 	
 	@Column(name = "liability")
 	private double liability;

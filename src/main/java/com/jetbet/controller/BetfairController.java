@@ -154,10 +154,10 @@ public class BetfairController {
 		return betfairService.getMarketCatalogue(sportsId,applicationKey,sessionToken,userName,transactionId);
 	}
 	
-	//@RequestMapping(value=ResourceConstants.USER_DASHBOARD, method=RequestMethod.GET)
+	@RequestMapping(value=ResourceConstants.USER_DASHBOARD_MATCH_LIST, method=RequestMethod.GET)
 	public List<DashboardMatchListDto> dashboardMatchList() {
 		String transactionId = "TB"+UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
-		log.info("["+transactionId+"]*************************INSIDE USER ROLE METHOD GET*************************");
+		log.info("["+transactionId+"]*************************INSIDE dashboardMatchList METHOD GET*************************");
 		log.info("applicationKey:: "+applicationKey);
 		log.info("sessionToken:: "+sessionToken);
 		//ResponseEntity<SessionDetails> sessionDetails=getSessionToken();
