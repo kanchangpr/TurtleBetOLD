@@ -423,11 +423,13 @@ public class UserDao {
 				toUserAccBean.setUserId(toUser);
 				toUserAccBean.setFromUser(fromUser);
 				toUserAccBean.setCreatedBy(createdByString);
+				toUserAccBean.setRemarks(depositWithdrawChips+" chips "+actString+" from "+fromUser+" to "+toUser);
 				toUserAccBeanRes = chipsRepository.saveAndFlush(toUserAccBean);
 
 				FromUserAccBean.setUserId(fromUser);
 				FromUserAccBean.setFromUser(toUser);
 				FromUserAccBean.setCreatedBy(createdByString);
+				FromUserAccBean.setRemarks(depositWithdrawChips+" chips "+actString+" from "+toUser+" to "+fromUser);
 				FromUserAccBeanRes = chipsRepository.saveAndFlush(FromUserAccBean);
 
 				if (updateFromUserAccChipsrowCount > 0 && updateToUserAccChipsrowCount > 0
@@ -889,6 +891,7 @@ public class UserDao {
 			String parent = userDetail.getParent();
 			int psId = userDetail.getPartnership();
 			double chips = userDetail.getChips();
+			double userLiab = userDetail.getLiability();
 			String isbetLock = userDetail.getIsBettingLock();
 			int sessionDelay = userDetail.getSessionDelay();
 			int betDelay = userDetail.getBetDelay();
@@ -934,11 +937,11 @@ public class UserDao {
 								log.info("[" + transactionId + "] placeBetsResBean:: " + placeBetsResBean);
 
 								double balance = Double.parseDouble(df.format(chips - stake));
-
+								double updUserLiab=Double.parseDouble(df.format(userLiab+ liability));
 								
 								updateChipsSql = QueryListConstant.UPDATE_USER_CHIPS;
 								int updateChipsRowCount = jdbcTemplate.update(updateChipsSql,
-										new Object[] { balance, userId, userId });
+										new Object[] { balance,updUserLiab, userId, userId });
 								log.info("[" + transactionId + "] updateChipsRowCount:: " + updateChipsRowCount);
 
 								chipsBean.setUserId(userId);
