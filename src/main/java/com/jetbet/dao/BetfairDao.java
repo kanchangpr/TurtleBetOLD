@@ -897,58 +897,58 @@ public class BetfairDao {
 			String sm=userParentMap.get("SUPERMASTER");
 			String master=userParentMap.get("MASTER");
 			
-			double currBalUser=userDetail.getAvailBalance();
+			double availBalUser=userDetail.getAvailBalance();
+			double profitLossUser=userDetail.getPrifitLoss();
 			
 			UserBean masterDetail = userRepository.findByUserId(master);
-			double currBalMaster=masterDetail.getAvailBalance();
+			double availBalMaster=masterDetail.getAvailBalance();
+			double profitLossMaster=masterDetail.getPrifitLoss();
 			
 			UserBean smDetail = userRepository.findByUserId(sm);
-			double currBalSM=smDetail.getAvailBalance();
+			double availBalSM=smDetail.getAvailBalance();
+			double profitLossSM=smDetail.getPrifitLoss();
 			
 			UserBean adminDetail = userRepository.findByUserId(admin);
-			double currBalAdmin=adminDetail.getAvailBalance();
+			double availBalAdmin=adminDetail.getAvailBalance();
+			double profitLossAdmin=adminDetail.getPrifitLoss();
 			
-			double availBalUser = 0.0;
-			double profitLossUser = 0.0;
-			double availBalMaster = 0.0;
-			double profitLossMaster = 0.0;
-			double availBalSM = 0.0;
-			double profitLossSM = 0.0;
-			double availBalAdmin = 0.0;
-			double profitLossAdmin = 0.0;
+//			double availBalUser = 0.0;
+//			double availBalMaster = 0.0;
+//			double availBalSM = 0.0;
+//			double availBalAdmin = 0.0;
 			// User
-			profitLossUser=netAmount;
-			if(currBalUser+netAmount<0) {
+			profitLossUser=profitLossUser+netAmount;
+			if(availBalUser+netAmount<0) {
 				availBalUser=0.0;
 			}else {
-				availBalUser=currBalUser+netAmount;
+				availBalUser=availBalUser+netAmount;
 			}
 			
 			
 			// Master
-			profitLossMaster=masterStakes;
-			if(currBalMaster+masterStakes<0) {
+			profitLossMaster=profitLossAdmin+masterStakes;
+			if(availBalMaster+masterStakes<0) {
 				availBalMaster=0.0;
 			}else {
-				availBalMaster=currBalMaster+masterStakes;
+				availBalMaster=availBalMaster+masterStakes;
 			}
 			
 			
 			// Super Master
 			profitLossSM=smStakes;
-			if(currBalSM+smStakes<0) {
+			if(availBalSM+smStakes<0) {
 				availBalSM=0.0;
 			}else {
-				availBalSM=currBalSM+smStakes;
+				availBalSM=availBalSM+smStakes;
 			}
 			
 			
 			// Admin
 			profitLossAdmin=adminStakes;
-			if(currBalAdmin+adminStakes<0) {
+			if(availBalAdmin+adminStakes<0) {
 				availBalAdmin=0.0;
 			}else {
-				availBalAdmin=currBalAdmin+adminStakes;
+				availBalAdmin=availBalAdmin+adminStakes;
 			}
 			
 			
@@ -967,9 +967,6 @@ public class BetfairDao {
 			String updateAvailBalAndPLForAdmin = QueryListConstant.UPDATE_AVAIL_BAL_AND_PROFIT_LOSS;
 			jdbcTemplate.update(updateAvailBalAndPLForAdmin,
 					new Object[] { availBalAdmin, profitLossAdmin, admin });
-			
-			
-
 			
 
 		}
