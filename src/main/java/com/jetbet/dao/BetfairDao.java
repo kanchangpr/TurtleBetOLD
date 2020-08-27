@@ -943,7 +943,7 @@ public class BetfairDao {
 				smInsertFlag=true;
 				adminInsertFlag=true;
 			}
-			
+			log.info("index:: "+i);
 			log.info("prevUser:: "+prevUser);
 			log.info("currUser:: "+currUser);
 			
@@ -956,10 +956,12 @@ public class BetfairDao {
 			log.info("adminPLExistCount:: "+adminPLExistCount);
 			
 			if(masterPLExistCount>0 || !masterInsertFlag) {
+				log.info("inside master update:: ");
 				//update
 				jdbcTemplate.update(QueryListConstant.UPDATE_PARENT_PROFIT_LOSS,
 						new Object[] { masterStakes, 0,smStakes,adminStakes, userId });
 			}else if(adminPLExistCount<=0 && masterInsertFlag){
+				log.info("inside master insert:: ");
 				//insert
 				masterInsertFlag=false;
 				betBeanForParent.setLoginId(master);
@@ -971,10 +973,12 @@ public class BetfairDao {
 				placeBetsRepository.saveAndFlush(betBeanForParent);
 			}
 			if(smPLExistCount>0 || !smInsertFlag) {
+				log.info("inside sm update:: ");
 				//update
 				jdbcTemplate.update(QueryListConstant.UPDATE_PARENT_PROFIT_LOSS,
 						new Object[] { smStakes, 0,0,adminStakes, userId });
 			}else if(adminPLExistCount<=0 && smInsertFlag) {
+				log.info("inside sm inside:: ");
 				//insert
 				smInsertFlag=false;
 				betBeanForParent.setLoginId(sm);
@@ -985,10 +989,12 @@ public class BetfairDao {
 				placeBetsRepository.saveAndFlush(betBeanForParent);
 			}
 			if(adminPLExistCount>0 || !adminInsertFlag) {
+				log.info("inside admin update:: ");
 				//update
 				jdbcTemplate.update(QueryListConstant.UPDATE_PARENT_PROFIT_LOSS,
 						new Object[] { adminStakes, 0,0,0, userId });
 			}else if(adminPLExistCount<=0 && adminInsertFlag) {
+				log.info("inside admin insert:: ");
 				//insert
 				adminInsertFlag=false;
 				betBeanForParent.setLoginId(admin);
