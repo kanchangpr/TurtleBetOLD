@@ -57,13 +57,16 @@ public class AdminDao {
 	
 	@Autowired
 	UserRepository userRepository;
+	
+	@Autowired
+	BetfairDao bfDao;
 
 	@Transactional
 	public UserResponseDto sportsControl(SportsControl sportsControlReq, String transactionId) {
 		log.info("[" + transactionId
 				+ "]*************************INSIDE addUserRole CLASS UserDao*************************");
 		UserResponseDto userResponseDto = new UserResponseDto();
-		BetfairDao bfDao = new BetfairDao();
+		//BetfairDao bfDao = new BetfairDao();
 		Boolean errorCode = false;
 		String sqlString = null;
 		String tableName = null;
