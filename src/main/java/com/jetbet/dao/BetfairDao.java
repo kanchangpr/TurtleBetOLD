@@ -857,82 +857,82 @@ public class BetfairDao {
 
 			placeBetsRepository.saveAndFlush(placeBetsBean);
 			
-			final String NA="NA";
-			final String N="N";
-			final double ZERO_DOUBLE=0;
-			final long ZERO_LONG=0;
-			final int ZERO_INT=0;
-			
-			PlaceBetsBean betBeanForMaster = new PlaceBetsBean();
-			
-			betBeanForMaster.setSportsId(NA);
-			betBeanForMaster.setSportsName(NA);
-			betBeanForMaster.setSeriesId(NA);
-			betBeanForMaster.setSeriesName(NA);
-			betBeanForMaster.setMatchId(NA);
-			betBeanForMaster.setMatchName(NA);
-			betBeanForMaster.setMarketId(NA);
-			betBeanForMaster.setMarketName(NA);
-			betBeanForMaster.setSelectionId(ZERO_LONG);
-			betBeanForMaster.setRunnerName(NA);
-			betBeanForMaster.setOdds(ZERO_DOUBLE);
-			betBeanForMaster.setStake(ZERO_DOUBLE);
-			betBeanForMaster.setLiability(ZERO_DOUBLE);
-			betBeanForMaster.setIsback(N);
-			betBeanForMaster.setIsLay(N);
-			betBeanForMaster.setPsId(ZERO_INT);
-			betBeanForMaster.setCreatedBy(ResourceConstants.USER_NAME);
-			betBeanForMaster.setBetStatus(NA);
-			betBeanForMaster.setBetResult(NA);
-			
-			PlaceBetsBean betBeanForSM = new PlaceBetsBean();
-			
-			betBeanForSM.setSportsId(NA);
-			betBeanForSM.setSportsName(NA);
-			betBeanForSM.setSeriesId(NA);
-			betBeanForSM.setSeriesName(NA);
-			betBeanForSM.setMatchId(NA);
-			betBeanForSM.setMatchName(NA);
-			betBeanForSM.setMarketId(NA);
-			betBeanForSM.setMarketName(NA);
-			betBeanForSM.setSelectionId(ZERO_LONG);
-			betBeanForSM.setRunnerName(NA);
-			betBeanForSM.setOdds(ZERO_DOUBLE);
-			betBeanForSM.setStake(ZERO_DOUBLE);
-			betBeanForSM.setLiability(ZERO_DOUBLE);
-			betBeanForSM.setIsback(N);
-			betBeanForSM.setIsLay(N);
-			betBeanForSM.setPsId(ZERO_INT);
-			betBeanForSM.setCreatedBy(ResourceConstants.USER_NAME);
-			betBeanForSM.setBetStatus(NA);
-			betBeanForSM.setBetResult(NA);
-			
-			PlaceBetsBean betBeanForAdmin = new PlaceBetsBean();
-			
-			betBeanForAdmin.setSportsId(NA);
-			betBeanForAdmin.setSportsName(NA);
-			betBeanForAdmin.setSeriesId(NA);
-			betBeanForAdmin.setSeriesName(NA);
-			betBeanForAdmin.setMatchId(NA);
-			betBeanForAdmin.setMatchName(NA);
-			betBeanForAdmin.setMarketId(NA);
-			betBeanForAdmin.setMarketName(NA);
-			betBeanForAdmin.setSelectionId(ZERO_LONG);
-			betBeanForAdmin.setRunnerName(NA);
-			betBeanForAdmin.setOdds(ZERO_DOUBLE);
-			betBeanForAdmin.setStake(ZERO_DOUBLE);
-			betBeanForAdmin.setLiability(ZERO_DOUBLE);
-			betBeanForAdmin.setIsback(N);
-			betBeanForAdmin.setIsLay(N);
-			betBeanForAdmin.setPsId(ZERO_INT);
-			betBeanForAdmin.setCreatedBy(ResourceConstants.USER_NAME);
-			betBeanForAdmin.setBetStatus(NA);
-			betBeanForAdmin.setBetResult(NA);
-			
-			String admin=userParentMap.get("ADMIN");
-			String sm=userParentMap.get("SUPERMASTER");
-			String master=userParentMap.get("MASTER");
-			placeBetsBean.setBetSettlement("PENDING");
+//			final String NA="NA";
+//			final String N="N";
+//			final double ZERO_DOUBLE=0;
+//			final long ZERO_LONG=0;
+//			final int ZERO_INT=0;
+//			
+//			PlaceBetsBean betBeanForMaster = new PlaceBetsBean();
+//			
+//			betBeanForMaster.setSportsId(NA);
+//			betBeanForMaster.setSportsName(NA);
+//			betBeanForMaster.setSeriesId(NA);
+//			betBeanForMaster.setSeriesName(NA);
+//			betBeanForMaster.setMatchId(NA);
+//			betBeanForMaster.setMatchName(NA);
+//			betBeanForMaster.setMarketId(NA);
+//			betBeanForMaster.setMarketName(NA);
+//			betBeanForMaster.setSelectionId(ZERO_LONG);
+//			betBeanForMaster.setRunnerName(NA);
+//			betBeanForMaster.setOdds(ZERO_DOUBLE);
+//			betBeanForMaster.setStake(ZERO_DOUBLE);
+//			betBeanForMaster.setLiability(ZERO_DOUBLE);
+//			betBeanForMaster.setIsback(N);
+//			betBeanForMaster.setIsLay(N);
+//			betBeanForMaster.setPsId(ZERO_INT);
+//			betBeanForMaster.setCreatedBy(ResourceConstants.USER_NAME);
+//			betBeanForMaster.setBetStatus(NA);
+//			betBeanForMaster.setBetResult(NA);
+//			
+//			PlaceBetsBean betBeanForSM = new PlaceBetsBean();
+//			
+//			betBeanForSM.setSportsId(NA);
+//			betBeanForSM.setSportsName(NA);
+//			betBeanForSM.setSeriesId(NA);
+//			betBeanForSM.setSeriesName(NA);
+//			betBeanForSM.setMatchId(NA);
+//			betBeanForSM.setMatchName(NA);
+//			betBeanForSM.setMarketId(NA);
+//			betBeanForSM.setMarketName(NA);
+//			betBeanForSM.setSelectionId(ZERO_LONG);
+//			betBeanForSM.setRunnerName(NA);
+//			betBeanForSM.setOdds(ZERO_DOUBLE);
+//			betBeanForSM.setStake(ZERO_DOUBLE);
+//			betBeanForSM.setLiability(ZERO_DOUBLE);
+//			betBeanForSM.setIsback(N);
+//			betBeanForSM.setIsLay(N);
+//			betBeanForSM.setPsId(ZERO_INT);
+//			betBeanForSM.setCreatedBy(ResourceConstants.USER_NAME);
+//			betBeanForSM.setBetStatus(NA);
+//			betBeanForSM.setBetResult(NA);
+//			
+//			PlaceBetsBean betBeanForAdmin = new PlaceBetsBean();
+//			
+//			betBeanForAdmin.setSportsId(NA);
+//			betBeanForAdmin.setSportsName(NA);
+//			betBeanForAdmin.setSeriesId(NA);
+//			betBeanForAdmin.setSeriesName(NA);
+//			betBeanForAdmin.setMatchId(NA);
+//			betBeanForAdmin.setMatchName(NA);
+//			betBeanForAdmin.setMarketId(NA);
+//			betBeanForAdmin.setMarketName(NA);
+//			betBeanForAdmin.setSelectionId(ZERO_LONG);
+//			betBeanForAdmin.setRunnerName(NA);
+//			betBeanForAdmin.setOdds(ZERO_DOUBLE);
+//			betBeanForAdmin.setStake(ZERO_DOUBLE);
+//			betBeanForAdmin.setLiability(ZERO_DOUBLE);
+//			betBeanForAdmin.setIsback(N);
+//			betBeanForAdmin.setIsLay(N);
+//			betBeanForAdmin.setPsId(ZERO_INT);
+//			betBeanForAdmin.setCreatedBy(ResourceConstants.USER_NAME);
+//			betBeanForAdmin.setBetStatus(NA);
+//			betBeanForAdmin.setBetResult(NA);
+//			
+//			String admin=userParentMap.get("ADMIN");
+//			String sm=userParentMap.get("SUPERMASTER");
+//			String master=userParentMap.get("MASTER");
+//			placeBetsBean.setBetSettlement("PENDING");
 			
 //			String prevUser;
 //			String currUser = placeBetsList.get(i).getUserId();
@@ -959,70 +959,70 @@ public class BetfairDao {
 //			log.info("masterPLExistCount:: "+masterPLExistCount);
 //			log.info("smPLExistCount:: "+smPLExistCount);
 //			log.info("adminPLExistCount:: "+adminPLExistCount);
-			
-//			if(masterPLExistCount>0 || !masterInsertFlag) {
+//			
+//			if(masterPLExistCount>0 ) {
 //				log.info("inside master update:: ");
 //				//update
 //				jdbcTemplate.update(QueryListConstant.UPDATE_PARENT_PROFIT_LOSS,
 //						new Object[] { masterStakes, 0,smStakes,adminStakes, userId });
-//			}else if(masterPLExistCount<=0 && masterInsertFlag){
+//			}else if(masterPLExistCount<=0 ){
 //				log.info("inside master insert:: ");
 //				//insert
-//				masterInsertFlag=false;
-				betBeanForMaster.setLoginId(master);
-				betBeanForMaster.setUserId(master);
-				betBeanForMaster.setParent(sm);
-				betBeanForMaster.setNetAmount(masterStakes);
-				betBeanForMaster.setAdminStakes(adminStakes);
-				betBeanForMaster.setSmStakes(smStakes);
-				placeBetsRepository.saveAndFlush(betBeanForMaster);
+////				masterInsertFlag=false;
+//				betBeanForMaster.setLoginId(master);
+//				betBeanForMaster.setUserId(master);
+//				betBeanForMaster.setParent(sm);
+//				betBeanForMaster.setNetAmount(masterStakes);
+//				betBeanForMaster.setAdminStakes(adminStakes);
+//				betBeanForMaster.setSmStakes(smStakes);
+//				placeBetsRepository.saveAndFlush(betBeanForMaster);
 //			}
-//			if(smPLExistCount>0 || !smInsertFlag) {
+//			if(smPLExistCount>0 ) {
 //				log.info("inside sm update:: ");
 //				//update
 //				jdbcTemplate.update(QueryListConstant.UPDATE_PARENT_PROFIT_LOSS,
 //						new Object[] { smStakes, 0,0,adminStakes, master });
-//			}else if(smPLExistCount<=0 && smInsertFlag) {
+//			}else if(smPLExistCount<=0 ) {
 //				log.info("inside sm insert:: ");
 //				//insert
-//				smInsertFlag=false;
-				betBeanForSM.setLoginId(sm);
-				betBeanForSM.setUserId(sm);
-				betBeanForSM.setParent(admin);
-				betBeanForSM.setNetAmount(smStakes);
-				betBeanForSM.setAdminStakes(adminStakes);
-				placeBetsRepository.saveAndFlush(betBeanForSM);
+////				smInsertFlag=false;
+//				betBeanForSM.setLoginId(sm);
+//				betBeanForSM.setUserId(sm);
+//				betBeanForSM.setParent(admin);
+//				betBeanForSM.setNetAmount(smStakes);
+//				betBeanForSM.setAdminStakes(adminStakes);
+//				placeBetsRepository.saveAndFlush(betBeanForSM);
 //			}
-//			if(adminPLExistCount>0 || !adminInsertFlag) {
+//			if(adminPLExistCount>0) {
 //				log.info("inside admin update:: ");
 //				//update
 //				jdbcTemplate.update(QueryListConstant.UPDATE_PARENT_PROFIT_LOSS,
 //						new Object[] { adminStakes, 0,0,0, sm });
-//			}else if(adminPLExistCount<=0 && adminInsertFlag) {
+//			}else if(adminPLExistCount<=0 ) {
 //				log.info("inside admin insert:: ");
-//				//insert
-//				adminInsertFlag=false;
-				betBeanForAdmin.setLoginId(admin);
-				betBeanForAdmin.setUserId(admin);
-				betBeanForAdmin.setParent("1");
-				betBeanForAdmin.setNetAmount(adminStakes);
-				placeBetsRepository.saveAndFlush(betBeanForAdmin);
+////				//insert
+////				adminInsertFlag=false;
+//				betBeanForAdmin.setLoginId(admin);
+//				betBeanForAdmin.setUserId(admin);
+//				betBeanForAdmin.setParent("1");
+//				betBeanForAdmin.setNetAmount(adminStakes);
+//				placeBetsRepository.saveAndFlush(betBeanForAdmin);
 //			}
-			
-			
-			
-			jdbcTemplate.update(QueryListConstant.UPDATE_AVAIL_BAL_AND_PROFIT_LOSS,
-					new Object[] { netAmount,netAmount, netAmount, userId });
-			
-			jdbcTemplate.update(QueryListConstant.UPDATE_AVAIL_BAL_AND_PROFIT_LOSS,
-					new Object[] { masterStakes,masterStakes, masterStakes, master });
-			
-			jdbcTemplate.update(QueryListConstant.UPDATE_AVAIL_BAL_AND_PROFIT_LOSS,
-					new Object[] { smStakes,smStakes, smStakes, sm });
-			
-			jdbcTemplate.update(QueryListConstant.UPDATE_AVAIL_BAL_AND_PROFIT_LOSS,
-					new Object[] { adminStakes,adminStakes, adminStakes, admin });
-			
+//			
+//			
+//			
+//			jdbcTemplate.update(QueryListConstant.UPDATE_AVAIL_BAL_AND_PROFIT_LOSS,
+//					new Object[] { netAmount,netAmount, netAmount, userId });
+//			
+//			jdbcTemplate.update(QueryListConstant.UPDATE_AVAIL_BAL_AND_PROFIT_LOSS,
+//					new Object[] { masterStakes,masterStakes, masterStakes, master });
+//			
+//			jdbcTemplate.update(QueryListConstant.UPDATE_AVAIL_BAL_AND_PROFIT_LOSS,
+//					new Object[] { smStakes,smStakes, smStakes, sm });
+//			
+//			jdbcTemplate.update(QueryListConstant.UPDATE_AVAIL_BAL_AND_PROFIT_LOSS,
+//					new Object[] { adminStakes,adminStakes, adminStakes, admin });
+//			
 			
 //			double availBalUser = 0.0;
 //			double availBalMaster = 0.0;
