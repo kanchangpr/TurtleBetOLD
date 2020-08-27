@@ -504,7 +504,7 @@ public class AdminDao {
 			UserBean userBean= userRepository.findByUserId(userId);
 			
 			//List<UserRoleDto> userDetails= new ArrayList<UserRoleDto>();
-			List<String> userDetails = jdbcTemplate.query(QueryListConstant.GET_PARENT_LIST,
+			List<String> userDetails = jdbcTemplate.query(QueryListConstant.GET_USER_LIST,
 					new Object[] { userId },
 					(rs, rowNum) -> new String(
 							rs.getString("USER_ID")
@@ -513,7 +513,7 @@ public class AdminDao {
 			for (int j = 0; j < userDetails.size(); j++) {
 				
 				log.info("userDetails index ::: "+j);
-				if(userBean.getUserRole().equalsIgnoreCase(ResourceConstants.ADMIN)) {
+				if(userBean.getUserRole().equalsIgnoreCase(ResourceConstants.SUPERMASTER)) {
 					log.info("In Admin userDetails::: "+userDetails.get(j));
 					
 					String sqlString="UPDATE JETBET.JB_BET_DETAILS SET BET_SETTLEMENT='SETTLED' , SM_SETTLE='Y', "
@@ -521,7 +521,7 @@ public class AdminDao {
 					jdbcTemplate.update(sqlString,
 							new Object[] { loggedInUser, remarks, userId});
 					
-				}else if(userBean.getUserRole().equalsIgnoreCase(ResourceConstants.SUPERMASTER)) {
+				}else if(userBean.getUserRole().equalsIgnoreCase(ResourceConstants.MASTER)) {
 					log.info("In SM userDetails::: "+userDetails.get(j));
 					
 					String sqlString="UPDATE JETBET.JB_BET_DETAILS SET BET_SETTLEMENT='SETTLED' , MASTER_SETTLE='Y', "
@@ -529,7 +529,7 @@ public class AdminDao {
 					jdbcTemplate.update(sqlString,
 							new Object[] { loggedInUser, remarks, userId});
 					
-				} else if(userBean.getUserRole().equalsIgnoreCase(ResourceConstants.MASTER)) {
+				} else if(userBean.getUserRole().equalsIgnoreCase(ResourceConstants.USER)) {
 					log.info("In Master userDetails::: "+userDetails.get(j));
 					
 					String sqlString="UPDATE JETBET.JB_BET_DETAILS SET BET_SETTLEMENT='SETTLED' , ADMIN_SETTLE='Y', "
