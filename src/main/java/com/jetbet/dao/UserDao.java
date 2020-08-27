@@ -463,7 +463,7 @@ public class UserDao {
 			ChipsDto chipsDto = new ChipsDto();
 			chipsDto.setUserRole(row.get("USER_ROLE").toString());
 			chipsDto.setToUser(row.get("USER_ID").toString());
-			chipsDto.setChips(Long.parseLong(row.get("CHIPS").toString()));
+			chipsDto.setChips(Long.parseLong(row.get("AVAIL_BALANCE").toString()));
 			chipsList.add(chipsDto);
 		}
 		log.info("[" + transactionId + "] chipsMap:: " + chipsMap);
@@ -573,7 +573,7 @@ public class UserDao {
 					(rs, rowNum) -> new UserBean(rs.getLong("id"), rs.getString("user_id"), rs.getString("full_name"),
 							rs.getString("user_Role"), rs.getString("parent"), rs.getDate("Reg_Date"),
 							rs.getFloat("Odds_Commission"), rs.getFloat("Session_Commission"), rs.getInt("Bet_Delay"),
-							rs.getInt("Session_Delay"), rs.getLong("User_Limit"), rs.getDouble("chips"),
+							rs.getInt("Session_Delay"), rs.getLong("User_Limit"), rs.getDouble("avail_limit"), rs.getDouble("avail_balance"), rs.getDouble("profit_loss"),
 							rs.getString("isactive"), rs.getString("isuserlock"), rs.getString("isbettinglock"),
 							rs.getString("remarks"), rs.getDate("lastupdateddate"), rs.getString("lastupdateby"),
 							rs.getDate("createddate"), rs.getString("createdby")));

@@ -135,7 +135,7 @@ public class UserBean {
 	public UserBean(Long id, String userId, String fullName, String userRole, String parent, Date regDate,
 			double oddsCommission, double sessionCommission, int betDelay, int sessionDelay, long userLimit,
 //			double maxProfit, double maxLoss, double oddsMaxStake, double goingInPlayStake, double sessionMaxStake,
-			double chips, String isActive, String isUserLock, String isBettingLock, String remarks,
+			double availLimit,double availBalance,double prifitLoss, String isActive, String isUserLock, String isBettingLock, String remarks,
 			Date lastUpdatedDate, String lastUpdateBy, Date createdDate, String createdBy) {
 		super();
 		this.id = id;
@@ -154,7 +154,9 @@ public class UserBean {
 //		this.oddsMaxStake = oddsMaxStake;
 //		this.goingInPlayStake = goingInPlayStake;
 //		this.sessionMaxStake = sessionMaxStake;
-		this.chips = chips;
+		this.availLimit = availLimit;
+		this.availBalance = availBalance;
+		this.prifitLoss = prifitLoss;
 		this.isActive = isActive;
 		this.isUserLock = isUserLock;
 		this.isBettingLock = isBettingLock;
@@ -164,7 +166,6 @@ public class UserBean {
 		this.createdDate = createdDate;
 		this.createdBy = createdBy;
 	}
-	
 	
 	
 }
