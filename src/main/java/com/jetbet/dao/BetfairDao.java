@@ -909,6 +909,7 @@ public class BetfairDao {
 			betBeanForParent.setMatchId(NA);
 			betBeanForParent.setMatchName(NA);
 			betBeanForParent.setMarketId(NA);
+			betBeanForParent.setMarketName(NA);
 			betBeanForParent.setSelectionId(ZERO_LONG);
 			betBeanForParent.setRunnerName(NA);
 			betBeanForParent.setOdds(ZERO_DOUBLE);
