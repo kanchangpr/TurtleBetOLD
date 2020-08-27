@@ -503,28 +503,40 @@ public class AdminDao {
 //			if((userPL==0 && masterPL==0)||(masterPL==0 && smPL))
 			UserBean userBean= userRepository.findByUserId(userId);
 			
-			List<UserRoleDto> userDetails= new ArrayList<UserRoleDto>();
-			userDetails = jdbcTemplate.query(QueryListConstant.GET_PARENT_LIST,
+			//List<UserRoleDto> userDetails= new ArrayList<UserRoleDto>();
+			List<String> userDetails = jdbcTemplate.query(QueryListConstant.GET_PARENT_LIST,
 					new Object[] { userId },
-					(rs, rowNum) -> new UserRoleDto(
-							rs.getString("USER_ID"), rs.getString("USER_ROLE")
+					(rs, rowNum) -> new String(
+							rs.getString("USER_ID")
 							));
+			log.info("userDetails::: "+userDetails);
 			for (int j = 0; j < userDetails.size(); j++) {
+				
+				log.info("userDetails index ::: "+j);
 				if(userBean.getUserRole().equalsIgnoreCase(ResourceConstants.ADMIN)) {
+					log.info("In Admin userDetails::: "+userDetails.get(j));
+					
 					String sqlString="UPDATE JETBET.JB_BET_DETAILS SET BET_SETTLEMENT='SETTLED' , SM_SETTLE='Y', "
 							+ "LAST_UPDATED_DATE=CURRENT_TIMESTAMP , LAST_UPDATED_BY=?, REMARKS=? WHERE USER_ID=?";
 					jdbcTemplate.update(sqlString,
-							new Object[] { loggedInUser, remarks, userDetails.get(j).getUserId()});
+							new Object[] { loggedInUser, remarks, userId});
+					
 				}else if(userBean.getUserRole().equalsIgnoreCase(ResourceConstants.SUPERMASTER)) {
+					log.info("In SM userDetails::: "+userDetails.get(j));
+					
 					String sqlString="UPDATE JETBET.JB_BET_DETAILS SET BET_SETTLEMENT='SETTLED' , MASTER_SETTLE='Y', "
 							+ "LAST_UPDATED_DATE=CURRENT_TIMESTAMP , LAST_UPDATED_BY=?, REMARKS=? WHERE USER_ID=?";
 					jdbcTemplate.update(sqlString,
-							new Object[] { loggedInUser, remarks, userDetails.get(j).getUserId()});
+							new Object[] { loggedInUser, remarks, userId});
+					
 				} else if(userBean.getUserRole().equalsIgnoreCase(ResourceConstants.MASTER)) {
+					log.info("In Master userDetails::: "+userDetails.get(j));
+					
 					String sqlString="UPDATE JETBET.JB_BET_DETAILS SET BET_SETTLEMENT='SETTLED' , ADMIN_SETTLE='Y', "
 							+ "LAST_UPDATED_DATE=CURRENT_TIMESTAMP , LAST_UPDATED_BY=?, REMARKS=? WHERE USER_ID=?";
 					jdbcTemplate.update(sqlString,
-							new Object[] { loggedInUser, remarks, userDetails.get(j).getUserId()});
+							new Object[] { loggedInUser, remarks, userId});
+					
 				} 
 				
 			}
