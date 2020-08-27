@@ -120,12 +120,12 @@ public class AdminController {
 		return new ResponseEntity<List<BetSettlementDto>>(response, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = ResourceConstants.BET_SETTLEMENT, method = RequestMethod.PUT)
+	@RequestMapping(value = ResourceConstants.SETTLEMENT, method = RequestMethod.GET)
 	public ResponseEntity<UserResponseDto> settlement(
-			@RequestParam(value = "chips", required = false) double chips,
-			@RequestParam(value = "remarks", required = false) String remarks,
-			@RequestParam(value = "userId", required = false) String userId,
-			@RequestParam(value = "loggedInUser", required = false) String loggedInUser) {
+			@RequestParam(value = "chips", required = true) double chips,
+			@RequestParam(value = "remarks", required = true) String remarks,
+			@RequestParam(value = "userId", required = true) String userId,
+			@RequestParam(value = "loggedInUser", required = true) String loggedInUser) {
 		String transactionId = "TB" + UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
 		log.info("[" + transactionId
 				+ "]*************************INSIDE settlement METHOD GET*************************");

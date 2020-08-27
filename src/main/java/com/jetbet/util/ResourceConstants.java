@@ -52,6 +52,7 @@ public class ResourceConstants {
 	public static final String OPEN_PLACE_BETS_BY_SPORTS="openPlaceBetsBySports";
 	public static final String CALCULATE_SETTLEMENT="calculateSettlement";
 	public static final String BET_SETTLEMENT="betSettlement";
+	public static final String SETTLEMENT="Settlement";
 	
 	
 	public static final String ADMIN="admin";
