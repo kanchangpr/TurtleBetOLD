@@ -477,6 +477,7 @@ public class AdminDao {
 		log.info("[" + transactionId + "] remarks:: "+remarks);
 		log.info("[" + transactionId + "] userId:: "+userId);
 		log.info("[" + transactionId + "] loggedInUser:: "+loggedInUser);
+		
 		UserResponseDto userResponseDto= new UserResponseDto();
 		try {
 			
@@ -500,20 +501,46 @@ public class AdminDao {
 //			double smPL=smDet.getPrifitLoss();
 //			
 //			if((userPL==0 && masterPL==0)||(masterPL==0 && smPL))
+			UserBean userBean= userRepository.findByUserId(userId);
 			
-			int userUpdateCount=jdbcTemplate.update(QueryListConstant.RESET_USER_TABLE_ON_SETTLEMENT,
+			List<UserRoleDto> userDetails= new ArrayList<UserRoleDto>();
+			userDetails = jdbcTemplate.query(QueryListConstant.GET_PARENT_LIST,
+					new Object[] { userId },
+					(rs, rowNum) -> new UserRoleDto(
+							rs.getString("USER_ID"), rs.getString("USER_ROLE")
+							));
+			for (int j = 0; j < userDetails.size(); j++) {
+				if(userBean.getUserRole().equalsIgnoreCase(ResourceConstants.ADMIN)) {
+					String sqlString="UPDATE JETBET.JB_BET_DETAILS SET BET_SETTLEMENT='SETTLED' , SM_SETTLE='Y', "
+							+ "LAST_UPDATED_DATE=CURRENT_TIMESTAMP , LAST_UPDATED_BY=?, REMARKS=? WHERE USER_ID=?";
+					jdbcTemplate.update(sqlString,
+							new Object[] { loggedInUser, remarks, userDetails.get(j).getUserId()});
+				}else if(userBean.getUserRole().equalsIgnoreCase(ResourceConstants.SUPERMASTER)) {
+					String sqlString="UPDATE JETBET.JB_BET_DETAILS SET BET_SETTLEMENT='SETTLED' , MASTER_SETTLE='Y', "
+							+ "LAST_UPDATED_DATE=CURRENT_TIMESTAMP , LAST_UPDATED_BY=?, REMARKS=? WHERE USER_ID=?";
+					jdbcTemplate.update(sqlString,
+							new Object[] { loggedInUser, remarks, userDetails.get(j).getUserId()});
+				} else if(userBean.getUserRole().equalsIgnoreCase(ResourceConstants.MASTER)) {
+					String sqlString="UPDATE JETBET.JB_BET_DETAILS SET BET_SETTLEMENT='SETTLED' , ADMIN_SETTLE='Y', "
+							+ "LAST_UPDATED_DATE=CURRENT_TIMESTAMP , LAST_UPDATED_BY=?, REMARKS=? WHERE USER_ID=?";
+					jdbcTemplate.update(sqlString,
+							new Object[] { loggedInUser, remarks, userDetails.get(j).getUserId()});
+				} 
+				
+			}
+			
+			jdbcTemplate.update(QueryListConstant.RESET_USER_TABLE_ON_SETTLEMENT,
 					new Object[] { loggedInUser, userId});
 			
-			int betUpdateCount=jdbcTemplate.update(QueryListConstant.RESET_BET_TABLE_ON_SETTLEMENT,
-					new Object[] { loggedInUser, remarks, userId});
 			
-			if(userUpdateCount>0 ) {
+			
+//			if(userUpdateCount>0 ) {
 				userResponseDto.setStatus(ResourceConstants.SUCCESS);
 				userResponseDto.setErrorMsg(ResourceConstants.SETTLEMENT_SUCCESS);
-			}else {
-				userResponseDto.setStatus(ResourceConstants.FAILED);
-				userResponseDto.setErrorMsg(ResourceConstants.SETTLEMENT_FAILED);
-			}
+//			}else {
+//				userResponseDto.setStatus(ResourceConstants.FAILED);
+//				userResponseDto.setErrorMsg(ResourceConstants.SETTLEMENT_FAILED);
+//			}
 			
 		}catch (Exception e) {
 			userResponseDto.setStatus(ResourceConstants.EXCEPTION);

@@ -129,7 +129,7 @@ public class AdminController {
 		String transactionId = "TB" + UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
 		log.info("[" + transactionId
 				+ "]*************************INSIDE settlement METHOD GET*************************");
-		UserResponseDto response = adminService.settlement(chips,remarks, userId,loggedInUser, transactionId);
+		UserResponseDto response = adminService.settlement(chips,remarks, userId.toUpperCase(),loggedInUser, transactionId);
 		return new ResponseEntity<UserResponseDto>(response, HttpStatus.OK);
 	}
 
