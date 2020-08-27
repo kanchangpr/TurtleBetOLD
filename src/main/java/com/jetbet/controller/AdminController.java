@@ -119,5 +119,18 @@ public class AdminController {
 		List<BetSettlementDto> response = adminService.betSettlement(accountType, userId, transactionId);
 		return new ResponseEntity<List<BetSettlementDto>>(response, HttpStatus.OK);
 	}
+	
+	@RequestMapping(value = ResourceConstants.BET_SETTLEMENT, method = RequestMethod.PUT)
+	public ResponseEntity<UserResponseDto> settlement(
+			@RequestParam(value = "chips", required = false) double chips,
+			@RequestParam(value = "remarks", required = false) String remarks,
+			@RequestParam(value = "userId", required = false) String userId,
+			@RequestParam(value = "loggedInUser", required = false) String loggedInUser) {
+		String transactionId = "TB" + UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
+		log.info("[" + transactionId
+				+ "]*************************INSIDE getListOfEventType METHOD GET*************************");
+		UserResponseDto response = adminService.settlement(chips,remarks, userId,loggedInUser, transactionId);
+		return new ResponseEntity<UserResponseDto>(response, HttpStatus.OK);
+	}
 
 }

@@ -449,4 +449,39 @@ public class AdminDao {
 		return betSettlementResList;*/
 	}
 
+	@Transactional
+	public UserResponseDto settlement(double chips,String remarks, String userId, String loggedInUser, String transactionId) {
+		log.info("[" + transactionId + "]**************INSIDE settlement CLASS UserDao******************");
+
+		log.info("[" + transactionId + "] chips:: "+chips);
+		log.info("[" + transactionId + "] remarks:: "+remarks);
+		log.info("[" + transactionId + "] userId:: "+userId);
+		log.info("[" + transactionId + "] loggedInUser:: "+loggedInUser);
+		UserResponseDto userResponseDto= new UserResponseDto();
+		try {
+			int userUpdateCount=jdbcTemplate.update(QueryListConstant.RESET_USER_TABLE_ON_SETTLEMENT,
+					new Object[] { loggedInUser, userId});
+			
+			int betUpdateCount=jdbcTemplate.update(QueryListConstant.RESET_BET_TABLE_ON_SETTLEMENT,
+					new Object[] { loggedInUser, remarks, chips});
+			
+			if(userUpdateCount>0 && betUpdateCount>0) {
+				userResponseDto.setStatus(ResourceConstants.SUCCESS);
+				userResponseDto.setErrorMsg(ResourceConstants.SETTLEMENT_SUCCESS);
+			}else {
+				userResponseDto.setStatus(ResourceConstants.FAILED);
+				userResponseDto.setErrorMsg(ResourceConstants.SETTLEMENT_FAILED);
+			}
+			
+		}catch (Exception e) {
+			userResponseDto.setStatus(ResourceConstants.EXCEPTION);
+			userResponseDto.setErrorCode(ResourceConstants.ERR_EXCEPTION);
+			userResponseDto.setErrorMsg(e.getMessage());
+			e.printStackTrace();
+		}
+		
+		
+		return userResponseDto;
+	}
+
 }

@@ -76,4 +76,10 @@ public class AdminServiceImpl implements AdminService{
 		return adminDao.betSettlement(accountType,userId,transactionId);
 	}
 
+	@Override
+	public UserResponseDto settlement(double chips, String remarks, String userId, String loggedInUser, String transactionId) {
+		log.info("["+transactionId+"]*************************INSIDE betSettlement CLASS AdminServiceImpl*************************");
+		return adminDao.settlement(chips,remarks,userId,loggedInUser,transactionId);
+	}
+
 }

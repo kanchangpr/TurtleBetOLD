@@ -53,6 +53,7 @@ public class ResourceConstants {
 	public static final String CALCULATE_SETTLEMENT="calculateSettlement";
 	public static final String BET_SETTLEMENT="betSettlement";
 	
+	
 	public static final String ADMIN="admin";
 	public static final String SUPERMASTER="superMaster";
 	public static final String MASTER="master";
@@ -113,6 +114,8 @@ public class ResourceConstants {
 	public static final String INSERTED="Data Inserted Successfully";
 	public static final String UPDATED="Data Updated Successfully";
 	public static final String PASSWORD_UPDATED="Password Updated Successfully";
+	public static final String SETTLEMENT_SUCCESS="Settlement done!!";
+	public static final String SETTLEMENT_FAILED="Settlement failed!!";
 	
 	public static final String LOCK_USER="LOCKUSER";
 	public static final String UNLOCK_USER="UNLOCKUSER";

@@ -35,4 +35,6 @@ public interface AdminService {
 
 	 List<BetSettlementDto> betSettlement(String accountType,String userId, String transactionId);
 
+	 UserResponseDto settlement(double chips, String remarks, String userId, String loggedInUser, String transactionId);
+
 }
