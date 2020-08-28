@@ -355,7 +355,7 @@ public class UserDao {
 		String fromUser = chipsDto.getFromUser().toUpperCase();
 		String toUser = chipsDto.getToUser().toUpperCase();
 		try {
-			if (chipsDto.getChips() <= 0) {
+			if (chipsDto.getChips() > 0) {
 				depositWithdrawChips = chipsDto.getChips();
 				log.info("[" + transactionId + "] depositWithdrawChipst: " + depositWithdrawChips);
 
