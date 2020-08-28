@@ -212,7 +212,7 @@ public class UserDao {
 						PartnershipBean psBeanRes = partnershipRepository.saveAndFlush(psBean);
 						if (psBeanRes.getUserId() == userBean.getUserId()) {
 
-							StakesBean stakesBean=new StakesBean();
+							StakesBean stakesBean = new StakesBean();
 							userBean.setPartnership(psBeanRes.getId());
 							UserBean userRes = userRepository.save(userBean);
 
@@ -224,7 +224,7 @@ public class UserDao {
 							stakesBean.setStake5(ResourceConstants.Stakes.STAKE5);
 							stakesBean.setCreatedBy(createdBy);
 							stakesRepository.save(stakesBean);
-							
+
 							if (userRes.getUserId() == userBean.getUserId()) {
 								userResponseDto.setStatus(ResourceConstants.SUCCESS);
 								userResponseDto.setErrorMsg(ResourceConstants.INSERTED);
@@ -355,94 +355,104 @@ public class UserDao {
 		String fromUser = chipsDto.getFromUser().toUpperCase();
 		String toUser = chipsDto.getToUser().toUpperCase();
 		try {
-			depositWithdrawChips = chipsDto.getChips();
-			log.info("[" + transactionId + "] depositWithdrawChipst: " + depositWithdrawChips);
+			if (chipsDto.getChips() <= 0) {
+				depositWithdrawChips = chipsDto.getChips();
+				log.info("[" + transactionId + "] depositWithdrawChipst: " + depositWithdrawChips);
 
-			UserBean fromUserRes = userRepository.findFirst1ByUserId(fromUser);
-			currentChipsInFromUserAcc = fromUserRes.getAvailLimit();
-			log.info("[" + transactionId + "] Chips in From User Account: " + currentChipsInFromUserAcc);
+				UserBean fromUserRes = userRepository.findFirst1ByUserId(fromUser);
+				currentChipsInFromUserAcc = fromUserRes.getAvailLimit();
+				log.info("[" + transactionId + "] Chips in From User Account: " + currentChipsInFromUserAcc);
 
-			UserBean toUserRes = userRepository.findFirst1ByUserId(toUser);
-			currentChipsInToUserAcc = toUserRes.getAvailLimit();
-			log.info("[" + transactionId + "] Chips in To User Account: " + currentChipsInToUserAcc);
+				UserBean toUserRes = userRepository.findFirst1ByUserId(toUser);
+				currentChipsInToUserAcc = toUserRes.getAvailLimit();
+				log.info("[" + transactionId + "] Chips in To User Account: " + currentChipsInToUserAcc);
 
-			if (actString.equalsIgnoreCase(ResourceConstants.DEPOSIT)) {
-				log.info("[" + transactionId + "] INSIDE Deposit");
-				returnMsgString = "Chips Deposited Successfully";
-				if (depositWithdrawChips > currentChipsInFromUserAcc) {
-					errorRes = true;
-					userResponseDto.setStatus(ResourceConstants.FAILED);
-					userResponseDto.setErrorCode(ResourceConstants.ERR_004);
-					userResponseDto.setErrorMsg(ResourceConstants.INSUFFICIENT_AMOUNT);
-				} else if (depositWithdrawChips <= currentChipsInFromUserAcc) {
-					totalChipsInFromAcc = currentChipsInFromUserAcc - depositWithdrawChips;
-					totalChipsInToAcc = currentChipsInToUserAcc + depositWithdrawChips;
+				if (actString.equalsIgnoreCase(ResourceConstants.DEPOSIT)) {
+					log.info("[" + transactionId + "] INSIDE Deposit");
+					returnMsgString = "Chips Deposited Successfully";
+					if (depositWithdrawChips > currentChipsInFromUserAcc) {
+						errorRes = true;
+						userResponseDto.setStatus(ResourceConstants.FAILED);
+						userResponseDto.setErrorCode(ResourceConstants.ERR_004);
+						userResponseDto.setErrorMsg(ResourceConstants.INSUFFICIENT_AMOUNT);
+					} else if (depositWithdrawChips <= currentChipsInFromUserAcc) {
+						totalChipsInFromAcc = currentChipsInFromUserAcc - depositWithdrawChips;
+						totalChipsInToAcc = currentChipsInToUserAcc + depositWithdrawChips;
 
-					toUserAccBean.setCredit(depositWithdrawChips);
-					toUserAccBean.setTotalChips(totalChipsInToAcc);
+						toUserAccBean.setCredit(depositWithdrawChips);
+						toUserAccBean.setTotalChips(totalChipsInToAcc);
 
-					FromUserAccBean.setDebit(depositWithdrawChips);
-					FromUserAccBean.setTotalChips(totalChipsInFromAcc);
+						FromUserAccBean.setDebit(depositWithdrawChips);
+						FromUserAccBean.setTotalChips(totalChipsInFromAcc);
+					}
+				} else if (actString.equalsIgnoreCase(ResourceConstants.WITHDRAW)) {
+					log.info("[" + transactionId + "] INSIDE Withdraw");
+					returnMsgString = "Chips Withdrawn Successfully";
+					if (depositWithdrawChips > currentChipsInToUserAcc) {
+						errorRes = true;
+						userResponseDto.setStatus(ResourceConstants.FAILED);
+						userResponseDto.setErrorCode(ResourceConstants.ERR_004);
+						userResponseDto.setErrorMsg(ResourceConstants.INSUFFICIENT_AMOUNT);
+					} else if (depositWithdrawChips <= currentChipsInToUserAcc) {
+						totalChipsInFromAcc = currentChipsInFromUserAcc + depositWithdrawChips;
+						totalChipsInToAcc = currentChipsInToUserAcc - depositWithdrawChips;
+
+						toUserAccBean.setDebit(depositWithdrawChips);
+						toUserAccBean.setTotalChips(totalChipsInToAcc);
+
+						FromUserAccBean.setCredit(depositWithdrawChips);
+						FromUserAccBean.setTotalChips(totalChipsInFromAcc);
+					}
 				}
-			} else if (actString.equalsIgnoreCase(ResourceConstants.WITHDRAW)) {
-				log.info("[" + transactionId + "] INSIDE Withdraw");
-				returnMsgString = "Chips Withdrawn Successfully";
-				if (depositWithdrawChips > currentChipsInToUserAcc) {
-					errorRes = true;
-					userResponseDto.setStatus(ResourceConstants.FAILED);
-					userResponseDto.setErrorCode(ResourceConstants.ERR_004);
-					userResponseDto.setErrorMsg(ResourceConstants.INSUFFICIENT_AMOUNT);
-				} else if (depositWithdrawChips <= currentChipsInToUserAcc) {
-					totalChipsInFromAcc = currentChipsInFromUserAcc + depositWithdrawChips;
-					totalChipsInToAcc = currentChipsInToUserAcc - depositWithdrawChips;
 
-					toUserAccBean.setDebit(depositWithdrawChips);
-					toUserAccBean.setTotalChips(totalChipsInToAcc);
+				log.info("[" + transactionId + "] errorRes:: " + errorRes);
 
-					FromUserAccBean.setCredit(depositWithdrawChips);
-					FromUserAccBean.setTotalChips(totalChipsInFromAcc);
+				if (!errorRes) {
+					log.info("[" + transactionId + "] totalChipsInFromAcc:: " + totalChipsInFromAcc);
+					log.info("[" + transactionId + "] totalChipsInToAcc:: " + totalChipsInToAcc);
+
+					updateFromUserAccChipsSql = QueryListConstant.UPDATE_FROM_USER_ACC_CHIPS_SQL;
+					int updateFromUserAccChipsrowCount = jdbcTemplate.update(updateFromUserAccChipsSql,
+							new Object[] { totalChipsInFromAcc,totalChipsInFromAcc, createdByString, fromUser });
+					log.info("[" + transactionId + "] updateFromUserAccChipsrowCount:: "
+							+ updateFromUserAccChipsrowCount);
+
+					updateToUserAccChipsSql = QueryListConstant.UPDATE_TO_USER_ACC_CHIPS_SQL;
+					int updateToUserAccChipsrowCount = jdbcTemplate.update(updateToUserAccChipsSql,
+							new Object[] { totalChipsInToAcc,totalChipsInToAcc, createdByString, toUser });
+					log.info("[" + transactionId + "] updateToUserAccChipsrowCount:: " + updateToUserAccChipsrowCount);
+
+					toUserAccBean.setUserId(toUser);
+					toUserAccBean.setFromUser(fromUser);
+					toUserAccBean.setCreatedBy(createdByString);
+					toUserAccBean.setRemarks(
+							depositWithdrawChips + " chips " + actString + " from " + fromUser + " to " + toUser);
+					toUserAccBeanRes = chipsRepository.saveAndFlush(toUserAccBean);
+
+					FromUserAccBean.setUserId(fromUser);
+					FromUserAccBean.setFromUser(toUser);
+					FromUserAccBean.setCreatedBy(createdByString);
+					FromUserAccBean.setRemarks(
+							depositWithdrawChips + " chips " + actString + " from " + toUser + " to " + fromUser);
+					FromUserAccBeanRes = chipsRepository.saveAndFlush(FromUserAccBean);
+
+					if (updateFromUserAccChipsrowCount > 0 && updateToUserAccChipsrowCount > 0
+							&& toUserAccBeanRes.getTotalChips() == toUserAccBean.getTotalChips()
+							&& FromUserAccBeanRes.getTotalChips() == FromUserAccBean.getTotalChips()) {
+						userResponseDto.setStatus(ResourceConstants.SUCCESS);
+						userResponseDto.setErrorMsg(returnMsgString);
+					} else {
+						userResponseDto.setStatus(ResourceConstants.FAILED);
+						userResponseDto.setErrorCode(ResourceConstants.ERR_005);
+						userResponseDto.setErrorMsg(ResourceConstants.CHIPS_TRANSFER_FAILED);
+					}
 				}
+			} else {
+				userResponseDto.setStatus(ResourceConstants.FAILED);
+				userResponseDto.setErrorCode(ResourceConstants.ERR_016);
+				userResponseDto.setErrorMsg(ResourceConstants.CHIPS_GREATER_THAN_ZERO);
 			}
 
-			log.info("[" + transactionId + "] errorRes:: " + errorRes);
-
-			if (!errorRes) {
-				log.info("[" + transactionId + "] totalChipsInFromAcc:: " + totalChipsInFromAcc);
-				log.info("[" + transactionId + "] totalChipsInToAcc:: " + totalChipsInToAcc);
-
-				updateFromUserAccChipsSql = QueryListConstant.UPDATE_FROM_USER_ACC_CHIPS_SQL;
-				int updateFromUserAccChipsrowCount = jdbcTemplate.update(updateFromUserAccChipsSql,
-						new Object[] { totalChipsInFromAcc, createdByString, fromUser });
-				log.info("[" + transactionId + "] updateFromUserAccChipsrowCount:: " + updateFromUserAccChipsrowCount);
-
-				updateToUserAccChipsSql = QueryListConstant.UPDATE_TO_USER_ACC_CHIPS_SQL;
-				int updateToUserAccChipsrowCount = jdbcTemplate.update(updateToUserAccChipsSql,
-						new Object[] { totalChipsInToAcc, createdByString, toUser });
-				log.info("[" + transactionId + "] updateToUserAccChipsrowCount:: " + updateToUserAccChipsrowCount);
-
-				toUserAccBean.setUserId(toUser);
-				toUserAccBean.setFromUser(fromUser);
-				toUserAccBean.setCreatedBy(createdByString);
-				toUserAccBean.setRemarks(depositWithdrawChips+" chips "+actString+" from "+fromUser+" to "+toUser);
-				toUserAccBeanRes = chipsRepository.saveAndFlush(toUserAccBean);
-
-				FromUserAccBean.setUserId(fromUser);
-				FromUserAccBean.setFromUser(toUser);
-				FromUserAccBean.setCreatedBy(createdByString);
-				FromUserAccBean.setRemarks(depositWithdrawChips+" chips "+actString+" from "+toUser+" to "+fromUser);
-				FromUserAccBeanRes = chipsRepository.saveAndFlush(FromUserAccBean);
-
-				if (updateFromUserAccChipsrowCount > 0 && updateToUserAccChipsrowCount > 0
-						&& toUserAccBeanRes.getTotalChips() == toUserAccBean.getTotalChips()
-						&& FromUserAccBeanRes.getTotalChips() == FromUserAccBean.getTotalChips()) {
-					userResponseDto.setStatus(ResourceConstants.SUCCESS);
-					userResponseDto.setErrorMsg(returnMsgString);
-				} else {
-					userResponseDto.setStatus(ResourceConstants.FAILED);
-					userResponseDto.setErrorCode(ResourceConstants.ERR_005);
-					userResponseDto.setErrorMsg(ResourceConstants.CHIPS_TRANSFER_FAILED);
-				}
-			}
 		} catch (Exception e) {
 			userResponseDto.setStatus(ResourceConstants.EXCEPTION);
 			userResponseDto.setErrorCode(ResourceConstants.ERR_EXCEPTION);
@@ -575,10 +585,11 @@ public class UserDao {
 					(rs, rowNum) -> new UserBean(rs.getLong("id"), rs.getString("user_id"), rs.getString("full_name"),
 							rs.getString("user_Role"), rs.getString("parent"), rs.getDate("Reg_Date"),
 							rs.getFloat("Odds_Commission"), rs.getFloat("Session_Commission"), rs.getInt("Bet_Delay"),
-							rs.getInt("Session_Delay"), rs.getLong("User_Limit"), rs.getDouble("avail_limit"), rs.getDouble("avail_balance"), rs.getDouble("profit_loss"),
-							rs.getString("isactive"), rs.getString("isuserlock"), rs.getString("isbettinglock"),
-							rs.getString("remarks"), rs.getDate("lastupdateddate"), rs.getString("lastupdateby"),
-							rs.getDate("createddate"), rs.getString("createdby")));
+							rs.getInt("Session_Delay"), rs.getLong("User_Limit"), rs.getDouble("avail_limit"),
+							rs.getDouble("avail_balance"), rs.getDouble("profit_loss"), rs.getString("isactive"),
+							rs.getString("isuserlock"), rs.getString("isbettinglock"), rs.getString("remarks"),
+							rs.getDate("lastupdateddate"), rs.getString("lastupdateby"), rs.getDate("createddate"),
+							rs.getString("createdby")));
 		} else if (!StringUtils.isBlank(parent)) {
 			responseBeans = userRepository.findByParentOrderByFullName(parent.toUpperCase());
 		} else if (!StringUtils.isBlank(userId)) {
@@ -824,14 +835,14 @@ public class UserDao {
 	}
 
 	@Transactional
-	public Double getLiability(String isBackLay,double odds, double stakes, String transactionId) {
+	public Double getLiability(String isBackLay, double odds, double stakes, String transactionId) {
 		log.info("[" + transactionId + "]****************INSIDE getLiability CLASS UserDao****************");
 		// DecimalFormat df = new DecimalFormat("0.00");
 		log.info("[" + transactionId + "] odds:  " + odds);
 		log.info("[" + transactionId + "] stakes:  " + stakes);
-		double liability=0.0;
-		double total=0.0;
-		
+		double liability = 0.0;
+		double total = 0.0;
+
 		if (isBackLay.equalsIgnoreCase(ResourceConstants.LAY)) {
 			total = odds * stakes;
 			liability = Double.parseDouble(df.format(total - stakes));
@@ -849,8 +860,8 @@ public class UserDao {
 	public UserResponseDto placeBets(@Valid PlaceBetsBean placeBetsBean, String transactionId) {
 		log.info("[" + transactionId + "]****************INSIDE placeBets CLASS UserDao****************");
 		UserResponseDto userResponseDto = new UserResponseDto();
-		BetfairDao bfDao= new BetfairDao();
-		
+		BetfairDao bfDao = new BetfairDao();
+
 		ChipsBean chipsBean = new ChipsBean();
 		final String MINIMUM_STAKE = "MINIMUM_STAKE";
 		final String IS_UNMATCHED_OPEN = "IS_UNMATCHED_OPEN";
@@ -879,15 +890,15 @@ public class UserDao {
 			String isback = placeBetsBean.getIsback();
 			String isLay = placeBetsBean.getIsLay();
 			String createdBy = placeBetsBean.getCreatedBy();
-			String isBackLay="";
-			if(isback.equalsIgnoreCase("Y")) {
-				isBackLay="BACK";
-			}else if(isLay.equalsIgnoreCase("Y")){
-				isBackLay="LAY";
+			String isBackLay = "";
+			if (isback.equalsIgnoreCase("Y")) {
+				isBackLay = "BACK";
+			} else if (isLay.equalsIgnoreCase("Y")) {
+				isBackLay = "LAY";
 			}
-			
-			Double runnerPrize= bfDao.getRunnersPrizeAndSize(marketId, selectionId, isBackLay, transactionId);
-			log.info("runnerPrize:: "+runnerPrize);
+
+			Double runnerPrize = bfDao.getRunnersPrizeAndSize(marketId, selectionId, isBackLay, transactionId);
+			log.info("runnerPrize:: " + runnerPrize);
 			UserBean userDetail = userRepository.findFirst1ByUserId(userId.toUpperCase());
 			String parent = userDetail.getParent();
 			int psId = userDetail.getPartnership();
@@ -931,19 +942,19 @@ public class UserDao {
 			String isUnMatchedOpen = isUnMatched.getLookupValue();
 			if (isbetLock.equalsIgnoreCase("N")) {
 				if (stake >= minimumStake) {
-					if(odds==runnerPrize) {
-						if (stake <= chips ) {
+					if (odds == runnerPrize) {
+						if (stake <= chips) {
 							PlaceBetsBean placeBetsResBean = placeBetsRepository.saveAndFlush(placeBetsBean);
 							if (placeBetsResBean.getUserId().equalsIgnoreCase(userId)) {
 
 								log.info("[" + transactionId + "] placeBetsResBean:: " + placeBetsResBean);
 
 								double balance = Double.parseDouble(df.format(chips - stake));
-								double updUserLiab=Double.parseDouble(df.format(userLiab+ liability));
-								
+								double updUserLiab = Double.parseDouble(df.format(userLiab + liability));
+
 								updateChipsSql = QueryListConstant.UPDATE_USER_CHIPS;
 								int updateChipsRowCount = jdbcTemplate.update(updateChipsSql,
-										new Object[] { balance,updUserLiab, userId, userId });
+										new Object[] { balance, updUserLiab, userId, userId });
 								log.info("[" + transactionId + "] updateChipsRowCount:: " + updateChipsRowCount);
 
 								chipsBean.setUserId(userId);
@@ -974,12 +985,12 @@ public class UserDao {
 							userResponseDto.setErrorCode(ResourceConstants.ERR_004);
 							userResponseDto.setErrorMsg(ResourceConstants.INSUFFICIENT_AMOUNT);
 						}
-					}else {
+					} else {
 						userResponseDto.setStatus(ResourceConstants.FAILED);
 						userResponseDto.setErrorCode(ResourceConstants.ERR_015);
 						userResponseDto.setErrorMsg(ResourceConstants.ODDS_MISMATCHED);
 					}
-					
+
 				} else {
 					userResponseDto.setStatus(ResourceConstants.FAILED);
 					userResponseDto.setErrorCode(ResourceConstants.ERR_013);
@@ -1015,11 +1026,10 @@ public class UserDao {
 			log.info("[" + transactionId + "] Inside :  " + type);
 			if (!StringUtils.isEmpty(searchParam) && searchParam.equalsIgnoreCase("betSettlement")) {
 				List<String> userList = jdbcTemplate.query(QueryListConstant.GET_USER_LIST,
-						new Object[] { userId.toUpperCase() },
-						(rs, rowNum) -> new String(rs.getString("USER_ID")));
-				log.info("userList:: "+userList);
+						new Object[] { userId.toUpperCase() }, (rs, rowNum) -> new String(rs.getString("USER_ID")));
+				log.info("userList:: " + userList);
 				betHistory = placeBetsRepository.findByUserIdInAndBetSettlementOrderByUserIdDesc(userList, "PENDING");
-			}else if (StringUtils.isEmpty(fromDate) && StringUtils.isEmpty(toDate)) {
+			} else if (StringUtils.isEmpty(fromDate) && StringUtils.isEmpty(toDate)) {
 				betHistory = placeBetsRepository.findByUserIdOrderByIdDesc(userId);
 			} else {
 				betHistory = jdbcTemplate.query(QueryListConstant.BET_HISTORY_BY_DATE_RANGE,
@@ -1028,16 +1038,16 @@ public class UserDao {
 								rs.getString("user_id"), rs.getString("parent"), rs.getString("sports_id"),
 								rs.getString("sports_name"), rs.getString("series_id"), rs.getString("series_name"),
 								rs.getString("match_id"), rs.getString("match_name"), rs.getString("market_id"),
-								rs.getString("market_name"), rs.getLong("selection_id"), rs.getString("runner_name"), rs.getString("MARKET_TYPE"),
-								rs.getDate("bet_place_date"), rs.getDouble("odds"), rs.getDouble("stake"),
-								rs.getDouble("liability"), rs.getDouble("profit"), rs.getDouble("loss"),
-								rs.getDouble("net_amount"), rs.getDouble("commision"), rs.getDouble("admin_stakes"),
-								rs.getDouble("sm_stakes"), rs.getDouble("master_stakes"),rs.getString("admin_settle"),
-								rs.getString("sm_settle"), rs.getString("master_settle"), rs.getString("isback"),
-								rs.getString("islay"), rs.getInt("psid"), rs.getString("remarks"),
-								rs.getString("bet_status"), rs.getString("bet_result"), rs.getString("bet_settlement"),
-								rs.getString("created_by"), rs.getDate("created_date"), rs.getString("last_updated_by"),
-								rs.getDate("last_updated_date")));
+								rs.getString("market_name"), rs.getLong("selection_id"), rs.getString("runner_name"),
+								rs.getString("MARKET_TYPE"), rs.getDate("bet_place_date"), rs.getDouble("odds"),
+								rs.getDouble("stake"), rs.getDouble("liability"), rs.getDouble("profit"),
+								rs.getDouble("loss"), rs.getDouble("net_amount"), rs.getDouble("commision"),
+								rs.getDouble("admin_stakes"), rs.getDouble("sm_stakes"), rs.getDouble("master_stakes"),
+								rs.getString("admin_settle"), rs.getString("sm_settle"), rs.getString("master_settle"),
+								rs.getString("isback"), rs.getString("islay"), rs.getInt("psid"),
+								rs.getString("remarks"), rs.getString("bet_status"), rs.getString("bet_result"),
+								rs.getString("bet_settlement"), rs.getString("created_by"), rs.getDate("created_date"),
+								rs.getString("last_updated_by"), rs.getDate("last_updated_date")));
 			}
 
 			for (int i = 0; i < betHistory.size(); i++) {
@@ -1079,7 +1089,7 @@ public class UserDao {
 		} else if (ResourceConstants.BetType.PROFIT_AND_LOSS_HISTORY.equalsIgnoreCase(type)) {
 			log.info("[" + transactionId + "] Inside :  " + type);
 			if (StringUtils.isEmpty(fromDate) && StringUtils.isEmpty(toDate)) {
-				betHistory = placeBetsRepository.findByUserIdAndBetResultNotOrderByIdDesc(userId,"OPEN");
+				betHistory = placeBetsRepository.findByUserIdAndBetResultNotOrderByIdDesc(userId, "OPEN");
 			} else {
 				betHistory = jdbcTemplate.query(QueryListConstant.PROFIT_AND_LOSS_HISTORY_BY_DATE_RANGE,
 						new Object[] { fromDate, toDate, userId },
@@ -1087,22 +1097,22 @@ public class UserDao {
 								rs.getString("user_id"), rs.getString("parent"), rs.getString("sports_id"),
 								rs.getString("sports_name"), rs.getString("series_id"), rs.getString("series_name"),
 								rs.getString("match_id"), rs.getString("match_name"), rs.getString("market_id"),
-								rs.getString("market_name"), rs.getLong("selection_id"), rs.getString("runner_name"), rs.getString("MARKET_TYPE"),
-								rs.getDate("bet_place_date"), rs.getDouble("odds"), rs.getDouble("stake"),
-								rs.getDouble("liability"), rs.getDouble("profit"), rs.getDouble("loss"),
-								rs.getDouble("net_amount"), rs.getDouble("commision"), rs.getDouble("admin_stakes"),
-								rs.getDouble("sm_stakes"), rs.getDouble("master_stakes"),rs.getString("admin_settle"),
-								rs.getString("sm_settle"), rs.getString("master_settle"),  rs.getString("isback"),
-								rs.getString("islay"), rs.getInt("psid"), rs.getString("remarks"),
-								rs.getString("bet_status"), rs.getString("bet_result"), rs.getString("bet_settlement"),
-								rs.getString("created_by"), rs.getDate("created_date"), rs.getString("last_updated_by"),
-								rs.getDate("last_updated_date")));
+								rs.getString("market_name"), rs.getLong("selection_id"), rs.getString("runner_name"),
+								rs.getString("MARKET_TYPE"), rs.getDate("bet_place_date"), rs.getDouble("odds"),
+								rs.getDouble("stake"), rs.getDouble("liability"), rs.getDouble("profit"),
+								rs.getDouble("loss"), rs.getDouble("net_amount"), rs.getDouble("commision"),
+								rs.getDouble("admin_stakes"), rs.getDouble("sm_stakes"), rs.getDouble("master_stakes"),
+								rs.getString("admin_settle"), rs.getString("sm_settle"), rs.getString("master_settle"),
+								rs.getString("isback"), rs.getString("islay"), rs.getInt("psid"),
+								rs.getString("remarks"), rs.getString("bet_status"), rs.getString("bet_result"),
+								rs.getString("bet_settlement"), rs.getString("created_by"), rs.getDate("created_date"),
+								rs.getString("last_updated_by"), rs.getDate("last_updated_date")));
 			}
 
 			for (int i = 0; i < betHistory.size(); i++) {
 				resObjects.add(betHistory.get(i));
 			}
-		} 
+		}
 
 		log.info("betHistory:: " + betHistory);
 		log.info("accHistory:: " + accHistory);

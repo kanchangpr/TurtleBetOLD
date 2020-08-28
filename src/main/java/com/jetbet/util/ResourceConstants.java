@@ -109,6 +109,9 @@ public class ResourceConstants {
 	public static final String ERR_015="ERR_15";
 	public static final String ODDS_MISMATCHED="Odds Mismatched!!!";
 	
+	public static final String ERR_016="ERR_16";
+	public static final String CHIPS_GREATER_THAN_ZERO="Chips should be greater than 0";
+	
 	public static final String BET_PLACED="Bet Placed Successfully!! Bet ID: ";
 	
 	public static final String ERR_EXCEPTION="ERR_EXEPCTION";
