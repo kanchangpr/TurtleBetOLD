@@ -151,7 +151,7 @@ public class ApiNgRescriptOperations extends ApiNgOperations {
 	public List<MarketCatalogue> listMarketCatalogue(MarketFilter filter, Set<MarketProjection> marketProjection,
 			MarketSort sort, String maxResult, String appKey, String ssoId) throws APINGException {
 		Map<String, Object> params = new HashMap<String, Object>();
-		List<MarketBook> marketBookList= new ArrayList<MarketBook>();
+		
 		params.put(LOCALE, locale);
 		params.put(FILTER, filter);
 		params.put(SORT, sort);
@@ -167,8 +167,10 @@ public class ApiNgRescriptOperations extends ApiNgOperations {
 		}.getType());
 		
 		Map<Long,String> runnerNameMap= new HashMap<Long,String>();
+		
 		List<MarketBook> marketBook = new ArrayList<MarketBook>();
 		for (int i = 0; i < container.size(); i++) {
+			List<MarketBook> marketBookList= new ArrayList<MarketBook>();
 			List<String> marketIds =new ArrayList<String>();
 			PriceProjection priceProjection = new PriceProjection();
 			Set<PriceData> priceData = new HashSet<PriceData>();
@@ -194,28 +196,34 @@ public class ApiNgRescriptOperations extends ApiNgOperations {
 			marketIds.add(marketId);
 			//log.info("marketIds:: "+marketIds);
 			marketBook =listMarketBook(marketIds, priceProjection, orderProjection, matchProjection, currencyCode, appKey, ssoId);
+			log.info("Iteration i: "+i+ "  "+container.get(i).getMarketName());
 			//log.info("marketBook:: "+marketBook);
 			for (int k = 0; k < marketBook.size(); k++) {
 				List<Runner> runnerList= new ArrayList<Runner>();
-				//log.info("marketBook.get(k).getRunners().size():: "+marketBook.get(k).getRunners().size());
+				log.info("Iteration k: "+k+ "  "+marketBook.get(k).getMarketId());
+				log.info("getRunners Size:: "+marketBook.get(k).getRunners().size());
+				log.info(" BEFORE FOR runnerList:: "+runnerList);
 				for (int j = 0; j < marketBook.get(k).getRunners().size(); j++) {
 					//marketBook.get(0).getRunners().get(j).getSelectionId();
-					
+					log.info("Iteration j: "+j+ "  "+marketBook.get(k).getRunners().get(j).getSelectionId());
 					if(marketBook.get(k).getRunners().get(j).getEx().getAvailableToBack().size()>0 || marketBook.get(k).getRunners().get(j).getEx().getAvailableToLay().size()>0) {
 					//	log.info("Runner NAme:: "+runnerNameMap.get(marketBook.get(k).getRunners().get(j).getSelectionId()));
 						marketBook.get(k).getRunners().get(j).setRunnerName(runnerNameMap.get(marketBook.get(k).getRunners().get(j).getSelectionId()));
 						runnerList.add(marketBook.get(k).getRunners().get(j));
+						log.info(" inside IF runnerList:: "+runnerList);
 					}
 					
-					
+					log.info(" OUTSIDE IF runnerList:: "+runnerList);
 				}
+				log.info(" AFTER FOR runnerList:: "+runnerList);
 				marketBook.get(k).setRunners(runnerList);
 				//log.info("marketBook.get(k).getRunners():: "+marketBook.get(k).getRunners());
 				
 				//log.info("marketBook.get(k):: "+marketBook.get(k));
 				 if(marketBook.get(k).getRunners().size()>0) {
+					log.info("marketBook.get(k):: "+marketBook.get(k));
 				 marketBookList.add(marketBook.get(k));
-				 //log.info("marketBook.get(k):: "+marketBook.get(k)); 
+				 log.info("marketBook.get(k):: "+marketBookList); 
 				 }
 				
 			}

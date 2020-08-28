@@ -872,6 +872,7 @@ public class UserDao {
 			String marketName = placeBetsBean.getMarketName();
 			Long selectionId = placeBetsBean.getSelectionId();
 			String runnerName = placeBetsBean.getRunnerName();
+			String marketType = placeBetsBean.getMarketType();
 			double odds = placeBetsBean.getOdds();
 			double stake = placeBetsBean.getStake();
 			double liability = placeBetsBean.getLiability();
@@ -909,6 +910,7 @@ public class UserDao {
 			log.info("[" + transactionId + "] marketName:  " + marketName);
 			log.info("[" + transactionId + "] selectionId:  " + selectionId);
 			log.info("[" + transactionId + "] runnerName:  " + runnerName);
+			log.info("[" + transactionId + "] marketType:  " + marketType);
 			log.info("[" + transactionId + "] odds:  " + odds);
 			log.info("[" + transactionId + "] stake:  " + stake);
 			log.info("[" + transactionId + "] porfitLoss:  " + liability);
