@@ -591,11 +591,11 @@ public class UserDao {
 							rs.getDate("lastupdateddate"), rs.getString("lastupdateby"), rs.getDate("createddate"),
 							rs.getString("createdby")));
 		} else if (!StringUtils.isBlank(parent)) {
-			responseBeans = userRepository.findByParentOrderByFullName(parent.toUpperCase());
+			responseBeans = userRepository.findByParentOrderByUserId(parent.toUpperCase());
 		} else if (!StringUtils.isBlank(userId)) {
-			responseBeans = userRepository.findByUserIdOrderByFullName(userId.toUpperCase());
+			responseBeans = userRepository.findByUserIdOrderByUserId(userId.toUpperCase());
 		} else {
-			responseBeans = userRepository.findAllByOrderByFullName();
+			responseBeans = userRepository.findAllByOrderByUserId();
 		}
 		log.info("responseBeans:  " + responseBeans);
 		return responseBeans;

@@ -10,15 +10,15 @@ public interface UserRepository extends JpaRepository<UserBean, Long>{
 
 	UserBean findFirst1ByUserId(String userName);
 	
-	List<UserBean> findByParentOrderByFullName(String parent);
+	List<UserBean> findByParentOrderByUserId(String parent);
 	
-	List<UserBean> findByUserIdOrderByFullName(String userName);
+	List<UserBean> findByUserIdOrderByUserId(String userName);
 	
 	Long countByUserId(String userName);
 	
 	long countByParent(String parent);
 	
-	List<UserBean> findAllByOrderByFullName();
+	List<UserBean> findAllByOrderByUserId();
 	
 	UserBean findByUserIdAndPassword(String username, String password);
 	
