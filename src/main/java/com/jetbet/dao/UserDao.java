@@ -157,13 +157,25 @@ public class UserDao {
 				int supermasterStake = 0;
 				int masterStake = 0;
 				boolean isValid = true;
+				boolean isCommisionValid = true;
 				if (userCount == 0) {
 
 					psBean.setUserId(userId);
 					psBean.setUserRole(userRole);
 					psBean.setParent(userParent);
 					psBean.setCreatedBy(createdBy);
+					
+					UserBean parentDetail= new UserBean();
+					parentDetail= userRepository.findByUserId(userParent.toUpperCase());
+					
+					if(userBean.getOddsCommission()>parentDetail.getOddsCommission()) {
+						isCommisionValid = false;
+					}
 
+					if(userBean.getSessionCommission()>parentDetail.getSessionCommission()) {
+						isCommisionValid = false;
+					}
+					
 					if (userRole.equalsIgnoreCase(ResourceConstants.SUPERMASTER)) {
 						adminStake = totalStake - partnership;
 						supermasterStake = partnership;
@@ -208,26 +220,32 @@ public class UserDao {
 					log.info("[" + transactionId + "] supermasterStake: " + supermasterStake);
 					log.info("[" + transactionId + "] masterStake: " + masterStake);
 
-					if (isValid) {
-						PartnershipBean psBeanRes = partnershipRepository.saveAndFlush(psBean);
-						if (psBeanRes.getUserId() == userBean.getUserId()) {
+					if(isCommisionValid) {
+						if (isValid) {
+							PartnershipBean psBeanRes = partnershipRepository.saveAndFlush(psBean);
+							if (psBeanRes.getUserId() == userBean.getUserId()) {
 
-							StakesBean stakesBean = new StakesBean();
-							userBean.setPartnership(psBeanRes.getId());
-							UserBean userRes = userRepository.save(userBean);
+								StakesBean stakesBean = new StakesBean();
+								userBean.setPartnership(psBeanRes.getId());
+								UserBean userRes = userRepository.save(userBean);
 
-							stakesBean.setUserId(userBean.getUserId());
-							stakesBean.setStake1(ResourceConstants.Stakes.STAKE1);
-							stakesBean.setStake2(ResourceConstants.Stakes.STAKE2);
-							stakesBean.setStake3(ResourceConstants.Stakes.STAKE3);
-							stakesBean.setStake4(ResourceConstants.Stakes.STAKE4);
-							stakesBean.setStake5(ResourceConstants.Stakes.STAKE5);
-							stakesBean.setCreatedBy(createdBy);
-							stakesRepository.save(stakesBean);
+								stakesBean.setUserId(userBean.getUserId());
+								stakesBean.setStake1(ResourceConstants.Stakes.STAKE1);
+								stakesBean.setStake2(ResourceConstants.Stakes.STAKE2);
+								stakesBean.setStake3(ResourceConstants.Stakes.STAKE3);
+								stakesBean.setStake4(ResourceConstants.Stakes.STAKE4);
+								stakesBean.setStake5(ResourceConstants.Stakes.STAKE5);
+								stakesBean.setCreatedBy(createdBy);
+								stakesRepository.save(stakesBean);
 
-							if (userRes.getUserId() == userBean.getUserId()) {
-								userResponseDto.setStatus(ResourceConstants.SUCCESS);
-								userResponseDto.setErrorMsg(ResourceConstants.INSERTED);
+								if (userRes.getUserId() == userBean.getUserId()) {
+									userResponseDto.setStatus(ResourceConstants.SUCCESS);
+									userResponseDto.setErrorMsg(ResourceConstants.USER_INSERTED);
+								} else {
+									userResponseDto.setStatus(ResourceConstants.FAILED);
+									userResponseDto.setErrorCode(ResourceConstants.ERR_002);
+									userResponseDto.setErrorMsg(ResourceConstants.INSERTION_FAILED);
+								}
 							} else {
 								userResponseDto.setStatus(ResourceConstants.FAILED);
 								userResponseDto.setErrorCode(ResourceConstants.ERR_002);
@@ -235,19 +253,20 @@ public class UserDao {
 							}
 						} else {
 							userResponseDto.setStatus(ResourceConstants.FAILED);
-							userResponseDto.setErrorCode(ResourceConstants.ERR_002);
-							userResponseDto.setErrorMsg(ResourceConstants.INSERTION_FAILED);
+							userResponseDto.setErrorCode(ResourceConstants.ERR_011);
+							userResponseDto.setErrorMsg(ResourceConstants.PARTNERSHIP_INVALID);
 						}
-					} else {
+					}else {
 						userResponseDto.setStatus(ResourceConstants.FAILED);
-						userResponseDto.setErrorCode(ResourceConstants.ERR_011);
-						userResponseDto.setErrorMsg(ResourceConstants.PARTNERSHIP_INVALID);
+						userResponseDto.setErrorCode(ResourceConstants.ERR_001);
+						userResponseDto.setErrorMsg(ResourceConstants.S_B_COMMISION_INVALID);
 					}
+					
 
 				} else {
 					userResponseDto.setStatus(ResourceConstants.FAILED);
 					userResponseDto.setErrorCode(ResourceConstants.ERR_001);
-					userResponseDto.setErrorMsg(ResourceConstants.EXIST);
+					userResponseDto.setErrorMsg(ResourceConstants.USER_EXIST);
 				}
 			} else {
 				userResponseDto.setStatus(ResourceConstants.FAILED);

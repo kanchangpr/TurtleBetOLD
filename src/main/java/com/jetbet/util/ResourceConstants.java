@@ -66,6 +66,7 @@ public class ResourceConstants {
 	
 	public static final String ERR_001="ERR_01";
 	public static final String EXIST="Data Already Exist";
+	public static final String USER_EXIST="User Already Exist";
 	
 	public static final String ERR_002="ERR_02";
 	public static final String INSERTION_FAILED="Data Insertion Failed";
@@ -96,6 +97,7 @@ public class ResourceConstants {
 	
 	public static final String ERR_011="ERR_11";
 	public static final String PARTNERSHIP_INVALID="Partnership between all stakeholders is greater than 100!!";
+	public static final String S_B_COMMISION_INVALID="Odd/Session Commission should not be greater than parent's Odd/Session Commision";
 	
 	public static final String ERR_012="ERR_12";
 	public static final String OLD_PASSWORD_WRONG="Current Password is Wrong!!";
@@ -116,6 +118,7 @@ public class ResourceConstants {
 	
 	public static final String ERR_EXCEPTION="ERR_EXEPCTION";
 	public static final String INSERTED="Data Inserted Successfully";
+	public static final String USER_INSERTED="User Added Successfully";
 	public static final String UPDATED="Data Updated Successfully";
 	public static final String PASSWORD_UPDATED="Password Updated Successfully";
 	public static final String SETTLEMENT_SUCCESS="Settlement done!!";
