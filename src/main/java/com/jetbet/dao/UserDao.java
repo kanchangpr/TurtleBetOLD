@@ -441,31 +441,16 @@ public class UserDao {
 				if (!errorRes) {
 					log.info("[" + transactionId + "] totalChipsInFromAcc:: " + totalChipsInFromAcc);
 					log.info("[" + transactionId + "] totalChipsInToAcc:: " + totalChipsInToAcc);
-					if (actString.equalsIgnoreCase(ResourceConstants.WITHDRAW)) {
-						updateFromUserAccChipsSql = QueryListConstant.UPDATE_FROM_USER_ACC_CHIPS_SQL;
-						int updateFromUserAccChipsrowCount = jdbcTemplate.update(updateFromUserAccChipsSql,
-								new Object[] { totalChipsInFromAcc, totalChipsInFromAcc, createdByString, fromUser });
-						log.info("[" + transactionId + "] updateFromUserAccChipsrowCount:: "
-								+ updateFromUserAccChipsrowCount);
+					updateFromUserAccChipsSql = QueryListConstant.UPDATE_FROM_USER_ACC_CHIPS_SQL;
+					int updateFromUserAccChipsrowCount = jdbcTemplate.update(updateFromUserAccChipsSql,
+							new Object[] { totalChipsInFromAcc, totChipsBalanceInFromUserAcc, createdByString, fromUser });
+					log.info("[" + transactionId + "] updateFromUserAccChipsrowCount:: "
+							+ updateFromUserAccChipsrowCount);
 
-						updateToUserAccChipsSql = QueryListConstant.UPDATE_TO_USER_ACC_CHIPS_SQL;
-						int updateToUserAccChipsrowCount = jdbcTemplate.update(updateToUserAccChipsSql,
-								new Object[] { totalChipsInToAcc,totalChipsInToAcc, createdByString, toUser });
-						log.info("[" + transactionId + "] updateToUserAccChipsrowCount:: " + updateToUserAccChipsrowCount);
-						
-					}else if(actString.equalsIgnoreCase(ResourceConstants.WITHDRAW)) {
-						updateFromUserAccChipsSql = QueryListConstant.UPDATE_FROM_USER_ACC_CHIPS_SQL;
-						int updateFromUserAccChipsrowCount = jdbcTemplate.update(updateFromUserAccChipsSql,
-								new Object[] { totalChipsInFromAcc, totalChipsInFromAcc, createdByString, fromUser });
-						log.info("[" + transactionId + "] updateFromUserAccChipsrowCount:: "
-								+ updateFromUserAccChipsrowCount);
-
-						updateToUserAccChipsSql = QueryListConstant.UPDATE_TO_USER_ACC_CHIPS_SQL;
-						int updateToUserAccChipsrowCount = jdbcTemplate.update(updateToUserAccChipsSql,
-								new Object[] { totalChipsInToAcc,totalChipsInToAcc, createdByString, toUser });
-						log.info("[" + transactionId + "] updateToUserAccChipsrowCount:: " + updateToUserAccChipsrowCount);
-					}
-					
+					updateToUserAccChipsSql = QueryListConstant.UPDATE_TO_USER_ACC_CHIPS_SQL;
+					int updateToUserAccChipsrowCount = jdbcTemplate.update(updateToUserAccChipsSql,
+							new Object[] { totalChipsInToAcc, totChipsBalanceInToUserAcc, createdByString, toUser });
+					log.info("[" + transactionId + "] updateToUserAccChipsrowCount:: " + updateToUserAccChipsrowCount);
 
 					toUserAccBean.setUserId(toUser);
 					toUserAccBean.setFromUser(fromUser);
