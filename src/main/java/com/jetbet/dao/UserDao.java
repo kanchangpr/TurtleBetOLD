@@ -395,12 +395,12 @@ public class UserDao {
 				if (actString.equalsIgnoreCase(ResourceConstants.DEPOSIT)) {
 					log.info("[" + transactionId + "] INSIDE Deposit");
 					returnMsgString = "Chips Deposited Successfully";
-					if (depositWithdrawChips > currentChipsInFromUserAcc) {
+					if (depositWithdrawChips > currentChipsInFromUserAcc && depositWithdrawChips > chipsBalanceInFromUserAcc) {
 						errorRes = true;
 						userResponseDto.setStatus(ResourceConstants.FAILED);
 						userResponseDto.setErrorCode(ResourceConstants.ERR_004);
 						userResponseDto.setErrorMsg(ResourceConstants.INSUFFICIENT_AMOUNT);
-					} else if (depositWithdrawChips <= currentChipsInFromUserAcc) {
+					} else if (depositWithdrawChips <= currentChipsInFromUserAcc && depositWithdrawChips <= chipsBalanceInFromUserAcc) {
 						totalChipsInFromAcc = currentChipsInFromUserAcc - depositWithdrawChips;
 						totalChipsInToAcc = currentChipsInToUserAcc + depositWithdrawChips;
 
@@ -416,12 +416,12 @@ public class UserDao {
 				} else if (actString.equalsIgnoreCase(ResourceConstants.WITHDRAW)) {
 					log.info("[" + transactionId + "] INSIDE Withdraw");
 					returnMsgString = "Chips Withdrawn Successfully";
-					if (depositWithdrawChips > currentChipsInToUserAcc) {
+					if (depositWithdrawChips > currentChipsInToUserAcc && depositWithdrawChips > currentChipsInToUserAcc) {
 						errorRes = true;
 						userResponseDto.setStatus(ResourceConstants.FAILED);
 						userResponseDto.setErrorCode(ResourceConstants.ERR_004);
 						userResponseDto.setErrorMsg(ResourceConstants.INSUFFICIENT_AMOUNT);
-					} else if (depositWithdrawChips <= currentChipsInToUserAcc) {
+					} else if (depositWithdrawChips <= currentChipsInToUserAcc && depositWithdrawChips <= currentChipsInToUserAcc) {
 						totalChipsInFromAcc = currentChipsInFromUserAcc + depositWithdrawChips;
 						totalChipsInToAcc = currentChipsInToUserAcc - depositWithdrawChips;
 

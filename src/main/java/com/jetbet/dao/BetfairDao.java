@@ -304,7 +304,11 @@ public class BetfairDao {
 		try {
 
 				List<SeriesBean> seriesBeanList = seriesRepository.findBySeriesIdAndIsActiveOrderBySportId(seriesId, "Y");
-
+				log.info(
+						"###########################################################################################################");
+				log.info("seriesBeanList::: " + seriesBeanList);
+				log.info(
+						"###########################################################################################################");
 				for (SeriesBean seriesBean : seriesBeanList) {
 
 					String sportsId = seriesBean.getSportId();
@@ -393,6 +397,56 @@ public class BetfairDao {
 		return fancyBeanResponseList;
 	}
 	
+	
+	public List<FancyBean> updateListOfOddsForSeries(String userName, String series, String transactionId) {
+
+		MarketFilter marketFilter;
+		marketFilter = new MarketFilter();
+		final List<FancyBean> fancyBeanList = new ArrayList<FancyBean>();
+		List<FancyBean> fancyBeanResponseList = new ArrayList<FancyBean>();
+		try {
+
+			List<MatchBean> matchBeanList = matchRepository.findBySeriesIdAndIsActive(series, "Y");
+			log.info(
+					"###########################################################################################################");
+			log.info("matchBeanList::: " + matchBeanList);
+			log.info(
+					"###########################################################################################################");
+			for (MatchBean matchBean : matchBeanList) {
+
+				String matchIds = matchBean.getMatchId();
+				String matchName = matchBean.getMatchName();
+				String sportsId = matchBean.getSportId();
+				String seriesId = matchBean.getSeriesId();
+				Set<String> matchIdSet = new HashSet<String>();
+				matchIdSet.add(matchIds);
+				marketFilter.setEventIds(matchIdSet);
+
+				List<MarketFancyResult> response = rescriptOperations.listFancy(marketFilter, appKey,
+						ssToken);
+
+				response.stream().forEach(res -> {
+					FancyBean fancyBean = new FancyBean();
+					FancyIdDto fancyId = new FancyIdDto();
+					fancyId.setMarketType(res.getMarketType());
+					fancyId.setMatchId(matchIds);
+					fancyBean.setFancyId(fancyId);
+					fancyBean.setSportId(sportsId);
+					fancyBean.setSeriesId(seriesId);
+					fancyBean.setMatchName(matchName);
+					fancyBean.setMarketCount(res.getMarketCount());
+					fancyBean.setFancyCreatedBy(userName);
+					fancyBeanList.add(fancyBean);
+				});
+			}
+
+			fancyBeanResponseList = storeListOfFancyDB(fancyBeanList, transactionId);
+
+		} catch (APINGException apiExc) {
+			log.info("[" + transactionId + "] " + apiExc.toString());
+		}
+		return fancyBeanResponseList;
+	}
 	
 	public List<FancyBean> updateListOfOdds(String userName, String matchId, String transactionId) {
 
