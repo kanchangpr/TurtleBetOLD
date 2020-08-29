@@ -405,6 +405,9 @@ public class BetfairDao {
 			for (MatchBean matchBean : matchBeanList) {
 
 				String matchIds = matchBean.getMatchId();
+				String matchName = matchBean.getMatchName();
+				String sportsId = matchBean.getSportId();
+				String seriesId = matchBean.getSeriesId();
 				Set<String> matchIdSet = new HashSet<String>();
 				matchIdSet.add(matchIds);
 				marketFilter.setEventIds(matchIdSet);
@@ -418,6 +421,9 @@ public class BetfairDao {
 					fancyId.setMarketType(res.getMarketType());
 					fancyId.setMatchId(matchIds);
 					fancyBean.setFancyId(fancyId);
+					fancyBean.setSportId(sportsId);
+					fancyBean.setSeriesId(seriesId);
+					fancyBean.setMatchName(matchName);
 					fancyBean.setMarketCount(res.getMarketCount());
 					fancyBean.setFancyCreatedBy(userName);
 					fancyBeanList.add(fancyBean);

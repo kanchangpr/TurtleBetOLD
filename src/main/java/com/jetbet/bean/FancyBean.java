@@ -45,7 +45,7 @@ public class FancyBean implements Serializable{
 //	@Column(name = "market_type")
 //	private String marketType;
 //
-	
+	@Column(name = "match_name")
 	private String matchName;
 	
 	@Column(name = "market_count")
