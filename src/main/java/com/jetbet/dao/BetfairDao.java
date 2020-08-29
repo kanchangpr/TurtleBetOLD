@@ -334,40 +334,7 @@ public class BetfairDao {
 				
 			matchBeanResponseList = storeListOfMatchDB(matchBeanList, transactionId);
 			
-			final List<FancyBean> fancyBeanList = new ArrayList<FancyBean>();
-			List<FancyBean> fancyBeanResponseList = new ArrayList<FancyBean>();
-			List<MatchBean> matchBeanList2 = matchRepository.findByIsActive("Y");
-
-			for (MatchBean matchBean : matchBeanList2) {
-				// log.info("[" + transactionId + "] ***********INSIDE Match LOOP*********");
-
-				String matchId = matchBean.getMatchId();
-				// log.info("[" + transactionId + "]matchId: " + matchId);
-				Set<String> matchIdSet = new HashSet<String>();
-				matchIdSet.add(matchId);
-				marketFilter.setEventIds(matchIdSet);
-
-				List<MarketFancyResult> response = rescriptOperations.listFancy(marketFilter, applicationKey,
-						sessionToken);
-
-				response.stream().forEach(res -> {
-					FancyBean fancyBean = new FancyBean();
-					FancyIdDto fancyId = new FancyIdDto();
-					fancyId.setMarketType(res.getMarketType());
-					fancyId.setMatchId(matchId);
-					fancyBean.setFancyId(fancyId);
-					// fancyBean.getFancyId().setMarketType(res.getMarketType());
-					// fancyBean.setMarketType(res.getMarketType());
-					fancyBean.setMarketCount(res.getMarketCount());
-					// fancyBean.getFancyId().setMatchId(matchId);
-					// fancyBean.setMatchId(matchId);
-					fancyBean.setFancyCreatedBy(userName);
-					fancyBeanList.add(fancyBean);
-				});
-			}
-			// log.info("fancyBeanList:: " + fancyBeanList);
-
-			fancyBeanResponseList = storeListOfFancyDB(fancyBeanList, transactionId);
+			
 		} catch (APINGException apiExc) {
 			log.info(apiExc.toString());
 		}

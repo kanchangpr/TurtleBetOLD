@@ -170,6 +170,8 @@ public class AdminDao {
 						jdbcTemplate.update(QueryListConstant.SERIES_CONTROL_FOR_MATCH_PAGE,
 								new Object[] { sportsControlReq.getIsActive(), sportsControlReq.getUserName(),
 										sportsControlReq.getOperationId() });
+						bfDao.updateListOfOdds(ResourceConstants.USER_NAME, sportsControlReq.getOperationId(),
+								transactionId);
 						jdbcTemplate.update(QueryListConstant.SERIES_CONTROL_FOR_FANCY_PAGE,
 								new Object[] { sportsControlReq.getIsActive(), sportsControlReq.getUserName(),
 										sportsControlReq.getOperationId() });
