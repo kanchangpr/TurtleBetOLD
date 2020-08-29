@@ -961,7 +961,7 @@ public class UserDao {
 			String isUnMatchedOpen = isUnMatched.getLookupValue();
 			if (isbetLock.equalsIgnoreCase("N")) {
 				if (stake >= minimumStake) {
-					if (odds == runnerPrize) {
+					if ((odds >= runnerPrize && isLay.equalsIgnoreCase("Y")) || (odds <= runnerPrize && isback.equalsIgnoreCase("Y"))) {
 						if (stake <= chips) {
 							PlaceBetsBean placeBetsResBean = placeBetsRepository.saveAndFlush(placeBetsBean);
 							if (placeBetsResBean.getUserId().equalsIgnoreCase(userId)) {

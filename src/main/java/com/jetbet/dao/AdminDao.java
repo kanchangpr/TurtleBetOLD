@@ -282,13 +282,13 @@ public class AdminDao {
 		String getUserRolesSql = null;
 
 		if (StringUtils.isBlank(matchId) && StringUtils.isBlank(fancyName)) {
-			getUserRolesSql = QueryListConstant.GET_FANCY_LIST + " ORDER BY MATCH_NAME";
+			getUserRolesSql = QueryListConstant.GET_FANCY_LIST + " ORDER BY MATCH_ID, market_type";
 		} else if (!StringUtils.isBlank(matchId) && StringUtils.isBlank(fancyName)) {
 			getUserRolesSql = QueryListConstant.GET_FANCY_LIST + " AND MATCH.MATCH_ID='" + matchId
-					+ "' ORDER BY MATCH_NAME";
+					+ "' ORDER BY MATCH_ID, market_type";
 		} else if (!StringUtils.isBlank(matchId) && !StringUtils.isBlank(fancyName)) {
 			getUserRolesSql = QueryListConstant.GET_FANCY_LIST + " AND MATCH.MATCH_ID='" + matchId
-					+ "' AND FANCY.MARKET_TYPE='" + fancyName + "' ORDER BY MATCH_NAME";
+					+ "' AND FANCY.MARKET_TYPE='" + fancyName + "' ORDER BY MATCH_ID, market_type ";
 		}
 
 		responseBeanList = jdbcTemplate.query(getUserRolesSql,
