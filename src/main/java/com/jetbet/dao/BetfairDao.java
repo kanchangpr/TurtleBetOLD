@@ -189,7 +189,7 @@ public class BetfairDao {
 		List<SeriesBean> seriesBeanResponseList = new ArrayList<SeriesBean>();
 		try {
 
-			List<SportsBean> sportsBeansList = sportsRepository.findByIsActiveAndSportsTypeIdOrderBySportsName(sportId,"Y");
+			List<SportsBean> sportsBeansList = sportsRepository.findBySportsTypeIdAndIsActiveOrderBySportsName(sportId,"Y");
 			for (SportsBean sportsBean : sportsBeansList) {
 				// log.info("[" + transactionId + "] ****************INSIDE OUTER
 				// FOR*********");
