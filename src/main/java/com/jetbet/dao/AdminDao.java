@@ -133,6 +133,11 @@ public class AdminDao {
 				if (sportsControlReq.getOperation().equalsIgnoreCase(ResourceConstants.SPORTS_PAGE)) {
 					log.info("[" + transactionId + "] sportsControlReq.getOperation(): "
 							+ sportsControlReq.getOperation());
+					if (sportsControlReq.getIsActive().equalsIgnoreCase("Y")) {
+						bfDao.updateListOfSeries(ResourceConstants.USER_NAME, sportsControlReq.getOperationId(),
+								transactionId);
+					}
+					
 					jdbcTemplate.update(QueryListConstant.SPORTS_CONTROL_FOR_SPORTS_PAGE,
 							new Object[] { sportsControlReq.getIsActive(), sportsControlReq.getUserName(),
 									sportsControlReq.getOperationId() });
@@ -143,32 +148,34 @@ public class AdminDao {
 							new Object[] { sportsControlReq.getIsActive(), sportsControlReq.getUserName(),
 									sportsControlReq.getOperationId() });
 
-					if (sportsControlReq.getIsActive().equalsIgnoreCase("Y")) {
-						bfDao.updateListOfSeries(ResourceConstants.USER_NAME, sportsControlReq.getOperationId(),
-								transactionId);
-					}
 					userResponseDto.setStatus(ResourceConstants.SUCCESS);
 					userResponseDto.setErrorMsg(ResourceConstants.UPDATED);
 
 				} else if (sportsControlReq.getOperation().equalsIgnoreCase(ResourceConstants.SERIES_PAGE)) {
 					log.info("[" + transactionId + "] sportsControlReq.getOperation(): "
 							+ sportsControlReq.getOperation());
+					if (sportsControlReq.getIsActive().equalsIgnoreCase("Y")) {
+						bfDao.updateListOfMatches(ResourceConstants.USER_NAME, sportsControlReq.getOperationId(),
+								transactionId);
+					}
 					jdbcTemplate.update(QueryListConstant.SERIES_CONTROL_FOR_SERIES_PAGE,
 							new Object[] { sportsControlReq.getIsActive(), sportsControlReq.getUserName(),
 									sportsControlReq.getOperationId() });
 					jdbcTemplate.update(QueryListConstant.SERIES_CONTROL_FOR_MATCH_PAGE,
 							new Object[] { sportsControlReq.getIsActive(), sportsControlReq.getUserName(),
 									sportsControlReq.getOperationId() });
-					if (sportsControlReq.getIsActive().equalsIgnoreCase("Y")) {
-						bfDao.updateListOfMatches(ResourceConstants.USER_NAME, sportsControlReq.getOperationId(),
-								transactionId);
-					}
+					
 					userResponseDto.setStatus(ResourceConstants.SUCCESS);
 					userResponseDto.setErrorMsg(ResourceConstants.UPDATED);
 
 				} else if (sportsControlReq.getOperation().equalsIgnoreCase(ResourceConstants.MATCH_PAGE)) {
 					log.info("[" + transactionId + "] sportsControlReq.getOperation(): "
 							+ sportsControlReq.getOperation());
+					
+					if (sportsControlReq.getIsActive().equalsIgnoreCase("Y")) {
+						bfDao.updateListOfOdds(ResourceConstants.USER_NAME, sportsControlReq.getOperationId(),
+								transactionId);
+					}
 					jdbcTemplate.update(QueryListConstant.MATCH_CONTROL_FOR_MATCH_PAGE,
 							new Object[] { sportsControlReq.getIsActive(), sportsControlReq.getUserName(),
 									sportsControlReq.getOperationId() });
@@ -177,10 +184,7 @@ public class AdminDao {
 							new Object[] { sportsControlReq.getIsActive(), sportsControlReq.getUserName(),
 									sportsControlReq.getOperationId() });
 
-					if (sportsControlReq.getIsActive().equalsIgnoreCase("Y")) {
-						bfDao.updateListOfOdds(ResourceConstants.USER_NAME, sportsControlReq.getOperationId(),
-								transactionId);
-					}
+					
 					userResponseDto.setStatus(ResourceConstants.SUCCESS);
 					userResponseDto.setErrorMsg(ResourceConstants.UPDATED);
 
