@@ -355,6 +355,10 @@ public class UserDao {
 		ChipsBean toUserAccBeanRes = new ChipsBean();
 		double currentChipsInFromUserAcc = 0;
 		double currentChipsInToUserAcc = 0;
+		double chipsBalanceInFromUserAcc = 0;
+		double chipsBalanceInToUserAcc = 0;
+		double totChipsBalanceInFromUserAcc = 0;
+		double totChipsBalanceInToUserAcc = 0;
 		double totalChipsInFromAcc = 0;
 		double totalChipsInToAcc = 0;
 		double depositWithdrawChips;
@@ -380,10 +384,12 @@ public class UserDao {
 
 				UserBean fromUserRes = userRepository.findFirst1ByUserId(fromUser);
 				currentChipsInFromUserAcc = fromUserRes.getAvailLimit();
+				chipsBalanceInFromUserAcc = fromUserRes.getAvailBalance();
 				log.info("[" + transactionId + "] Chips in From User Account: " + currentChipsInFromUserAcc);
 
 				UserBean toUserRes = userRepository.findFirst1ByUserId(toUser);
 				currentChipsInToUserAcc = toUserRes.getAvailLimit();
+				chipsBalanceInToUserAcc = toUserRes.getAvailBalance();
 				log.info("[" + transactionId + "] Chips in To User Account: " + currentChipsInToUserAcc);
 
 				if (actString.equalsIgnoreCase(ResourceConstants.DEPOSIT)) {
@@ -403,6 +409,9 @@ public class UserDao {
 
 						FromUserAccBean.setDebit(depositWithdrawChips);
 						FromUserAccBean.setTotalChips(totalChipsInFromAcc);
+						
+						totChipsBalanceInFromUserAcc=chipsBalanceInFromUserAcc-depositWithdrawChips;
+						totChipsBalanceInToUserAcc=chipsBalanceInToUserAcc+depositWithdrawChips;
 					}
 				} else if (actString.equalsIgnoreCase(ResourceConstants.WITHDRAW)) {
 					log.info("[" + transactionId + "] INSIDE Withdraw");
@@ -421,6 +430,9 @@ public class UserDao {
 
 						FromUserAccBean.setCredit(depositWithdrawChips);
 						FromUserAccBean.setTotalChips(totalChipsInFromAcc);
+						
+						totChipsBalanceInFromUserAcc=chipsBalanceInFromUserAcc+depositWithdrawChips;
+						totChipsBalanceInToUserAcc=chipsBalanceInToUserAcc-depositWithdrawChips;
 					}
 				}
 
@@ -429,17 +441,31 @@ public class UserDao {
 				if (!errorRes) {
 					log.info("[" + transactionId + "] totalChipsInFromAcc:: " + totalChipsInFromAcc);
 					log.info("[" + transactionId + "] totalChipsInToAcc:: " + totalChipsInToAcc);
+					if (actString.equalsIgnoreCase(ResourceConstants.WITHDRAW)) {
+						updateFromUserAccChipsSql = QueryListConstant.UPDATE_FROM_USER_ACC_CHIPS_SQL;
+						int updateFromUserAccChipsrowCount = jdbcTemplate.update(updateFromUserAccChipsSql,
+								new Object[] { totalChipsInFromAcc, totalChipsInFromAcc, createdByString, fromUser });
+						log.info("[" + transactionId + "] updateFromUserAccChipsrowCount:: "
+								+ updateFromUserAccChipsrowCount);
 
-					updateFromUserAccChipsSql = QueryListConstant.UPDATE_FROM_USER_ACC_CHIPS_SQL;
-					int updateFromUserAccChipsrowCount = jdbcTemplate.update(updateFromUserAccChipsSql,
-							new Object[] { totalChipsInFromAcc,totalChipsInFromAcc, createdByString, fromUser });
-					log.info("[" + transactionId + "] updateFromUserAccChipsrowCount:: "
-							+ updateFromUserAccChipsrowCount);
+						updateToUserAccChipsSql = QueryListConstant.UPDATE_TO_USER_ACC_CHIPS_SQL;
+						int updateToUserAccChipsrowCount = jdbcTemplate.update(updateToUserAccChipsSql,
+								new Object[] { totalChipsInToAcc,totalChipsInToAcc, createdByString, toUser });
+						log.info("[" + transactionId + "] updateToUserAccChipsrowCount:: " + updateToUserAccChipsrowCount);
+						
+					}else if(actString.equalsIgnoreCase(ResourceConstants.WITHDRAW)) {
+						updateFromUserAccChipsSql = QueryListConstant.UPDATE_FROM_USER_ACC_CHIPS_SQL;
+						int updateFromUserAccChipsrowCount = jdbcTemplate.update(updateFromUserAccChipsSql,
+								new Object[] { totalChipsInFromAcc, totalChipsInFromAcc, createdByString, fromUser });
+						log.info("[" + transactionId + "] updateFromUserAccChipsrowCount:: "
+								+ updateFromUserAccChipsrowCount);
 
-					updateToUserAccChipsSql = QueryListConstant.UPDATE_TO_USER_ACC_CHIPS_SQL;
-					int updateToUserAccChipsrowCount = jdbcTemplate.update(updateToUserAccChipsSql,
-							new Object[] { totalChipsInToAcc,totalChipsInToAcc, createdByString, toUser });
-					log.info("[" + transactionId + "] updateToUserAccChipsrowCount:: " + updateToUserAccChipsrowCount);
+						updateToUserAccChipsSql = QueryListConstant.UPDATE_TO_USER_ACC_CHIPS_SQL;
+						int updateToUserAccChipsrowCount = jdbcTemplate.update(updateToUserAccChipsSql,
+								new Object[] { totalChipsInToAcc,totalChipsInToAcc, createdByString, toUser });
+						log.info("[" + transactionId + "] updateToUserAccChipsrowCount:: " + updateToUserAccChipsrowCount);
+					}
+					
 
 					toUserAccBean.setUserId(toUser);
 					toUserAccBean.setFromUser(fromUser);
