@@ -968,7 +968,7 @@ public class UserDao {
 
 								log.info("[" + transactionId + "] placeBetsResBean:: " + placeBetsResBean);
 
-								double balance = Double.parseDouble(df.format(chips - stake));
+								double balance = Double.parseDouble(df.format(chips - liability));
 								double updUserLiab = Double.parseDouble(df.format(userLiab + liability));
 
 								updateChipsSql = QueryListConstant.UPDATE_USER_CHIPS;

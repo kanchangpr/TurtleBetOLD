@@ -292,8 +292,8 @@ public class AdminDao {
 		}
 
 		responseBeanList = jdbcTemplate.query(getUserRolesSql,
-				(rs, rowNum) -> new FancyBean(new FancyIdDto(rs.getString("market_type"), rs.getString("MATCH_NAME")),
-						rs.getInt("market_count"), rs.getString("series_id"), rs.getString("sports_id"),
+				(rs, rowNum) -> new FancyBean(new FancyIdDto(rs.getString("market_type"), rs.getString("match_id")),
+						rs.getInt("market_count"),rs.getString("match_Name"), rs.getString("series_id"), rs.getString("sports_id"),
 						rs.getString("is_active"), rs.getString("fancy_created_by"), rs.getDate("fancy_created_date")));
 		log.info("[" + transactionId + "] responseBeanList:  " + responseBeanList);
 		return responseBeanList;

@@ -45,8 +45,8 @@ public class FancyBean implements Serializable{
 //	@Column(name = "market_type")
 //	private String marketType;
 //
-//	@Column(name = "match_id")
-//	private String matchId;
+	
+	private String matchName;
 	
 	@Column(name = "market_count")
 	private int marketCount;
@@ -87,11 +87,12 @@ public class FancyBean implements Serializable{
 //		this.fancyCreatedDate = fancyCreatedDate;
 //	}
 
-	public FancyBean(FancyIdDto fancyId, int marketCount, String seriesId, String sportId, String isActive,
+	public FancyBean(FancyIdDto fancyId, int marketCount,String matchName, String seriesId, String sportId, String isActive,
 			String fancyCreatedBy, Date fancyCreatedDate) {
 		super();
 		this.fancyId = fancyId;
 		this.marketCount = marketCount;
+		this.matchName = matchName;
 		this.seriesId = seriesId;
 		this.sportId = sportId;
 		this.isActive = isActive;
