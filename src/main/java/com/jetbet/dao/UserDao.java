@@ -441,7 +441,7 @@ public class UserDao {
 				if (!errorRes) {
 					log.info("[" + transactionId + "] totalChipsInFromAcc:: " + totalChipsInFromAcc);
 					log.info("[" + transactionId + "] totalChipsInToAcc:: " + totalChipsInToAcc);
-					updateFromUserAccChipsSql = QueryListConstant.UPDATE_FROM_USER_ACC_CHIPS_SQL;
+					updateFromUserAccChipsSql = QueryListConstant.UPDATE_FROM_USER_ACC_CHIPS_SQL; 
 					int updateFromUserAccChipsrowCount = jdbcTemplate.update(updateFromUserAccChipsSql,
 							new Object[] { totalChipsInFromAcc, totChipsBalanceInFromUserAcc, createdByString, fromUser });
 					log.info("[" + transactionId + "] updateFromUserAccChipsrowCount:: "
