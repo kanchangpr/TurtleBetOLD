@@ -54,10 +54,10 @@ public class AdminDao {
 
 	@Autowired
 	FancyRepository fancyRepository;
-	
+
 	@Autowired
 	UserRepository userRepository;
-	
+
 	@Autowired
 	BetfairDao bfDao;
 
@@ -66,7 +66,7 @@ public class AdminDao {
 		log.info("[" + transactionId
 				+ "]*************************INSIDE addUserRole CLASS UserDao*************************");
 		UserResponseDto userResponseDto = new UserResponseDto();
-		//BetfairDao bfDao = new BetfairDao();
+		// BetfairDao bfDao = new BetfairDao();
 		Boolean errorCode = false;
 		String sqlString = null;
 		String tableName = null;
@@ -103,32 +103,33 @@ public class AdminDao {
 
 			log.info("[" + transactionId + "] errorCode:: " + errorCode + "sportsControlReq.getIsActive(): "
 					+ sportsControlReq.getIsActive());
-
-			if (!errorCode && sportsControlReq.getIsActive().equalsIgnoreCase("Y")) {
-
-				sqlString = "UPDATE " + tableName + " SET IS_ACTIVE= ? , " + lastUpdatedByColumn + " = ? , "
-						+ lastUpdateDateColumn + " = CURRENT_TIMESTAMP " + "WHERE " + columnName + " = ?";
-
-				log.info("[" + transactionId + "] sqlString:: " + sqlString);
-
-				int count = jdbcTemplate.update(sqlString, new Object[] { sportsControlReq.getIsActive(),
-						sportsControlReq.getUserName(), sportsControlReq.getOperationId() });
-				if (count == 0) {
-					userResponseDto.setStatus(ResourceConstants.FAILED);
-					userResponseDto.setErrorCode(ResourceConstants.ERR_003);
-					userResponseDto.setErrorMsg(ResourceConstants.UPDATION_FAILED);
-				} else {
-					userResponseDto.setStatus(ResourceConstants.SUCCESS);
-					userResponseDto.setErrorMsg(ResourceConstants.UPDATED);
-					if (sportsControlReq.getOperation().equalsIgnoreCase(ResourceConstants.SPORTS_PAGE)) {
-						bfDao.updateListOfSeries(ResourceConstants.USER_NAME, sportsControlReq.getOperationId() ,transactionId);
-					} else if (sportsControlReq.getOperation().equalsIgnoreCase(ResourceConstants.SERIES_PAGE)) {
-						bfDao.updateListOfMatches(ResourceConstants.USER_NAME, sportsControlReq.getOperationId() ,transactionId);
-					} else if (sportsControlReq.getOperation().equalsIgnoreCase(ResourceConstants.MATCH_PAGE)) {
-						bfDao.updateListOfOdds(ResourceConstants.USER_NAME, sportsControlReq.getOperationId() ,transactionId);
-					}
-				}
-			} else if (!errorCode && sportsControlReq.getIsActive().equalsIgnoreCase("N")) {
+//
+//			if (!errorCode && sportsControlReq.getIsActive().equalsIgnoreCase("Y")) {
+//
+//				sqlString = "UPDATE " + tableName + " SET IS_ACTIVE= ? , " + lastUpdatedByColumn + " = ? , "
+//						+ lastUpdateDateColumn + " = CURRENT_TIMESTAMP " + "WHERE " + columnName + " = ?";
+//
+//				log.info("[" + transactionId + "] sqlString:: " + sqlString);
+//
+//				int count = jdbcTemplate.update(sqlString, new Object[] { sportsControlReq.getIsActive(),
+//						sportsControlReq.getUserName(), sportsControlReq.getOperationId() });
+//				if (count == 0) {
+//					userResponseDto.setStatus(ResourceConstants.FAILED);
+//					userResponseDto.setErrorCode(ResourceConstants.ERR_003);
+//					userResponseDto.setErrorMsg(ResourceConstants.UPDATION_FAILED);
+//				} else {
+//					userResponseDto.setStatus(ResourceConstants.SUCCESS);
+//					userResponseDto.setErrorMsg(ResourceConstants.UPDATED);
+//					if (sportsControlReq.getOperation().equalsIgnoreCase(ResourceConstants.SPORTS_PAGE)) {
+//						bfDao.updateListOfSeries(ResourceConstants.USER_NAME, sportsControlReq.getOperationId() ,transactionId);
+//					} else if (sportsControlReq.getOperation().equalsIgnoreCase(ResourceConstants.SERIES_PAGE)) {
+//						bfDao.updateListOfMatches(ResourceConstants.USER_NAME, sportsControlReq.getOperationId() ,transactionId);
+//					} else if (sportsControlReq.getOperation().equalsIgnoreCase(ResourceConstants.MATCH_PAGE)) {
+//						bfDao.updateListOfOdds(ResourceConstants.USER_NAME, sportsControlReq.getOperationId() ,transactionId);
+//					}
+//				}
+//			} else
+			if (!errorCode) {
 				if (sportsControlReq.getOperation().equalsIgnoreCase(ResourceConstants.SPORTS_PAGE)) {
 					log.info("[" + transactionId + "] sportsControlReq.getOperation(): "
 							+ sportsControlReq.getOperation());
@@ -142,6 +143,10 @@ public class AdminDao {
 							new Object[] { sportsControlReq.getIsActive(), sportsControlReq.getUserName(),
 									sportsControlReq.getOperationId() });
 
+					if (sportsControlReq.getIsActive().equalsIgnoreCase("Y")) {
+						bfDao.updateListOfSeries(ResourceConstants.USER_NAME, sportsControlReq.getOperationId(),
+								transactionId);
+					}
 					userResponseDto.setStatus(ResourceConstants.SUCCESS);
 					userResponseDto.setErrorMsg(ResourceConstants.UPDATED);
 
@@ -154,7 +159,10 @@ public class AdminDao {
 					jdbcTemplate.update(QueryListConstant.SERIES_CONTROL_FOR_MATCH_PAGE,
 							new Object[] { sportsControlReq.getIsActive(), sportsControlReq.getUserName(),
 									sportsControlReq.getOperationId() });
-
+					if (sportsControlReq.getIsActive().equalsIgnoreCase("Y")) {
+						bfDao.updateListOfMatches(ResourceConstants.USER_NAME, sportsControlReq.getOperationId(),
+								transactionId);
+					}
 					userResponseDto.setStatus(ResourceConstants.SUCCESS);
 					userResponseDto.setErrorMsg(ResourceConstants.UPDATED);
 
@@ -169,6 +177,10 @@ public class AdminDao {
 							new Object[] { sportsControlReq.getIsActive(), sportsControlReq.getUserName(),
 									sportsControlReq.getOperationId() });
 
+					if (sportsControlReq.getIsActive().equalsIgnoreCase("Y")) {
+						bfDao.updateListOfOdds(ResourceConstants.USER_NAME, sportsControlReq.getOperationId(),
+								transactionId);
+					}
 					userResponseDto.setStatus(ResourceConstants.SUCCESS);
 					userResponseDto.setErrorMsg(ResourceConstants.UPDATED);
 
@@ -293,8 +305,9 @@ public class AdminDao {
 
 		responseBeanList = jdbcTemplate.query(getUserRolesSql,
 				(rs, rowNum) -> new FancyBean(new FancyIdDto(rs.getString("market_type"), rs.getString("match_id")),
-						rs.getInt("market_count"),rs.getString("match_Name"), rs.getString("series_id"), rs.getString("sports_id"),
-						rs.getString("is_active"), rs.getString("fancy_created_by"), rs.getDate("fancy_created_date")));
+						rs.getInt("market_count"), rs.getString("match_Name"), rs.getString("series_id"),
+						rs.getString("sports_id"), rs.getString("is_active"), rs.getString("fancy_created_by"),
+						rs.getDate("fancy_created_date")));
 		log.info("[" + transactionId + "] responseBeanList:  " + responseBeanList);
 		return responseBeanList;
 	}
@@ -340,9 +353,9 @@ public class AdminDao {
 	public List<BetSettlementDto> betSettlement(String accountType, String userId, String transactionId) {
 		String sqlString = null;
 		UserBean userDetail = userRepository.findByUserId(userId.toUpperCase());
-		String role= userDetail.getUserRole();
-		List<BetSettlementDto> betSettlementList= new ArrayList<BetSettlementDto>();
-		
+		String role = userDetail.getUserRole();
+		List<BetSettlementDto> betSettlementList = new ArrayList<BetSettlementDto>();
+
 //		if(accountType.equalsIgnoreCase("MINUS")) {
 //			sqlString=QueryListConstant.GET_SETTLEMENT_MINUS;
 //		}else if(accountType.equalsIgnoreCase("PLUS")) {
@@ -358,129 +371,101 @@ public class AdminDao {
 //						rs.getDouble("SM_STAKES"),
 //						rs.getDouble("ADMIN_STAKES")
 //						));
-		
-		if(role.equalsIgnoreCase(ResourceConstants.MASTER)) {
-			if(accountType.equalsIgnoreCase("MINUS")) {
-				sqlString=QueryListConstant.GET_SETTLEMENT_FOR_MASTER_MINUS;
-			}else if(accountType.equalsIgnoreCase("PLUS")) {
-				sqlString=QueryListConstant.GET_SETTLEMENT_FOR_MASTER_PLUS;
-			} 
-			
-			betSettlementList = jdbcTemplate.query(sqlString,
-					new Object[] { userId.toUpperCase() },
-					(rs, rowNum) -> new BetSettlementDto(
-							rs.getString("USER_ID"), 
-							rs.getDouble("AMOUNT"),
-							rs.getDouble("ADMIN_STAKES"),
-							rs.getDouble("SM_STAKES"),
-							rs.getDouble("MASTER_STAKES")
-							));
-			
-		}else if(role.equalsIgnoreCase(ResourceConstants.SUPERMASTER)) {
-			if(accountType.equalsIgnoreCase("MINUS")) {
-				sqlString=QueryListConstant.GET_SETTLEMENT_FOR_SM_MINUS;
-			}else if(accountType.equalsIgnoreCase("PLUS")) {
-				sqlString=QueryListConstant.GET_SETTLEMENT_FOR_SM_PLUS;
+
+		if (role.equalsIgnoreCase(ResourceConstants.MASTER)) {
+			if (accountType.equalsIgnoreCase("MINUS")) {
+				sqlString = QueryListConstant.GET_SETTLEMENT_FOR_MASTER_MINUS;
+			} else if (accountType.equalsIgnoreCase("PLUS")) {
+				sqlString = QueryListConstant.GET_SETTLEMENT_FOR_MASTER_PLUS;
 			}
-			
-			betSettlementList = jdbcTemplate.query(sqlString,
-					new Object[] { userId.toUpperCase() },
-					(rs, rowNum) -> new BetSettlementDto(
-							rs.getString("USER_ID"), 
-							rs.getDouble("MASTER_STAKES"),
-							rs.getDouble("ADMIN_STAKES"),
-							rs.getDouble("SM_STAKES")
-							));
-			
-		}else if(role.equalsIgnoreCase(ResourceConstants.ADMIN)) {
-			if(accountType.equalsIgnoreCase("MINUS")) {
-				sqlString=QueryListConstant.GET_SETTLEMENT_FOR_ADMIN_MINUS;
-			}else if(accountType.equalsIgnoreCase("PLUS")) {
-				sqlString=QueryListConstant.GET_SETTLEMENT_FOR_ADMIN_PLUS;
+
+			betSettlementList = jdbcTemplate.query(sqlString, new Object[] { userId.toUpperCase() },
+					(rs, rowNum) -> new BetSettlementDto(rs.getString("USER_ID"), rs.getDouble("AMOUNT"),
+							rs.getDouble("ADMIN_STAKES"), rs.getDouble("SM_STAKES"), rs.getDouble("MASTER_STAKES")));
+
+		} else if (role.equalsIgnoreCase(ResourceConstants.SUPERMASTER)) {
+			if (accountType.equalsIgnoreCase("MINUS")) {
+				sqlString = QueryListConstant.GET_SETTLEMENT_FOR_SM_MINUS;
+			} else if (accountType.equalsIgnoreCase("PLUS")) {
+				sqlString = QueryListConstant.GET_SETTLEMENT_FOR_SM_PLUS;
 			}
-			
-			betSettlementList = jdbcTemplate.query(sqlString,
-					new Object[] { userId.toUpperCase() },
-					(rs, rowNum) -> new BetSettlementDto(
-							rs.getString("USER_ID"), 
-							rs.getDouble("SM_STAKES"),
-							rs.getDouble("ADMIN_STAKES")
-							));
+
+			betSettlementList = jdbcTemplate.query(sqlString, new Object[] { userId.toUpperCase() },
+					(rs, rowNum) -> new BetSettlementDto(rs.getString("USER_ID"), rs.getDouble("MASTER_STAKES"),
+							rs.getDouble("ADMIN_STAKES"), rs.getDouble("SM_STAKES")));
+
+		} else if (role.equalsIgnoreCase(ResourceConstants.ADMIN)) {
+			if (accountType.equalsIgnoreCase("MINUS")) {
+				sqlString = QueryListConstant.GET_SETTLEMENT_FOR_ADMIN_MINUS;
+			} else if (accountType.equalsIgnoreCase("PLUS")) {
+				sqlString = QueryListConstant.GET_SETTLEMENT_FOR_ADMIN_PLUS;
+			}
+
+			betSettlementList = jdbcTemplate.query(sqlString, new Object[] { userId.toUpperCase() },
+					(rs, rowNum) -> new BetSettlementDto(rs.getString("USER_ID"), rs.getDouble("SM_STAKES"),
+							rs.getDouble("ADMIN_STAKES")));
 		}
-		
+
 		return betSettlementList;
-		
-		/* String admin;
-		 String sm;
-		 String master;
-		 String sqlString = null;
-		List<UserRoleDto> userDetails= new ArrayList<UserRoleDto>();
-		java.util.Map<String,String> userParentMap=new HashMap<String,String>();
-		
-		List<BetSettlementDto> betSettlementResList= new ArrayList<BetSettlementDto>();
-		List<BetSettlementDto> betSettlementList= new ArrayList<BetSettlementDto>();
-		if(accountType.equalsIgnoreCase("MINUS")) {
-			sqlString=QueryListConstant.GET_BET_SETTLEMENT_DATA_MINUS;
-		}else if(accountType.equalsIgnoreCase("PLUS")) {
-			sqlString=QueryListConstant.GET_BET_SETTLEMENT_DATA_PLUS;
-		}
-		
-		betSettlementList = jdbcTemplate.query(sqlString,
-				new Object[] { userId },
-				(rs, rowNum) -> new BetSettlementDto(
-						rs.getString("USER_ID"), rs.getDouble("STAKES"), 
-						rs.getDouble("LIABILITY"),	rs.getDouble("PROFIT"),
-						rs.getDouble("LOSS"),
-						rs.getDouble("AMOUNT"),
-						rs.getDouble("COMMISION"),
-						rs.getDouble("ADMIN_STAKES"),
-						rs.getDouble("SM_STAKES"),
-						rs.getDouble("MASTER_STAKES")
-						));
-		for (int i = 0; i < betSettlementList.size(); i++) {
-			BetSettlementDto betSettlementRes= new BetSettlementDto();
-			userDetails = jdbcTemplate.query(QueryListConstant.GET_PARENT_LIST,
-					new Object[] { betSettlementList.get(i).getUserId() },
-					(rs, rowNum) -> new UserRoleDto(
-							rs.getString("USER_ID"), rs.getString("USER_ROLE")
-							));
-			for (int j = 0; j < userDetails.size(); j++) {
-				userParentMap.put(userDetails.get(j).getUserRole(),userDetails.get(j).getUserId());
-			}
-			admin=userParentMap.get("ADMIN");
-			sm=userParentMap.get("SUPERMASTER");
-			master=userParentMap.get("MASTER");
-			betSettlementRes.setAdmin(admin);
-			betSettlementRes.setSm(sm);
-			betSettlementRes.setMaster(master);
-			betSettlementRes.setUserId(betSettlementList.get(i).getUserId());
-			betSettlementRes.setStake(betSettlementList.get(i).getStake());
-			betSettlementRes.setLiability(betSettlementList.get(i).getLiability());
-			betSettlementRes.setProfit(betSettlementList.get(i).getProfit());
-			betSettlementRes.setLoss(betSettlementList.get(i).getLoss());
-			betSettlementRes.setAmount(betSettlementList.get(i).getAmount());
-			betSettlementRes.setCommision(betSettlementList.get(i).getCommision());
-			betSettlementRes.setAdminStakes(betSettlementList.get(i).getAdminStakes());
-			betSettlementRes.setSmStakes(betSettlementList.get(i).getSmStakes());
-			betSettlementRes.setMasterStakes(betSettlementList.get(i).getMasterStakes());
-			betSettlementResList.add(betSettlementRes);
-		}
-		
-		return betSettlementResList;*/
+
+		/*
+		 * String admin; String sm; String master; String sqlString = null;
+		 * List<UserRoleDto> userDetails= new ArrayList<UserRoleDto>();
+		 * java.util.Map<String,String> userParentMap=new HashMap<String,String>();
+		 * 
+		 * List<BetSettlementDto> betSettlementResList= new
+		 * ArrayList<BetSettlementDto>(); List<BetSettlementDto> betSettlementList= new
+		 * ArrayList<BetSettlementDto>(); if(accountType.equalsIgnoreCase("MINUS")) {
+		 * sqlString=QueryListConstant.GET_BET_SETTLEMENT_DATA_MINUS; }else
+		 * if(accountType.equalsIgnoreCase("PLUS")) {
+		 * sqlString=QueryListConstant.GET_BET_SETTLEMENT_DATA_PLUS; }
+		 * 
+		 * betSettlementList = jdbcTemplate.query(sqlString, new Object[] { userId },
+		 * (rs, rowNum) -> new BetSettlementDto( rs.getString("USER_ID"),
+		 * rs.getDouble("STAKES"), rs.getDouble("LIABILITY"), rs.getDouble("PROFIT"),
+		 * rs.getDouble("LOSS"), rs.getDouble("AMOUNT"), rs.getDouble("COMMISION"),
+		 * rs.getDouble("ADMIN_STAKES"), rs.getDouble("SM_STAKES"),
+		 * rs.getDouble("MASTER_STAKES") )); for (int i = 0; i <
+		 * betSettlementList.size(); i++) { BetSettlementDto betSettlementRes= new
+		 * BetSettlementDto(); userDetails =
+		 * jdbcTemplate.query(QueryListConstant.GET_PARENT_LIST, new Object[] {
+		 * betSettlementList.get(i).getUserId() }, (rs, rowNum) -> new UserRoleDto(
+		 * rs.getString("USER_ID"), rs.getString("USER_ROLE") )); for (int j = 0; j <
+		 * userDetails.size(); j++) {
+		 * userParentMap.put(userDetails.get(j).getUserRole(),userDetails.get(j).
+		 * getUserId()); } admin=userParentMap.get("ADMIN");
+		 * sm=userParentMap.get("SUPERMASTER"); master=userParentMap.get("MASTER");
+		 * betSettlementRes.setAdmin(admin); betSettlementRes.setSm(sm);
+		 * betSettlementRes.setMaster(master);
+		 * betSettlementRes.setUserId(betSettlementList.get(i).getUserId());
+		 * betSettlementRes.setStake(betSettlementList.get(i).getStake());
+		 * betSettlementRes.setLiability(betSettlementList.get(i).getLiability());
+		 * betSettlementRes.setProfit(betSettlementList.get(i).getProfit());
+		 * betSettlementRes.setLoss(betSettlementList.get(i).getLoss());
+		 * betSettlementRes.setAmount(betSettlementList.get(i).getAmount());
+		 * betSettlementRes.setCommision(betSettlementList.get(i).getCommision());
+		 * betSettlementRes.setAdminStakes(betSettlementList.get(i).getAdminStakes());
+		 * betSettlementRes.setSmStakes(betSettlementList.get(i).getSmStakes());
+		 * betSettlementRes.setMasterStakes(betSettlementList.get(i).getMasterStakes());
+		 * betSettlementResList.add(betSettlementRes); }
+		 * 
+		 * return betSettlementResList;
+		 */
 	}
 
 	@Transactional
-	public UserResponseDto settlement(double chips,String remarks, String userId, String loggedInUser, String transactionId) {
+	public UserResponseDto settlement(double chips, String remarks, String userId, String loggedInUser,
+			String transactionId) {
 		log.info("[" + transactionId + "]**************INSIDE settlement CLASS UserDao******************");
 
-		log.info("[" + transactionId + "] chips:: "+chips);
-		log.info("[" + transactionId + "] remarks:: "+remarks);
-		log.info("[" + transactionId + "] userId:: "+userId);
-		log.info("[" + transactionId + "] loggedInUser:: "+loggedInUser);
-		
-		UserResponseDto userResponseDto= new UserResponseDto();
+		log.info("[" + transactionId + "] chips:: " + chips);
+		log.info("[" + transactionId + "] remarks:: " + remarks);
+		log.info("[" + transactionId + "] userId:: " + userId);
+		log.info("[" + transactionId + "] loggedInUser:: " + loggedInUser);
+
+		UserResponseDto userResponseDto = new UserResponseDto();
 		try {
-			
+
 //			List<UserRoleDto> userDetails= new ArrayList<UserRoleDto>();
 //			Map<String,String> userParentMap=new HashMap<String,String>();
 //			userDetails = jdbcTemplate.query(QueryListConstant.GET_PARENT_LIST,
@@ -501,67 +486,58 @@ public class AdminDao {
 //			double smPL=smDet.getPrifitLoss();
 //			
 //			if((userPL==0 && masterPL==0)||(masterPL==0 && smPL))
-			UserBean userBean= userRepository.findByUserId(userId);
-			
-			//List<UserRoleDto> userDetails= new ArrayList<UserRoleDto>();
-			List<String> userDetails = jdbcTemplate.query(QueryListConstant.GET_USER_LIST,
-					new Object[] { userId },
-					(rs, rowNum) -> new String(
-							rs.getString("USER_ID")
-							));
-			log.info("userDetails::: "+userDetails);
+			UserBean userBean = userRepository.findByUserId(userId);
+
+			// List<UserRoleDto> userDetails= new ArrayList<UserRoleDto>();
+			List<String> userDetails = jdbcTemplate.query(QueryListConstant.GET_USER_LIST, new Object[] { userId },
+					(rs, rowNum) -> new String(rs.getString("USER_ID")));
+			log.info("userDetails::: " + userDetails);
 			for (int j = 0; j < userDetails.size(); j++) {
-				
-				log.info("userDetails index ::: "+j);
-				if(userBean.getUserRole().equalsIgnoreCase(ResourceConstants.SUPERMASTER)) {
-					log.info("In Admin userDetails::: "+userDetails.get(j));
-					
-					String sqlString="UPDATE JETBET.JB_BET_DETAILS SET BET_SETTLEMENT='SETTLED' , SM_SETTLE='Y', "
+
+				log.info("userDetails index ::: " + j);
+				if (userBean.getUserRole().equalsIgnoreCase(ResourceConstants.SUPERMASTER)) {
+					log.info("In Admin userDetails::: " + userDetails.get(j));
+
+					String sqlString = "UPDATE JETBET.JB_BET_DETAILS SET BET_SETTLEMENT='SETTLED' , SM_SETTLE='Y', "
 							+ "LAST_UPDATED_DATE=CURRENT_TIMESTAMP , LAST_UPDATED_BY=?, REMARKS=? WHERE USER_ID=?";
-					jdbcTemplate.update(sqlString,
-							new Object[] { loggedInUser, remarks, userDetails.get(j)});
-					
-				}else if(userBean.getUserRole().equalsIgnoreCase(ResourceConstants.MASTER)) {
-					log.info("In SM userDetails::: "+userDetails.get(j));
-					
-					String sqlString="UPDATE JETBET.JB_BET_DETAILS SET BET_SETTLEMENT='SETTLED' , MASTER_SETTLE='Y', "
+					jdbcTemplate.update(sqlString, new Object[] { loggedInUser, remarks, userDetails.get(j) });
+
+				} else if (userBean.getUserRole().equalsIgnoreCase(ResourceConstants.MASTER)) {
+					log.info("In SM userDetails::: " + userDetails.get(j));
+
+					String sqlString = "UPDATE JETBET.JB_BET_DETAILS SET BET_SETTLEMENT='SETTLED' , MASTER_SETTLE='Y', "
 							+ "LAST_UPDATED_DATE=CURRENT_TIMESTAMP , LAST_UPDATED_BY=?, REMARKS=? WHERE USER_ID=?";
-					jdbcTemplate.update(sqlString,
-							new Object[] { loggedInUser, remarks, userDetails.get(j)});
-					
-				} else if(userBean.getUserRole().equalsIgnoreCase(ResourceConstants.USER)) {
-					log.info("In Master userDetails::: "+userDetails.get(j));
-					
-					String sqlString="UPDATE JETBET.JB_BET_DETAILS SET BET_SETTLEMENT='SETTLED' , ADMIN_SETTLE='Y', "
+					jdbcTemplate.update(sqlString, new Object[] { loggedInUser, remarks, userDetails.get(j) });
+
+				} else if (userBean.getUserRole().equalsIgnoreCase(ResourceConstants.USER)) {
+					log.info("In Master userDetails::: " + userDetails.get(j));
+
+					String sqlString = "UPDATE JETBET.JB_BET_DETAILS SET BET_SETTLEMENT='SETTLED' , ADMIN_SETTLE='Y', "
 							+ "LAST_UPDATED_DATE=CURRENT_TIMESTAMP , LAST_UPDATED_BY=?, REMARKS=? WHERE USER_ID=?";
-					jdbcTemplate.update(sqlString,
-							new Object[] { loggedInUser, remarks, userDetails.get(j)});
-					
-				} 
-				
+					jdbcTemplate.update(sqlString, new Object[] { loggedInUser, remarks, userDetails.get(j) });
+
+				}
+
 			}
-			
+
 			jdbcTemplate.update(QueryListConstant.RESET_USER_TABLE_ON_SETTLEMENT,
-					new Object[] { loggedInUser, userId});
-			
-			
-			
+					new Object[] { loggedInUser, userId });
+
 //			if(userUpdateCount>0 ) {
-				userResponseDto.setStatus(ResourceConstants.SUCCESS);
-				userResponseDto.setErrorMsg(ResourceConstants.SETTLEMENT_SUCCESS);
+			userResponseDto.setStatus(ResourceConstants.SUCCESS);
+			userResponseDto.setErrorMsg(ResourceConstants.SETTLEMENT_SUCCESS);
 //			}else {
 //				userResponseDto.setStatus(ResourceConstants.FAILED);
 //				userResponseDto.setErrorMsg(ResourceConstants.SETTLEMENT_FAILED);
 //			}
-			
-		}catch (Exception e) {
+
+		} catch (Exception e) {
 			userResponseDto.setStatus(ResourceConstants.EXCEPTION);
 			userResponseDto.setErrorCode(ResourceConstants.ERR_EXCEPTION);
 			userResponseDto.setErrorMsg(e.getMessage());
 			e.printStackTrace();
 		}
-		
-		
+
 		return userResponseDto;
 	}
 
