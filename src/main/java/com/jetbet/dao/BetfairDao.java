@@ -402,8 +402,12 @@ public class BetfairDao {
 		List<FancyBean> fancyBeanResponseList = new ArrayList<FancyBean>();
 		try {
 
-			List<MatchBean> matchBeanList = matchRepository.findByMatchIdAndIsActive(matchId,"Y");
-
+			List<MatchBean> matchBeanList = matchRepository.findByMatchIdAndIsActive(matchId, "Y");
+			log.info(
+					"###########################################################################################################");
+			log.info("matchBeanList::: " + matchBeanList);
+			log.info(
+					"###########################################################################################################");
 			for (MatchBean matchBean : matchBeanList) {
 
 				String matchIds = matchBean.getMatchId();
