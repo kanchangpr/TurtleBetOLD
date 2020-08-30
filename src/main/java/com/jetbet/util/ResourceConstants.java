@@ -115,6 +115,7 @@ public class ResourceConstants {
 	public static final String CHIPS_GREATER_THAN_ZERO="Chips should be greater than 0";
 	
 	public static final String BET_PLACED="Bet Placed Successfully!! Bet ID: ";
+	public static final String USER_UPDATED="User Detail updated Successfully!! ";
 	
 	public static final String ERR_EXCEPTION="ERR_EXEPCTION";
 	public static final String INSERTED="Data Inserted Successfully";

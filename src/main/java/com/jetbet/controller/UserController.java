@@ -196,12 +196,12 @@ public class UserController {
 	}
 
 	@RequestMapping(value = ResourceConstants.USER_DETAILS, method = RequestMethod.PUT)
-	public ResponseEntity<UserBean> updateUserDetails(@Valid @RequestBody UserDetailsRequestDto userDetailsRequestDto) {
+	public ResponseEntity<UserResponseDto> updateUserDetails(@Valid @RequestBody UserDetailsRequestDto userDetailsRequestDto) {
 		String transactionId = "TB" + UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
 		log.info("[" + transactionId
 				+ "]*************************INSIDE GET USER DETAILS METHOD POST*************************");
-		UserBean response = userService.updateUserDetails(userDetailsRequestDto, transactionId);
-		return new ResponseEntity<UserBean>(response, HttpStatus.OK);
+		UserResponseDto response = userService.updateUserDetails(userDetailsRequestDto, transactionId);
+		return new ResponseEntity<UserResponseDto>(response, HttpStatus.OK);
 	}
 
 	@RequestMapping(value = ResourceConstants.CHIPS_HISTORY, method = RequestMethod.GET)

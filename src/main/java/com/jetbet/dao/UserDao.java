@@ -703,9 +703,10 @@ public class UserDao {
 	}
 
 	@Transactional
-	public UserBean updateUserDetails(@Valid UserDetailsRequestDto userDetailsRequestDto, String transactionId) {
+	public UserResponseDto updateUserDetails(@Valid UserDetailsRequestDto userDetailsRequestDto, String transactionId) {
 		log.info("[" + transactionId
 				+ "]*************************INSIDE psPercentage CLASS UserDao*************************");
+		UserResponseDto userResponseDto = new UserResponseDto();
 		String userId = userDetailsRequestDto.getUserId().toUpperCase();
 		String fullName = userDetailsRequestDto.getFullName();
 		double oddsCommission = userDetailsRequestDto.getOddsCommission();
@@ -713,11 +714,6 @@ public class UserDao {
 		int betDelay = userDetailsRequestDto.getBetDelay();
 		int sessionDelay = userDetailsRequestDto.getSessionDelay();
 		long userLimit = userDetailsRequestDto.getUserLimit();
-//		double maxProfit = userDetailsRequestDto.getMaxProfit();
-//		double maxLoss = userDetailsRequestDto.getMaxLoss();
-//		double oddsMaxStake = userDetailsRequestDto.getOddsMaxStake();
-//		double goingInPlayStake = userDetailsRequestDto.getGoingInPlayStake();
-//		double sessionMaxStake = userDetailsRequestDto.getSessionMaxStake();
 		String remarks = userDetailsRequestDto.getRemarks();
 
 		log.info("[" + transactionId + "] userId:: " + userId);
@@ -727,33 +723,45 @@ public class UserDao {
 		log.info("[" + transactionId + "] betDelay:: " + betDelay);
 		log.info("[" + transactionId + "] sessionDelay:: " + sessionDelay);
 		log.info("[" + transactionId + "] userLimit:: " + userLimit);
-//		log.info("[" + transactionId + "] maxProfit:: " + maxProfit);
-//		log.info("[" + transactionId + "] maxLoss:: " + maxLoss);
-//		log.info("[" + transactionId + "] oddsMaxStake:: " + oddsMaxStake);
-//		log.info("[" + transactionId + "] goingInPlayStake:: " + goingInPlayStake);
-//		log.info("[" + transactionId + "] sessionMaxStake:: " + sessionMaxStake);
 		log.info("[" + transactionId + "] remarks:: " + remarks);
-
+		boolean isCommisionValid = true;
+		
 		UserBean userUpdBean = userRepository.findFirst1ByUserId(userId);
+		
+		UserBean parentDetail = new UserBean();
+		parentDetail = userRepository.findByUserId(userUpdBean.getParent().toUpperCase());
 		if (userUpdBean != null) {
-			log.info("[" + transactionId + "] userUpdBean:: " + userUpdBean);
-			userUpdBean.setFullName(fullName);
-			userUpdBean.setOddsCommission(oddsCommission);
-			userUpdBean.setSessionCommission(sessionCommission);
-			userUpdBean.setBetDelay(betDelay);
-			userUpdBean.setSessionDelay(sessionDelay);
-			userUpdBean.setUserLimit(userLimit);
-//			userUpdBean.setMaxProfit(maxProfit);
-//			userUpdBean.setMaxLoss(maxLoss);
-//			userUpdBean.setOddsMaxStake(oddsMaxStake);
-//			userUpdBean.setGoingInPlayStake(goingInPlayStake);
-//			userUpdBean.setSessionMaxStake(sessionMaxStake);
-			userUpdBean.setRemarks(remarks);
-			userUpdBean = userRepository.save(userUpdBean);
+			if (userUpdBean.getOddsCommission() > parentDetail.getOddsCommission()) {
+				isCommisionValid = false;
+			}
+
+			if (userUpdBean.getSessionCommission() > parentDetail.getSessionCommission()) {
+				isCommisionValid = false;
+			}
+
+			if(isCommisionValid) {
+				log.info("[" + transactionId + "] userUpdBean:: " + userUpdBean);
+				userUpdBean.setFullName(fullName);
+				userUpdBean.setOddsCommission(oddsCommission);
+				userUpdBean.setSessionCommission(sessionCommission);
+				userUpdBean.setBetDelay(betDelay);
+				userUpdBean.setSessionDelay(sessionDelay);
+				userUpdBean.setUserLimit(userLimit);
+				userUpdBean.setRemarks(remarks);
+				userUpdBean = userRepository.saveAndFlush(userUpdBean);
+				
+				userResponseDto.setStatus(ResourceConstants.SUCCESS);
+				userResponseDto.setErrorMsg(ResourceConstants.USER_UPDATED);
+			}else {
+				userResponseDto.setStatus(ResourceConstants.FAILED);
+				userResponseDto.setErrorCode(ResourceConstants.ERR_001);
+				userResponseDto.setErrorMsg(ResourceConstants.S_B_COMMISION_INVALID);
+			}
+			
 		}
 		log.info("[" + transactionId + "] userUpdBean:: " + userUpdBean);
 
-		return userUpdBean;
+		return userResponseDto;
 	}
 
 	@Transactional
@@ -965,6 +973,9 @@ public class UserDao {
 			placeBetsBean.setBetStatus(BET_STATUS);
 			placeBetsBean.setBetResult(BET_RESULT);
 			placeBetsBean.setBetSettlement(BET_SETTLEMENT);
+			placeBetsBean.setAdminSettle("N");
+			placeBetsBean.setMasterSettle("N");
+			placeBetsBean.setSmSettle("N");
 
 			LookupTableBean lookupTableRes = lookupTableRepository.findByLookupType(MINIMUM_STAKE);
 			LookupTableBean isUnMatched = lookupTableRepository.findByLookupType(IS_UNMATCHED_OPEN);
@@ -973,7 +984,7 @@ public class UserDao {
 			if (isbetLock.equalsIgnoreCase("N")) {
 				if (stake >= minimumStake) {
 					if ((odds >= runnerPrize && isLay.equalsIgnoreCase("Y")) || (odds <= runnerPrize && isback.equalsIgnoreCase("Y"))) {
-						if (stake <= chips) {
+						if (liability <= chips) {
 							PlaceBetsBean placeBetsResBean = placeBetsRepository.saveAndFlush(placeBetsBean);
 							if (placeBetsResBean.getUserId().equalsIgnoreCase(userId)) {
 

@@ -59,7 +59,7 @@ public interface UserService {
 
 	Map<Integer, Boolean> psPercentage(PartnershipBean psBean, String transactionId);
 
-	UserBean updateUserDetails(@Valid UserDetailsRequestDto userDetailsRequestDto, String transactionId);
+	UserResponseDto updateUserDetails(@Valid UserDetailsRequestDto userDetailsRequestDto, String transactionId);
 
 	List<ChipsBean> getChipsHistory(String userId, String transactionId);
 

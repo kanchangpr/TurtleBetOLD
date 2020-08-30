@@ -131,7 +131,7 @@ public class UserServiceImpl implements UserService{
 	}
 
 	@Override
-	public UserBean updateUserDetails(@Valid UserDetailsRequestDto userDetailsRequestDto, String transactionId) {
+	public UserResponseDto updateUserDetails(@Valid UserDetailsRequestDto userDetailsRequestDto, String transactionId) {
 		log.info("["+transactionId+"]*************************INSIDE updateUserDetails CLASS AdminServiceImpl*************************");
 		return userDao.updateUserDetails(userDetailsRequestDto,transactionId);
 	}

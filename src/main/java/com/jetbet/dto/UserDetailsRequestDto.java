@@ -18,16 +18,16 @@ public class UserDetailsRequestDto {
 	@NotNull
 	private String userId;
 	
-	@NotNull
+	
 	private String fullName;
 	
-	@NotNull
+	
 	private String password;
 	
-	@NotNull
+	
 	private String userRole;
 	
-	@NotNull
+	
 	private String parent;
 	
 	private int partnership;
@@ -42,9 +42,9 @@ public class UserDetailsRequestDto {
 //	private int goingInPlayStake;
 //	private int sessionMaxStake;
 	
-	@NotNull
+	
 	private String remarks;
 	
-	@NotNull
+	
 	private String userName;
 }
