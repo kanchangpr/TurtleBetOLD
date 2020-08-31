@@ -15,4 +15,7 @@ public interface FancyRepository extends JpaRepository<FancyBean, FancyIdDto>{
 	long countByFancyIdMarketTypeAndFancyIdMatchId (String marketType, String matchId);
 	
 	List<FancyBean> findByFancyIdMarketTypeAndFancyIdMatchIdAndIsActive (String marketType, String matchId,String isActive);
+	
+	
+	List<FancyBean> findBySportIdAndFancyIdMatchIdAndIsActive (String sportId, String matchId,String isActive);
 }

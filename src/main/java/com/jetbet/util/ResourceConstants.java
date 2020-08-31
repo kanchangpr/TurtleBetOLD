@@ -39,6 +39,7 @@ public class ResourceConstants {
 	public static final String CHANGE_PASSWORD="changePassword";
 	public static final String MARKET_CATALOGUE="marketCatalogue";
 	public static final String MATCH_ODDS="matchOdds";
+	public static final String MATCH_ODDS_AND_FANCY="matchOddsAndFancy";
 	public static final String PLACE_BETS="placeBets";
 	public static final String STAKES_DETAILS="stakesDetails";
 	public static final String LIABILITY="calcLiability";

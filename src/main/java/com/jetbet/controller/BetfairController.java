@@ -24,6 +24,7 @@ import com.jetbet.bean.SeriesBean;
 import com.jetbet.bean.SportsBean;
 import com.jetbet.betfair.entities.MarketCatalogue;
 import com.jetbet.dto.DashboardMatchListDto;
+import com.jetbet.dto.MatchAndFancyDetailDto;
 import com.jetbet.dto.RunnerPriceAndSize;
 import com.jetbet.dto.SeriesMatchFancyResponseDto;
 import com.jetbet.dto.SessionDetails;
@@ -166,6 +167,18 @@ public class BetfairController {
 		String userName=ResourceConstants.USER_NAME;
 		
 		return betfairService.getMatchOdds(sportsId,applicationKey,sessionToken,userName,transactionId);
+	}
+	
+	@RequestMapping(value=ResourceConstants.MATCH_ODDS_AND_FANCY, method=RequestMethod.GET)
+	public List<MatchAndFancyDetailDto> getMatchOddsAndFancy(@RequestParam(value="sportsId" ,required=false) String sportsId,
+			@RequestParam(value="matchId" ,required=false) String matchId) {
+		String transactionId = "TB"+UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
+		log.info("["+transactionId+"]*************************INSIDE USER ROLE METHOD GET*************************");
+		log.info("applicationKey:: "+applicationKey);
+		log.info("sessionToken:: "+sessionToken);
+		String userName=ResourceConstants.USER_NAME;
+		
+		return betfairService.getMatchOddsAndFancy(sportsId,matchId,applicationKey,sessionToken,userName,transactionId);
 	}
 	
 	@RequestMapping(value=ResourceConstants.USER_DASHBOARD_MATCH_LIST, method=RequestMethod.GET)

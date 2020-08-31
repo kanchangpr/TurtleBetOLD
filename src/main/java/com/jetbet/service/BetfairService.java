@@ -11,6 +11,7 @@ import com.jetbet.bean.SeriesBean;
 import com.jetbet.bean.SportsBean;
 import com.jetbet.betfair.entities.MarketCatalogue;
 import com.jetbet.dto.DashboardMatchListDto;
+import com.jetbet.dto.MatchAndFancyDetailDto;
 import com.jetbet.dto.RunnerPriceAndSize;
 import com.jetbet.dto.SeriesMatchFancyResponseDto;
 import com.jetbet.dto.SessionDetails;
@@ -45,5 +46,8 @@ public interface BetfairService {
 
 	List<SeriesMatchFancyResponseDto> getMatchOdds(String sportsId, String applicationKey, String sessionToken,
 			String userName, String transactionId);
+
+	List<MatchAndFancyDetailDto> getMatchOddsAndFancy(String sportsId, String matchId, String applicationKey,
+			String sessionToken, String userName, String transactionId);
 
 }
