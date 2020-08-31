@@ -143,7 +143,7 @@ public class PlaceBetsBean {
 	private String isLay;
 	
 	@Column(name = "psid" , updatable = false)
-	private int psId;
+	private long psId;
 	
 	@Column(name = "remarks" , updatable = false)
 	private String remarks;

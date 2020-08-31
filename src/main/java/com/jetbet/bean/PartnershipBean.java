@@ -35,7 +35,6 @@ public class PartnershipBean {
     @GeneratedValue(strategy = GenerationType.SEQUENCE,generator="jb_partnership_details_seq")
 	private int id;
 	
-	@OrderBy
 	@Column(name = "user_id", updatable=false)
 	private String userId;
 	

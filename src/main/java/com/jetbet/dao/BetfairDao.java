@@ -93,7 +93,7 @@ public class BetfairDao {
 
 	@Autowired
 	JdbcTemplate jdbcTemplate;
-	
+
 	public static String appKey;
 	public static String ssToken;
 
@@ -179,17 +179,17 @@ public class BetfairDao {
 		// seriesBeanResponseList);
 		return seriesBeanResponseList;
 	}
-	
-	
+
 	public List<SeriesBean> updateListOfSeries(String userName, String sportId, String transactionId) {
-		
+
 		MarketFilter marketFilter;
 		marketFilter = new MarketFilter();
 		final List<SeriesBean> seriesBeanList = new ArrayList<SeriesBean>();
 		List<SeriesBean> seriesBeanResponseList = new ArrayList<SeriesBean>();
 		try {
 
-			List<SportsBean> sportsBeansList = sportsRepository.findBySportsTypeIdAndIsActiveOrderBySportsName(sportId,"Y");
+			List<SportsBean> sportsBeansList = sportsRepository.findBySportsTypeIdAndIsActiveOrderBySportsName(sportId,
+					"Y");
 			for (SportsBean sportsBean : sportsBeansList) {
 				// log.info("[" + transactionId + "] ****************INSIDE OUTER
 				// FOR*********");
@@ -202,8 +202,7 @@ public class BetfairDao {
 
 				// log.info("[" + transactionId + "] (getlistOfComp) Get all
 				// Competition(Series)...\n");
-				List<CompetitionResult> response = rescriptOperations.listComp(marketFilter, appKey,
-						ssToken);
+				List<CompetitionResult> response = rescriptOperations.listComp(marketFilter, appKey, ssToken);
 
 				response.stream().forEach(res -> {
 					SeriesBean seriesBean = new SeriesBean();
@@ -292,10 +291,8 @@ public class BetfairDao {
 		// matchBeanResponseList);
 		return matchBeanResponseList;
 	}
-	
-	
-	
-	public List<MatchBean> updateListOfMatches(String userName,String seriesId, String transactionId) {
+
+	public List<MatchBean> updateListOfMatches(String userName, String seriesId, String transactionId) {
 
 		MarketFilter marketFilter;
 		marketFilter = new MarketFilter();
@@ -303,42 +300,40 @@ public class BetfairDao {
 		List<MatchBean> matchBeanResponseList = new ArrayList<MatchBean>();
 		try {
 
-				List<SeriesBean> seriesBeanList = seriesRepository.findBySeriesIdAndIsActiveOrderBySportId(seriesId, "Y");
-				log.info(
-						"###########################################################################################################");
-				log.info("seriesBeanList::: " + seriesBeanList);
-				log.info(
-						"###########################################################################################################");
-				for (SeriesBean seriesBean : seriesBeanList) {
+			List<SeriesBean> seriesBeanList = seriesRepository.findBySeriesIdAndIsActiveOrderBySportId(seriesId, "Y");
+			log.info(
+					"###########################################################################################################");
+			log.info("seriesBeanList::: " + seriesBeanList);
+			log.info(
+					"###########################################################################################################");
+			for (SeriesBean seriesBean : seriesBeanList) {
 
-					String sportsId = seriesBean.getSportId();
-					String seriesIds  = seriesBean.getSeriesId();
-					Set<String> seriesIdSet = new HashSet<String>();
-					seriesIdSet.add(seriesIds);
-					marketFilter.setCompetitionIds(seriesIdSet);
+				String sportsId = seriesBean.getSportId();
+				String seriesIds = seriesBean.getSeriesId();
+				Set<String> seriesIdSet = new HashSet<String>();
+				seriesIdSet.add(seriesIds);
+				marketFilter.setCompetitionIds(seriesIdSet);
 
-					List<EventResult> response = rescriptOperations.listEvents(marketFilter, appKey,
-							ssToken);
+				List<EventResult> response = rescriptOperations.listEvents(marketFilter, appKey, ssToken);
 
-					response.stream().forEach(res -> {
-						MatchBean matchBean = new MatchBean();
-						matchBean.setMatchId(res.getEvent().getId());
-						matchBean.setMatchName(res.getEvent().getName());
-						matchBean.setMatchCountryCode(res.getEvent().getCountryCode());
-						matchBean.setMatchTimezone(res.getEvent().getTimezone());
-						matchBean.setMatchVenue(res.getEvent().getVenue());
-						matchBean.setMatchOpenDate(res.getEvent().getOpenDate());
-						matchBean.setMatchMarketCount(res.getMarketCount());
-						matchBean.setSportId(sportsId);
-						matchBean.setSeriesId(seriesId);
-						matchBean.setMatchCreatedBy(userName);
-						matchBeanList.add(matchBean);
-					});
-				}
-				
+				response.stream().forEach(res -> {
+					MatchBean matchBean = new MatchBean();
+					matchBean.setMatchId(res.getEvent().getId());
+					matchBean.setMatchName(res.getEvent().getName());
+					matchBean.setMatchCountryCode(res.getEvent().getCountryCode());
+					matchBean.setMatchTimezone(res.getEvent().getTimezone());
+					matchBean.setMatchVenue(res.getEvent().getVenue());
+					matchBean.setMatchOpenDate(res.getEvent().getOpenDate());
+					matchBean.setMatchMarketCount(res.getMarketCount());
+					matchBean.setSportId(sportsId);
+					matchBean.setSeriesId(seriesId);
+					matchBean.setMatchCreatedBy(userName);
+					matchBeanList.add(matchBean);
+				});
+			}
+
 			matchBeanResponseList = storeListOfMatchDB(matchBeanList, transactionId);
-			
-			
+
 		} catch (APINGException apiExc) {
 			log.info(apiExc.toString());
 		}
@@ -396,8 +391,7 @@ public class BetfairDao {
 		}
 		return fancyBeanResponseList;
 	}
-	
-	
+
 	public List<FancyBean> updateListOfOddsForSeries(String userName, String series, String transactionId) {
 
 		MarketFilter marketFilter;
@@ -422,8 +416,7 @@ public class BetfairDao {
 				matchIdSet.add(matchIds);
 				marketFilter.setEventIds(matchIdSet);
 
-				List<MarketFancyResult> response = rescriptOperations.listFancy(marketFilter, appKey,
-						ssToken);
+				List<MarketFancyResult> response = rescriptOperations.listFancy(marketFilter, appKey, ssToken);
 
 				response.stream().forEach(res -> {
 					FancyBean fancyBean = new FancyBean();
@@ -447,7 +440,7 @@ public class BetfairDao {
 		}
 		return fancyBeanResponseList;
 	}
-	
+
 	public List<FancyBean> updateListOfOdds(String userName, String matchId, String transactionId) {
 
 		MarketFilter marketFilter;
@@ -472,8 +465,7 @@ public class BetfairDao {
 				matchIdSet.add(matchIds);
 				marketFilter.setEventIds(matchIdSet);
 
-				List<MarketFancyResult> response = rescriptOperations.listFancy(marketFilter, appKey,
-						ssToken);
+				List<MarketFancyResult> response = rescriptOperations.listFancy(marketFilter, appKey, ssToken);
 
 				response.stream().forEach(res -> {
 					FancyBean fancyBean = new FancyBean();
@@ -513,7 +505,7 @@ public class BetfairDao {
 		// ArrayList<MarketCatalogueBean>();
 		try {
 			String maxResults = "100";
-			List<SeriesBean> seriesList= new ArrayList<SeriesBean>();
+			List<SeriesBean> seriesList = new ArrayList<SeriesBean>();
 			if (StringUtils.isEmpty(sportsId)) {
 				seriesList = seriesRepository.findByIsActiveOrderBySportId("Y");
 			} else {
@@ -584,7 +576,7 @@ public class BetfairDao {
 						marketCatalogueResult = rescriptOperations.listMarketCatalogue(marketFilter, marketProjection,
 								MarketSort.FIRST_TO_START, maxResults, applicationKey, sessionToken);
 						if (marketCatalogueResult.size() == 0) {
-							//log.info("INSIDE IF");
+							// log.info("INSIDE IF");
 							matchAndFancyDetailDto.setMarketCatalogueRes(new ArrayList<MarketCatalogue>());
 						} else {
 							matchAndFancyDetailDto.setMarketCatalogueRes(marketCatalogueResult);
@@ -596,7 +588,100 @@ public class BetfairDao {
 				}
 				seriesMatchFancyResList.add(seriesMatchFancyRes);
 			}
-			//log.info("seriesMatchFancyResList: " + seriesMatchFancyResList);
+			// log.info("seriesMatchFancyResList: " + seriesMatchFancyResList);
+		} catch (APINGException e) {
+			e.printStackTrace();
+		}
+		return seriesMatchFancyResList;
+	}
+
+	public List<SeriesMatchFancyResponseDto> getMatchOdds(String sportsId, String appKey, String ssoid, String userName,
+			String transactionId) {
+		this.applicationKey = appKey;
+		this.sessionToken = ssoid;
+		MarketFilter marketFilter;
+
+		List<SeriesMatchFancyResponseDto> seriesMatchFancyResList = new ArrayList<SeriesMatchFancyResponseDto>();
+		List<MarketCatalogue> marketCatalogueResult = null;
+		List<MarketBook> mBooks = new ArrayList<MarketBook>();
+
+		final List<MarketCatalogueBean> marketCatalogueList = new ArrayList<MarketCatalogueBean>();
+		try {
+			String maxResults = "100";
+			List<SeriesBean> seriesList = new ArrayList<SeriesBean>();
+			if (StringUtils.isEmpty(sportsId)) {
+				seriesList = seriesRepository.findByIsActiveOrderBySportId("Y");
+			} else {
+				seriesList = seriesRepository.findBySportIdAndIsActiveOrderBySportId(sportsId, "Y");
+			}
+
+			for (int k = 0; k < seriesList.size(); k++) {
+				SeriesMatchFancyResponseDto seriesMatchFancyRes = new SeriesMatchFancyResponseDto();
+				List<MatchAndFancyDetailDto> matchAndFancyDetailList = new ArrayList<MatchAndFancyDetailDto>();
+				String seriesId = seriesList.get(k).getSeriesId();
+				String seriesName = seriesList.get(k).getSeriesName();
+
+				seriesMatchFancyRes.setSeriesId(seriesId);
+				seriesMatchFancyRes.setSeriesName(seriesName);
+
+				List<MatchBean> matchList = matchRepository.findBySeriesIdAndIsActive(seriesId, "Y");
+				for (int j = 0; j < matchList.size(); j++) {
+
+					String matchIdString = matchList.get(j).getMatchId();
+					String matchNameString = matchList.get(j).getMatchName();
+					Date matchOpenDate = matchList.get(j).getMatchOpenDate();
+					// log.info("Match ID for Fancy Details: " + matchIdString);
+					List<FancyBean> marketTypeList = fancyRepository
+							.findByFancyIdMarketTypeAndFancyIdMatchIdAndIsActive("MATCH_ODDS", matchIdString, "Y");
+
+					for (int i = 0; i < marketTypeList.size(); i++) {
+						MatchAndFancyDetailDto matchAndFancyDetailDto = new MatchAndFancyDetailDto();
+						String matchId = matchIdString;
+						String matchName = matchNameString;
+						Date matchDate = matchOpenDate;
+						String marketType = marketTypeList.get(i).getFancyId().getMarketType();
+						int marketCount = marketTypeList.get(i).getMarketCount();
+
+						log.info("matchId: " + matchId);
+						log.info("matchName:: " + matchName);
+						log.info("matchDate: " + matchDate);
+						log.info("marketType:: " + marketType);
+
+						matchAndFancyDetailDto.setMatchId(matchId);
+						matchAndFancyDetailDto.setMatchName(matchName);
+						matchAndFancyDetailDto.setMatchDate(matchDate);
+						matchAndFancyDetailDto.setMarketType(marketType);
+						matchAndFancyDetailDto.setMarketCount(marketCount);
+
+						Set<String> typesCode = new HashSet<String>();
+						typesCode.add(marketType);
+						Set<String> eventIds = new HashSet<String>();
+						eventIds.add(matchId);
+
+						marketFilter = new MarketFilter();
+						marketFilter.setEventIds(eventIds);
+						marketFilter.setMarketTypeCodes(typesCode);
+						Set<MarketProjection> marketProjection = new HashSet<MarketProjection>();
+						marketProjection.add(MarketProjection.MARKET_START_TIME);
+						marketProjection.add(MarketProjection.RUNNER_DESCRIPTION);
+
+						mBooks = rescriptOperations.getMatchOdds(marketFilter, marketProjection,
+								MarketSort.FIRST_TO_START, maxResults, applicationKey, sessionToken);
+						if (mBooks.size() > 0) {
+							matchAndFancyDetailDto.setMarketBook(mBooks);
+							matchAndFancyDetailList.add(matchAndFancyDetailDto);
+						}
+					}
+					if (matchAndFancyDetailList.size() > 0) {
+						seriesMatchFancyRes.setMatchAndFancyDetail(matchAndFancyDetailList);
+					}
+				}
+				if (seriesMatchFancyRes.getMatchAndFancyDetail() != null) {
+					seriesMatchFancyResList.add(seriesMatchFancyRes);
+				}
+				log.info("seriesMatchFancyResList: " + seriesMatchFancyResList);
+			}
+			 
 		} catch (APINGException e) {
 			e.printStackTrace();
 		}
@@ -712,10 +797,10 @@ public class BetfairDao {
 	@Transactional
 	public SessionDetails getSessionToken(String userName, String password, String transactionId) {
 		SessionDetails response = rescriptOperations.getSessionToken(userName, password, transactionId);
-		appKey=response.getProduct();
-		ssToken=response.getToken();
-		log.info("applicationKey in Dao:: "+appKey);
-		log.info("sessionToken in dao:: "+ssToken);
+		appKey = response.getProduct();
+		ssToken = response.getToken();
+		log.info("applicationKey in Dao:: " + appKey);
+		log.info("sessionToken in dao:: " + ssToken);
 		return response;
 	}
 
@@ -761,7 +846,7 @@ public class BetfairDao {
 	}
 
 	public Double getRunnersPrizeAndSize(String marketId, Long selectionId, String isBackLay, String transactionId) {
-		Double runnerPrize=0.0;
+		Double runnerPrize = 0.0;
 		PriceProjection priceProjection = new PriceProjection();
 		Set<PriceData> priceData = new HashSet<PriceData>();
 		priceData.add(PriceData.EX_BEST_OFFERS);
@@ -772,7 +857,8 @@ public class BetfairDao {
 		String currencyCode = null;
 
 		try {
-			runnerPrize=rescriptOperations.runnerPrizeAndSize(marketId, selectionId, priceProjection, orderProjection, matchProjection, currencyCode, isBackLay, appKey, ssToken);
+			runnerPrize = rescriptOperations.runnerPrizeAndSize(marketId, selectionId, priceProjection, orderProjection,
+					matchProjection, currencyCode, isBackLay, appKey, ssToken);
 		} catch (APINGException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -825,7 +911,6 @@ public class BetfairDao {
 		calculateProfitLoss();
 	}
 
-	
 	public void calculateProfitLoss() {
 		log.info("##########Inside  calculateProfitLoss#########");
 		List<PlaceBetsBean> placeBetsList = new ArrayList<PlaceBetsBean>();
@@ -836,7 +921,8 @@ public class BetfairDao {
 
 		String betSettlement = "NOT_INITIATED";
 
-		placeBetsList = placeBetsRepository.findByBetResultInAndBetSettlementOrderByUserId(betResultList, betSettlement);
+		placeBetsList = placeBetsRepository.findByBetResultInAndBetSettlementOrderByUserId(betResultList,
+				betSettlement);
 
 //		log.info("calculateProfitLoss:: "+placeBetsList);
 //		boolean masterInsertFlag=true;
@@ -850,16 +936,14 @@ public class BetfairDao {
 			double adminStakes = 0.0;
 			double smStakes = 0.0;
 			double masterStakes = 0.0;
-			
+
 			// String userId=placeBetsList.get(i).getUserId() ;
 
 			PlaceBetsBean placeBetsBean = new PlaceBetsBean();
 			placeBetsBean = placeBetsList.get(i);
-			String userId=placeBetsBean.getUserId().toUpperCase();
+			String userId = placeBetsBean.getUserId().toUpperCase();
 			UserBean userDetail = userRepository.findByUserId(userId);
 
-			
-			
 			PartnershipBean psDetails = partnershipRepository.findByUserId(userId);
 
 			int adminPer = psDetails.getAdminStake();
@@ -871,13 +955,13 @@ public class BetfairDao {
 			double liability = placeBetsList.get(i).getLiability();
 			double stake = placeBetsList.get(i).getStake();
 			double odds = placeBetsList.get(i).getOdds();
-			double total=0.0;
+			double total = 0.0;
 			if (placeBetsBean.getBetResult().equalsIgnoreCase(ResourceConstants.WON)) {
 				if (placeBetsBean.getMarketName().toUpperCase().contains("ODDS")) {
 					total = odds * stake;
 					profit = Double.parseDouble(df.format(total - stake));
 					commision = calcuateCommision(profit, oddCommision);
-					profit =  Double.parseDouble(df.format(profit - commision));
+					profit = Double.parseDouble(df.format(profit - commision));
 					netAmount = profit;
 				} else {
 					commision = calcuateCommision(stake, sessionCommision);
@@ -887,31 +971,29 @@ public class BetfairDao {
 				masterStakes = calcuateCommision(profit, masterPer);
 				adminStakes = calcuateCommision(profit, adminPer);
 				smStakes = calcuateCommision(profit, smPer);
-				
+
 			} else if (placeBetsBean.getBetResult().equalsIgnoreCase(ResourceConstants.LOST)) {
 				if (placeBetsBean.getMarketName().toUpperCase().contains("ODDS")) {
-					loss=liability;
+					loss = liability;
 					netAmount = -loss;
-				}else {
+				} else {
 					commision = calcuateCommision(liability, sessionCommision);
-					loss = Double.parseDouble(df.format(liability-commision));
+					loss = Double.parseDouble(df.format(liability - commision));
 					netAmount = -loss;
 				}
 				adminStakes = -calcuateCommision(loss, adminPer);
 				smStakes = -calcuateCommision(loss, smPer);
 				masterStakes = -calcuateCommision(loss, masterPer);
 			}
-			List<UserRoleDto> userDetails= new ArrayList<UserRoleDto>();
-			Map<String,String> userParentMap=new HashMap<String,String>();
-			userDetails = jdbcTemplate.query(QueryListConstant.GET_PARENT_LIST,
-					new Object[] { userId },
-					(rs, rowNum) -> new UserRoleDto(
-							rs.getString("USER_ID"), rs.getString("USER_ROLE")
-							));
+			List<UserRoleDto> userDetails = new ArrayList<UserRoleDto>();
+			Map<String, String> userParentMap = new HashMap<String, String>();
+			userDetails = jdbcTemplate.query(QueryListConstant.GET_PARENT_LIST, new Object[] { userId },
+					(rs, rowNum) -> new UserRoleDto(rs.getString("USER_ID"), rs.getString("USER_ROLE")));
 			for (int j = 0; j < userDetails.size(); j++) {
-				userParentMap.put(userDetails.get(j).getUserRole().toUpperCase(),userDetails.get(j).getUserId().toUpperCase());
+				userParentMap.put(userDetails.get(j).getUserRole().toUpperCase(),
+						userDetails.get(j).getUserId().toUpperCase());
 			}
-			
+
 			placeBetsBean.setCommision(commision);
 			placeBetsBean.setProfit(profit);
 			placeBetsBean.setLoss(loss);
@@ -925,7 +1007,7 @@ public class BetfairDao {
 			placeBetsBean.setBetSettlement("PENDING");
 
 			placeBetsRepository.saveAndFlush(placeBetsBean);
-			
+
 //			final String NA="NA";
 //			final String N="N";
 //			final double ZERO_DOUBLE=0;
@@ -1002,7 +1084,7 @@ public class BetfairDao {
 //			String sm=userParentMap.get("SUPERMASTER");
 //			String master=userParentMap.get("MASTER");
 //			placeBetsBean.setBetSettlement("PENDING");
-			
+
 //			String prevUser;
 //			String currUser = placeBetsList.get(i).getUserId();
 //			if(i==0) {
@@ -1011,7 +1093,7 @@ public class BetfairDao {
 //				prevUser=placeBetsList.get(i-1).getUserId();
 //			}
 //			
-			
+
 //			if(!prevUser.equalsIgnoreCase(currUser)){
 //				masterInsertFlag=true;
 //				smInsertFlag=true;
@@ -1092,58 +1174,41 @@ public class BetfairDao {
 //			jdbcTemplate.update(QueryListConstant.UPDATE_AVAIL_BAL_AND_PROFIT_LOSS,
 //					new Object[] { adminStakes,adminStakes, adminStakes, admin });
 //			
-			
+
 //			double availBalUser = 0.0;
 //			double availBalMaster = 0.0;
 //			double availBalSM = 0.0;
 //			double availBalAdmin = 0.0;
 			// User
-			/*	profitLossUser=profitLossUser+netAmount;
-			if(availBalUser+netAmount<0) {
-				availBalUser=0.0;
-			}else {
-				availBalUser=availBalUser+netAmount;
-			}
-			
-			
-			// Master
-			profitLossMaster=profitLossAdmin+masterStakes;
-			if(availBalMaster+masterStakes<0) {
-				availBalMaster=0.0;
-			}else {
-				availBalMaster=availBalMaster+masterStakes;
-			}
-			
-			
-			// Super Master
-			profitLossSM=smStakes;
-			if(availBalSM+smStakes<0) {
-				availBalSM=0.0;
-			}else {
-				availBalSM=availBalSM+smStakes;
-			}
-			
-			
-			// Admin
-			profitLossAdmin=adminStakes;
-			if(availBalAdmin+adminStakes<0) {
-				availBalAdmin=0.0;
-			}else {
-				availBalAdmin=availBalAdmin+adminStakes;
-			}
-			*/
-			/*double availBalUser=userDetail.getAvailBalance();
-			
-			UserBean masterDetail = userRepository.findByUserId(master);
-			double availBalMaster=masterDetail.getAvailBalance();
-			
-			UserBean smDetail = userRepository.findByUserId(sm);
-			double availBalSM=smDetail.getAvailBalance();
-			
-			UserBean adminDetail = userRepository.findByUserId(admin);
-			double availBalAdmin=adminDetail.getAvailBalance();*/
-			
-			
+			/*
+			 * profitLossUser=profitLossUser+netAmount; if(availBalUser+netAmount<0) {
+			 * availBalUser=0.0; }else { availBalUser=availBalUser+netAmount; }
+			 * 
+			 * 
+			 * // Master profitLossMaster=profitLossAdmin+masterStakes;
+			 * if(availBalMaster+masterStakes<0) { availBalMaster=0.0; }else {
+			 * availBalMaster=availBalMaster+masterStakes; }
+			 * 
+			 * 
+			 * // Super Master profitLossSM=smStakes; if(availBalSM+smStakes<0) {
+			 * availBalSM=0.0; }else { availBalSM=availBalSM+smStakes; }
+			 * 
+			 * 
+			 * // Admin profitLossAdmin=adminStakes; if(availBalAdmin+adminStakes<0) {
+			 * availBalAdmin=0.0; }else { availBalAdmin=availBalAdmin+adminStakes; }
+			 */
+			/*
+			 * double availBalUser=userDetail.getAvailBalance();
+			 * 
+			 * UserBean masterDetail = userRepository.findByUserId(master); double
+			 * availBalMaster=masterDetail.getAvailBalance();
+			 * 
+			 * UserBean smDetail = userRepository.findByUserId(sm); double
+			 * availBalSM=smDetail.getAvailBalance();
+			 * 
+			 * UserBean adminDetail = userRepository.findByUserId(admin); double
+			 * availBalAdmin=adminDetail.getAvailBalance();
+			 */
 
 		}
 

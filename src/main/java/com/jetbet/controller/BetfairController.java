@@ -36,7 +36,7 @@ import reactor.core.publisher.Flux;
 @CrossOrigin(origins = "*")
 @Slf4j
 @RestController
-@RequestMapping(value="/Betfair")
+@RequestMapping(value="/TurtleBets")
 public class BetfairController {
 	
 	public static String applicationKey;
@@ -154,6 +154,20 @@ public class BetfairController {
 		return betfairService.getMarketCatalogue(sportsId,applicationKey,sessionToken,userName,transactionId);
 	}
 	
+	@RequestMapping(value=ResourceConstants.MATCH_ODDS, method=RequestMethod.GET)
+	public List<SeriesMatchFancyResponseDto> getMatchOdds(@RequestParam(value="sportsId" ,required=false) String sportsId) {
+		String transactionId = "TB"+UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
+		log.info("["+transactionId+"]*************************INSIDE USER ROLE METHOD GET*************************");
+		log.info("applicationKey:: "+applicationKey);
+		log.info("sessionToken:: "+sessionToken);
+		//ResponseEntity<SessionDetails> sessionDetails=getSessionToken();
+//		String applicationKey=sessionDetails.getBody().getProduct();
+//		String sessionToken=sessionDetails.getBody().getToken();
+		String userName=ResourceConstants.USER_NAME;
+		
+		return betfairService.getMatchOdds(sportsId,applicationKey,sessionToken,userName,transactionId);
+	}
+	
 	@RequestMapping(value=ResourceConstants.USER_DASHBOARD_MATCH_LIST, method=RequestMethod.GET)
 	public List<DashboardMatchListDto> dashboardMatchList() {
 		String transactionId = "TB"+UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
@@ -237,7 +251,7 @@ public class BetfairController {
 	
 	
 	//@RequestMapping(value=ResourceConstants.DECLARE_RESULT, method=RequestMethod.GET)
-	@Scheduled(fixedDelay = 300000)
+	@Scheduled(fixedDelay = 300000, initialDelay = 10000)
 	public void declareResult() {
 		log.info("applicationKey:: "+applicationKey);
 		log.info("sessionToken:: "+sessionToken);

@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.jetbet.bean.MarketCatalogueBean;
+import com.jetbet.betfair.entities.MarketBook;
 import com.jetbet.betfair.entities.MarketCatalogue;
 
 import lombok.AllArgsConstructor;
@@ -24,4 +25,5 @@ public class MatchAndFancyDetailDto {
 	private int marketCount;
 	private Date matchDate;
 	private List<MarketCatalogue> marketCatalogueRes;
+	private List<MarketBook> marketBook;
 }

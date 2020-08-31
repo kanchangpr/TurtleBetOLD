@@ -93,4 +93,12 @@ public class BetfairServiceImpl implements BetfairService{
 		log.info("["+transactionId+"]*************************INSIDE getMatchOdds CLASS AdminServiceImpl*************************");
 		return betfairDao.dashboardDetails(applicationKey, sessionToken, matchId,marketType,transactionId);
 	}
+
+	@Override
+	public List<SeriesMatchFancyResponseDto> getMatchOdds(String sportsId, String applicationKey, String sessionToken,
+			String userName, String transactionId) {
+		log.info("["+transactionId+"]*************************INSIDE getMatchOdds CLASS AdminServiceImpl*************************");
+		return betfairDao.getMatchOdds(sportsId,applicationKey, sessionToken, userName,transactionId);
+	}
+
 }

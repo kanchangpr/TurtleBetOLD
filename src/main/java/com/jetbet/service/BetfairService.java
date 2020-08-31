@@ -43,4 +43,7 @@ public interface BetfairService {
 	List<MarketCatalogue> dashboardDetails(String applicationKey, String sessionToken, String matchId,
 			String marketType, String transactionId);
 
+	List<SeriesMatchFancyResponseDto> getMatchOdds(String sportsId, String applicationKey, String sessionToken,
+			String userName, String transactionId);
+
 }
