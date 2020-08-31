@@ -703,7 +703,7 @@ public class BetfairDao {
 		try {
 			String maxResults = "100";
 
-			MatchAndFancyDetailDto matchAndFancyDetailDto = new MatchAndFancyDetailDto();
+			
 			MatchBean matchDet = matchRepository.findFirst1ByMatchIdAndIsActive(matchid, "Y");
 
 			String matchId = matchDet.getMatchId();
@@ -715,6 +715,7 @@ public class BetfairDao {
 
 			for (int i = 0; i < marketTypeList.size(); i++) {
 				List<MarketBook> mBooks = new ArrayList<MarketBook>();
+				MatchAndFancyDetailDto matchAndFancyDetailDto = new MatchAndFancyDetailDto();
 				String marketType = marketTypeList.get(i).getFancyId().getMarketType();
 				int marketCount = marketTypeList.get(i).getMarketCount();
 
@@ -748,7 +749,7 @@ public class BetfairDao {
 					matchAndFancyDetailDto.setMarketBook(mBooks);
 					matchAndFancyDetailList.add(matchAndFancyDetailDto);
 				}
-
+				log.info("matchAndFancyDetailDto:: " + matchAndFancyDetailDto);
 			}
 		} catch (APINGException e) {
 			e.printStackTrace();
