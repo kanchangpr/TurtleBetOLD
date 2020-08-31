@@ -18,6 +18,7 @@ import lombok.ToString;
 @ToString
 public class MarketBook {
 	private String marketId;
+	private String marketName;
 	private Boolean isMarketDataDelayed;
 	private String status;
 	private int betDelay;

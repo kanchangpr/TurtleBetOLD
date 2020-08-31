@@ -289,6 +289,7 @@ public class ApiNgRescriptOperations extends ApiNgOperations {
 			for (int k = 0; k < marketBook.size(); k++) {
 				MarketBook mBook=new MarketBook();
 				mBook=marketBook.get(k);
+				mBook.setMarketName(container.get(i).getMarketName());
 				List<Runner> runnerList= new ArrayList<Runner>();
 				for (int j = 0; j < mBook.getRunners().size(); j++) {
 					if(mBook.getRunners().get(j).getEx().getAvailableToBack().size()>0 || mBook.getRunners().get(j).getEx().getAvailableToLay().size()>0) {
