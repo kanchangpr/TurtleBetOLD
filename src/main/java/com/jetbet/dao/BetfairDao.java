@@ -697,7 +697,7 @@ public class BetfairDao {
 
 		MarketFilter marketFilter;
 
-		List<MarketBook> mBooks = new ArrayList<MarketBook>();
+		
 
 		List<MatchAndFancyDetailDto> matchAndFancyDetailList = new ArrayList<MatchAndFancyDetailDto>();
 		try {
@@ -714,6 +714,7 @@ public class BetfairDao {
 					matchId, "Y");
 
 			for (int i = 0; i < marketTypeList.size(); i++) {
+				List<MarketBook> mBooks = new ArrayList<MarketBook>();
 				String marketType = marketTypeList.get(i).getFancyId().getMarketType();
 				int marketCount = marketTypeList.get(i).getMarketCount();
 
