@@ -12,6 +12,7 @@ import com.jetbet.betfair.entities.MarketCatalogue;
 import com.jetbet.betfair.entities.MarketFancyResult;
 import com.jetbet.betfair.entities.MarketFilter;
 import com.jetbet.betfair.entities.PriceProjection;
+import com.jetbet.betfair.entities.RunnerCatalog;
 import com.jetbet.betfair.enums.MarketSort;
 import com.jetbet.betfair.enums.MatchProjection;
 import com.jetbet.betfair.enums.OrderProjection;
@@ -57,6 +58,9 @@ public abstract class ApiNgOperations {
 
     public abstract List<MarketCatalogue> listMarketCatalogue(MarketFilter filter, Set<MarketProjection> marketProjection,
         MarketSort sort, String maxResult, String appKey, String ssoId) throws APINGException;
+    
+    public abstract List<RunnerCatalog> updateRunnerData(MarketFilter filter, Set<MarketProjection> marketProjection,
+            MarketSort sort, String maxResult, String appKey, String ssoId) throws APINGException;
     
     public abstract List<MarketBook> getMatchOdds(MarketFilter filter, Set<MarketProjection> marketProjection,
             MarketSort sort, String maxResult, String appKey, String ssoId) throws APINGException;

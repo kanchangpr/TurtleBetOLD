@@ -28,6 +28,7 @@ import com.jetbet.dto.UserResponseDto;
 import com.jetbet.dto.UserRoleDto;
 import com.jetbet.repository.FancyRepository;
 import com.jetbet.repository.MatchRepository;
+import com.jetbet.repository.RunnersRepository;
 import com.jetbet.repository.SeriesRepository;
 import com.jetbet.repository.SportsRepository;
 import com.jetbet.repository.UserRepository;
@@ -57,6 +58,9 @@ public class AdminDao {
 
 	@Autowired
 	UserRepository userRepository;
+	
+	@Autowired
+	RunnersRepository runnersRepository;
 
 	@Autowired
 	BetfairDao bfDao;
@@ -358,7 +362,16 @@ public class AdminDao {
 
 		int count = jdbcTemplate.update(QueryListConstant.UPDATE_FANCY_DETAIL,
 				new Object[] { isActive, updatedBy, marketName, matchId });
+		
 		if (count == 0) {
+			
+			if(marketName.equalsIgnoreCase("MATCH_ODDS")) {
+				runnersRepository.countByMatchId(matchId);
+				if(count==0) {
+					bfDao.updateRunnerData(ResourceConstants.USER_NAME, matchId, marketName,
+							transactionId);
+				}
+			}
 			userResponseDto.setStatus(ResourceConstants.FAILED);
 			userResponseDto.setErrorCode(ResourceConstants.ERR_003);
 			userResponseDto.setErrorMsg(ResourceConstants.UPDATION_FAILED);

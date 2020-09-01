@@ -19,6 +19,7 @@ import com.jetbet.betfair.entities.MarketFilter;
 import com.jetbet.betfair.entities.PriceProjection;
 import com.jetbet.betfair.entities.PriceSize;
 import com.jetbet.betfair.entities.Runner;
+import com.jetbet.betfair.entities.RunnerCatalog;
 import com.jetbet.betfair.enums.ApiNgOperation;
 import com.jetbet.betfair.enums.MarketProjection;
 import com.jetbet.betfair.enums.MarketSort;
@@ -241,6 +242,30 @@ public class ApiNgRescriptOperations extends ApiNgOperations {
 		}
 
 		return container;
+
+	}
+	
+	
+	public List<RunnerCatalog> updateRunnerData(MarketFilter filter, Set<MarketProjection> marketProjection,
+			MarketSort sort, String maxResult, String appKey, String ssoId) throws APINGException {
+		Map<String, Object> params = new HashMap<String, Object>();
+		
+		params.put(LOCALE, locale);
+		params.put(FILTER, filter);
+		params.put(SORT, sort);
+		params.put(MAX_RESULT, maxResult);
+		params.put(MARKET_PROJECTION, marketProjection);
+		String result = getInstance().makeRequest(ApiNgOperation.LISTMARKETCATALOGUE.getOperationName(), params, appKey,
+				ssoId);
+		//log.info("MarketCatalogue: " + result);
+		if (ApiNGDemo.isDebug())
+			System.out.println("\nResponse: " + result);
+
+		List<MarketCatalogue> container = JsonConverter.convertFromJson(result, new TypeToken<List<MarketCatalogue>>() {
+		}.getType());
+		
+		
+		return container.get(0).getRunners();
 
 	}
 	

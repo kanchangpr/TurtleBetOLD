@@ -35,6 +35,7 @@ import com.jetbet.betfair.entities.MarketCatalogue;
 import com.jetbet.betfair.entities.MarketFancyResult;
 import com.jetbet.betfair.entities.MarketFilter;
 import com.jetbet.betfair.entities.PriceProjection;
+import com.jetbet.betfair.entities.RunnerCatalog;
 import com.jetbet.betfair.enums.MarketProjection;
 import com.jetbet.betfair.enums.MarketSort;
 import com.jetbet.betfair.enums.MatchProjection;
@@ -338,6 +339,36 @@ public class BetfairDao {
 			log.info(apiExc.toString());
 		}
 		return matchBeanResponseList;
+	}
+	
+	public boolean updateRunnerData(String userName, String matchId, String marketType, String transactionId) {
+		try {
+			MarketFilter marketFilter;
+			marketFilter = new MarketFilter();
+			Set<String> typesCode = new HashSet<String>();
+			typesCode.add(marketType);
+			Set<String> eventIds = new HashSet<String>();
+			eventIds.add(matchId);
+			String maxResults = "100";
+			List<RunnerCatalog> runnerData;
+			marketFilter = new MarketFilter();
+			marketFilter.setEventIds(eventIds);
+			marketFilter.setMarketTypeCodes(typesCode);
+			Set<MarketProjection> marketProjection = new HashSet<MarketProjection>();
+			marketProjection.add(MarketProjection.MARKET_START_TIME);
+			marketProjection.add(MarketProjection.RUNNER_DESCRIPTION);
+
+			runnerData = rescriptOperations.updateRunnerData(marketFilter, marketProjection,
+					MarketSort.FIRST_TO_START, maxResults, applicationKey, sessionToken);
+
+			log.info("runnerData::  "+runnerData);
+			
+			
+			
+		} catch (APINGException apiExc) {
+			log.info(apiExc.toString());
+		}
+		return true;
 	}
 
 	@Transactional
