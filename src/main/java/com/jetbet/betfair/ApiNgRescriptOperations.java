@@ -245,11 +245,10 @@ public class ApiNgRescriptOperations extends ApiNgOperations {
 
 	}
 	
-	
 	public List<RunnerCatalog> updateRunnerData(MarketFilter filter, Set<MarketProjection> marketProjection,
 			MarketSort sort, String maxResult, String appKey, String ssoId) throws APINGException {
 		Map<String, Object> params = new HashMap<String, Object>();
-		
+		List<RunnerCatalog> runnerList = new ArrayList<RunnerCatalog>();
 		params.put(LOCALE, locale);
 		params.put(FILTER, filter);
 		params.put(SORT, sort);
@@ -257,16 +256,18 @@ public class ApiNgRescriptOperations extends ApiNgOperations {
 		params.put(MARKET_PROJECTION, marketProjection);
 		String result = getInstance().makeRequest(ApiNgOperation.LISTMARKETCATALOGUE.getOperationName(), params, appKey,
 				ssoId);
-		//log.info("MarketCatalogue: " + result);
+		// log.info("MarketCatalogue: " + result);
 		if (ApiNGDemo.isDebug())
 			System.out.println("\nResponse: " + result);
 
 		List<MarketCatalogue> container = JsonConverter.convertFromJson(result, new TypeToken<List<MarketCatalogue>>() {
 		}.getType());
-		
-		
-		return container.get(0).getRunners();
 
+		if (container.get(0).getRunners().size() > 0) {
+			runnerList = container.get(0).getRunners();
+		}
+
+		return runnerList;
 	}
 	
 	@Override

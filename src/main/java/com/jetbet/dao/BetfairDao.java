@@ -366,26 +366,33 @@ public class BetfairDao {
 			runnerData = rescriptOperations.updateRunnerData(marketFilter, marketProjection,
 					MarketSort.FIRST_TO_START, maxResults, appKey, ssToken);
 
-			
-			
-			RunnersBean rB = new RunnersBean();
-			rB.setMatchId(matchId);
-			if(runnerData.size()==2) {
-				rB.setTeama_id(runnerData.get(0).getSelectionId());
-				rB.setTeama_name(runnerData.get(0).getRunnerName());
-				rB.setTeamb_id(runnerData.get(1).getSelectionId());
-				rB.setTeamb_name(runnerData.get(1).getRunnerName());
-			}else if(runnerData.size()==3) {
-				rB.setTeama_id(runnerData.get(0).getSelectionId());
-				rB.setTeama_name(runnerData.get(0).getRunnerName());
-				rB.setTeamb_id(runnerData.get(1).getSelectionId());
-				rB.setTeamb_name(runnerData.get(1).getRunnerName());
-				rB.setTeamc_id(runnerData.get(2).getSelectionId());
-				rB.setTeamc_name(runnerData.get(2).getRunnerName());
+			if(runnerData.size()>0) {
+				RunnersBean rB = new RunnersBean();
+				rB.setMatchId(matchId);
+				
+				if(runnerData.size()==1) {
+					rB.setTeama_id(runnerData.get(0).getSelectionId());
+					rB.setTeama_name(runnerData.get(0).getRunnerName());
+				}
+				else if(runnerData.size()==2) {
+					rB.setTeama_id(runnerData.get(0).getSelectionId());
+					rB.setTeama_name(runnerData.get(0).getRunnerName());
+					rB.setTeamb_id(runnerData.get(1).getSelectionId());
+					rB.setTeamb_name(runnerData.get(1).getRunnerName());
+				}else if(runnerData.size()==3) {
+					rB.setTeama_id(runnerData.get(0).getSelectionId());
+					rB.setTeama_name(runnerData.get(0).getRunnerName());
+					rB.setTeamb_id(runnerData.get(1).getSelectionId());
+					rB.setTeamb_name(runnerData.get(1).getRunnerName());
+					rB.setTeamc_id(runnerData.get(2).getSelectionId());
+					rB.setTeamc_name(runnerData.get(2).getRunnerName());
+				}
+				
+				log.info("runnerData::  "+rB);
+				runnersRepository.saveAndFlush(rB);
 			}
 			
-			log.info("runnerData::  "+rB);
-			runnersRepository.saveAndFlush(rB);
+			
 			
 		} catch (APINGException apiExc) {
 			log.info(apiExc.toString());
