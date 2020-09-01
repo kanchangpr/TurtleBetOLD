@@ -605,13 +605,12 @@ public class AdminDao {
 			sqlString=QueryListConstant.MATCH_DASHBOARD_FOR_ADMIN;
 		}
 		
-		matchDashboardList = jdbcTemplate.query(sqlString,
+		matchDashboardList = jdbcTemplate.query(sqlString, new Object[] { userId },
 				(rs, rowNum) -> new MatchDashboardDto(rs.getString("sportsId"), rs.getString("matchId"),
 						 rs.getString("matchName"), rs.getString("teamAName"), rs.getString("teamBName"),
 						rs.getString("teamCName"), rs.getDouble("teamAStake"), rs.getDouble("teamBStake"),
 						rs.getDouble("teamCStake"),
 						rs.getDate("matchDate")));
-		
 		
 		return matchDashboardList;
 	}
