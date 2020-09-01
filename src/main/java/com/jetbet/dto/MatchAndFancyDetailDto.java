@@ -21,6 +21,10 @@ import lombok.Setter;
 public class MatchAndFancyDetailDto {
 	private String matchId;
 	private String matchName;
+	private String sportId;
+	private String sportName;
+	private String seriesId;
+	private String seriesName;
 	private String marketType;
 	private int marketCount;
 	private Date matchDate;

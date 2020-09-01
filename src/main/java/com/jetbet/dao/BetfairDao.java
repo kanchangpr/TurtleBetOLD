@@ -749,7 +749,7 @@ public class BetfairDao {
 					matchAndFancyDetailDto.setMarketBook(mBooks);
 					matchAndFancyDetailList.add(matchAndFancyDetailDto);
 				}
-				log.info("matchAndFancyDetailDto:: " + matchAndFancyDetailDto);
+				log.info("marketType:: " + matchAndFancyDetailDto);
 			}
 		} catch (APINGException e) {
 			e.printStackTrace();
