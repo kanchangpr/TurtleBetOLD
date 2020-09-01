@@ -263,7 +263,7 @@ public class ApiNgRescriptOperations extends ApiNgOperations {
 		List<MarketCatalogue> container = JsonConverter.convertFromJson(result, new TypeToken<List<MarketCatalogue>>() {
 		}.getType());
 
-		if (container.get(0).getRunners().size() > 0) {
+		if (container.size()>0 && container.get(0).getRunners().size() > 0) {
 			runnerList = container.get(0).getRunners();
 		}
 
