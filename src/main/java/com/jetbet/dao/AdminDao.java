@@ -363,11 +363,11 @@ public class AdminDao {
 		int count = jdbcTemplate.update(QueryListConstant.UPDATE_FANCY_DETAIL,
 				new Object[] { isActive, updatedBy, marketName, matchId });
 		
-		if (count == 0) {
+		if (count != 0) {
 			
 			if(marketName.equalsIgnoreCase("MATCH_ODDS") && isActive.equalsIgnoreCase("Y")) {
-				runnersRepository.countByMatchId(matchId);
-				if(count==0) {
+				long runnerCount=runnersRepository.countByMatchId(matchId);
+				if(runnerCount==0) {
 					bfDao.updateRunnerData(ResourceConstants.USER_NAME, matchId, marketName,
 							transactionId);
 				}
