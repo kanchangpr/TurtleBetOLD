@@ -359,12 +359,9 @@ public class BetfairDao {
 			marketProjection.add(MarketProjection.RUNNER_DESCRIPTION);
 
 			runnerData = rescriptOperations.updateRunnerData(marketFilter, marketProjection,
-					MarketSort.FIRST_TO_START, maxResults, applicationKey, sessionToken);
+					MarketSort.FIRST_TO_START, maxResults, appKey, ssToken);
 
 			log.info("runnerData::  "+runnerData);
-			
-			
-			
 		} catch (APINGException apiExc) {
 			log.info(apiExc.toString());
 		}

@@ -22,6 +22,7 @@ import com.jetbet.bean.SeriesBean;
 import com.jetbet.bean.SportsBean;
 import com.jetbet.dto.BetSettlementDto;
 import com.jetbet.dto.FancyControl;
+import com.jetbet.dto.MatchDashboardDto;
 import com.jetbet.dto.SportsControl;
 import com.jetbet.dto.UserResponseDto;
 import com.jetbet.service.AdminService;
@@ -131,6 +132,16 @@ public class AdminController {
 				+ "]*************************INSIDE settlement METHOD GET*************************");
 		UserResponseDto response = adminService.settlement(chips,remarks, userId.toUpperCase(),loggedInUser, transactionId);
 		return new ResponseEntity<UserResponseDto>(response, HttpStatus.OK);
+	}
+	
+	@RequestMapping(value = ResourceConstants.MATCH_DASHBOARD, method = RequestMethod.GET)
+	public ResponseEntity<List<MatchDashboardDto>> matchDashboard(
+			@RequestParam(value = "userId", required = true) String userId) {
+		String transactionId = "TB" + UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
+		log.info("[" + transactionId
+				+ "]*************************INSIDE settlement METHOD GET*************************");
+		List<MatchDashboardDto> response = adminService.matchDashboard(userId.toUpperCase(),transactionId);
+		return new ResponseEntity<List<MatchDashboardDto>>(response, HttpStatus.OK);
 	}
 
 }

@@ -54,6 +54,7 @@ public class ResourceConstants {
 	public static final String CALCULATE_SETTLEMENT="calculateSettlement";
 	public static final String BET_SETTLEMENT="betSettlement";
 	public static final String SETTLEMENT="Settlement";
+	public static final String MATCH_DASHBOARD="matchDashboard";
 	
 	
 	public static final String ADMIN="admin";

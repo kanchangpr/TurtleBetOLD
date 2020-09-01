@@ -15,6 +15,7 @@ import com.jetbet.bean.SportsBean;
 import com.jetbet.dao.AdminDao;
 import com.jetbet.dto.BetSettlementDto;
 import com.jetbet.dto.FancyControl;
+import com.jetbet.dto.MatchDashboardDto;
 import com.jetbet.dto.SportsControl;
 import com.jetbet.dto.UserResponseDto;
 import com.jetbet.service.AdminService;
@@ -80,6 +81,12 @@ public class AdminServiceImpl implements AdminService{
 	public UserResponseDto settlement(double chips, String remarks, String userId, String loggedInUser, String transactionId) {
 		log.info("["+transactionId+"]*************************INSIDE betSettlement CLASS AdminServiceImpl*************************");
 		return adminDao.settlement(chips,remarks,userId,loggedInUser,transactionId);
+	}
+
+	@Override
+	public List<MatchDashboardDto> matchDashboard(String userId, String transactionId) {
+		log.info("["+transactionId+"]*************************INSIDE betSettlement CLASS AdminServiceImpl*************************");
+		return adminDao.matchDashboard(userId,transactionId);
 	}
 
 }

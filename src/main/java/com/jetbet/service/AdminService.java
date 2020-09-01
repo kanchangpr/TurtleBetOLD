@@ -13,6 +13,7 @@ import com.jetbet.bean.SeriesBean;
 import com.jetbet.bean.SportsBean;
 import com.jetbet.dto.BetSettlementDto;
 import com.jetbet.dto.FancyControl;
+import com.jetbet.dto.MatchDashboardDto;
 import com.jetbet.dto.SportsControl;
 import com.jetbet.dto.UserResponseDto;
 
@@ -36,5 +37,7 @@ public interface AdminService {
 	 List<BetSettlementDto> betSettlement(String accountType,String userId, String transactionId);
 
 	 UserResponseDto settlement(double chips, String remarks, String userId, String loggedInUser, String transactionId);
+
+	 List<MatchDashboardDto> matchDashboard(String userId, String transactionId);
 
 }

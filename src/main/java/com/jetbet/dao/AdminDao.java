@@ -23,6 +23,7 @@ import com.jetbet.controller.BetfairController;
 import com.jetbet.dto.BetSettlementDto;
 import com.jetbet.dto.FancyControl;
 import com.jetbet.dto.FancyIdDto;
+import com.jetbet.dto.MatchDashboardDto;
 import com.jetbet.dto.SportsControl;
 import com.jetbet.dto.UserResponseDto;
 import com.jetbet.dto.UserRoleDto;
@@ -368,6 +369,7 @@ public class AdminDao {
 			if(marketName.equalsIgnoreCase("MATCH_ODDS") && isActive.equalsIgnoreCase("Y")) {
 				long runnerCount=runnersRepository.countByMatchId(matchId);
 				if(runnerCount==0) {
+					log.info("Inside Runner Count#############");
 					bfDao.updateRunnerData(ResourceConstants.USER_NAME, matchId, marketName,
 							transactionId);
 				}
@@ -586,6 +588,32 @@ public class AdminDao {
 		}
 
 		return userResponseDto;
+	}
+
+	public List<MatchDashboardDto> matchDashboard(String userId, String transactionId) {
+		
+		List<MatchDashboardDto> matchDashboardList=new ArrayList<MatchDashboardDto>();
+		UserBean userDet= userRepository.findByUserId(userId);
+		String userRole= userDet.getUserRole();
+		String sqlString=null;
+		
+		if(userRole.equalsIgnoreCase(ResourceConstants.MASTER)) {
+			sqlString=QueryListConstant.MATCH_DASHBOARD_FOR_MASTER;
+		}else if(userRole.equalsIgnoreCase(ResourceConstants.SUPERMASTER)){
+			sqlString=QueryListConstant.MATCH_DASHBOARD_FOR_SM;
+		}else if(userRole.equalsIgnoreCase(ResourceConstants.ADMIN)){
+			sqlString=QueryListConstant.MATCH_DASHBOARD_FOR_ADMIN;
+		}
+		
+		matchDashboardList = jdbcTemplate.query(sqlString,
+				(rs, rowNum) -> new MatchDashboardDto(rs.getString("sportsId"), rs.getString("matchId"),
+						 rs.getString("matchName"), rs.getString("teamAName"), rs.getString("teamBName"),
+						rs.getString("teamCName"), rs.getDouble("teamAStake"), rs.getDouble("teamBStake"),
+						rs.getDouble("teamCStake"),
+						rs.getDate("matchDate")));
+		
+		
+		return matchDashboardList;
 	}
 
 }
