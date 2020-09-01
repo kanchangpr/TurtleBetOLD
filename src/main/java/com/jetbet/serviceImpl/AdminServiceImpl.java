@@ -65,9 +65,9 @@ public class AdminServiceImpl implements AdminService{
 	}
 
 	@Override
-	public List<PlaceBetsBean> openPlacedBetsBySports(String matchId,String marketId,String userId, String transactionId) {
+	public List<PlaceBetsBean> openPlacedBetsBySports(String matchId,String sportsId,String userId, String transactionId) {
 		log.info("["+transactionId+"]*************************INSIDE openPlacedBetsBySports CLASS AdminServiceImpl*************************");
-		return adminDao.openPlacedBetsBySports(matchId,marketId,userId,transactionId);
+		return adminDao.openPlacedBetsBySports(matchId,sportsId,userId,transactionId);
 	}
 
 	@Override

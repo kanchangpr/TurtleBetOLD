@@ -370,11 +370,11 @@ public class AdminDao {
 		return userResponseDto;
 	}
 
-	public List<PlaceBetsBean> openPlacedBetsBySports(String matchId, String marketId, String userId,
+	public List<PlaceBetsBean> openPlacedBetsBySports(String matchId, String sportsId, String userId,
 			String transactionId) {
 		List<PlaceBetsBean> placeBetsList = new ArrayList<PlaceBetsBean>();
 		placeBetsList = jdbcTemplate.query(QueryListConstant.OPEN_BET_FOR_MASTERS,
-				new Object[] { userId, matchId, marketId },
+				new Object[] { userId, matchId, sportsId },
 				(rs, rowNum) -> new PlaceBetsBean(rs.getString("user_id"), rs.getString("match_id"),
 						rs.getString("match_name"), rs.getString("market_id"), rs.getString("market_name"),
 						rs.getLong("selection_id"), rs.getString("runner_name"), rs.getDate("bet_place_date"),

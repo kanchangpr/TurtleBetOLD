@@ -31,7 +31,7 @@ public interface AdminService {
 
 	UserResponseDto updateFancy(@Valid FancyControl fancyControl, String transactionId);
 
-	List<PlaceBetsBean> openPlacedBetsBySports(String matchId,String marketId,String userId, String transactionId);
+	List<PlaceBetsBean> openPlacedBetsBySports(String matchId,String sportsId,String userId, String transactionId);
 
 	 List<BetSettlementDto> betSettlement(String accountType,String userId, String transactionId);
 
