@@ -49,5 +49,5 @@ public class RunnersBean {
 	private long teamc_id;
 	
 	@Column(name = "teamc_name")
-	private double teamc_name;
+	private String teamc_name;
 }

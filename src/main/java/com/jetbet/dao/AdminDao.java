@@ -351,6 +351,7 @@ public class AdminDao {
 		return responseBeanList;
 	}
 
+	@Transactional
 	public UserResponseDto updateFancy(@Valid FancyControl fancyControl, String transactionId) {
 		log.info("[" + transactionId + "]**************INSIDE fancyList CLASS UserDao******************");
 		UserResponseDto userResponseDto = new UserResponseDto();
@@ -364,16 +365,16 @@ public class AdminDao {
 		int count = jdbcTemplate.update(QueryListConstant.UPDATE_FANCY_DETAIL,
 				new Object[] { isActive, updatedBy, marketName, matchId });
 		
-		if (count != 0) {
-			
-			if(marketName.equalsIgnoreCase("MATCH_ODDS") && isActive.equalsIgnoreCase("Y")) {
-				long runnerCount=runnersRepository.countByMatchId(matchId);
-				if(runnerCount==0) {
-					log.info("Inside Runner Count#############");
-					bfDao.updateRunnerData(ResourceConstants.USER_NAME, matchId, marketName,
-							transactionId);
-				}
+		if(marketName.equalsIgnoreCase("MATCH_ODDS") && isActive.equalsIgnoreCase("Y")) {
+			long runnerCount=runnersRepository.countByMatchId(matchId);
+			if(runnerCount==0) {
+				log.info("Inside Runner Count#############");
+				bfDao.updateRunnerData(ResourceConstants.USER_NAME, matchId, marketName,
+						transactionId);
 			}
+		}
+		
+		if (count == 0) {
 			userResponseDto.setStatus(ResourceConstants.FAILED);
 			userResponseDto.setErrorCode(ResourceConstants.ERR_003);
 			userResponseDto.setErrorMsg(ResourceConstants.UPDATION_FAILED);

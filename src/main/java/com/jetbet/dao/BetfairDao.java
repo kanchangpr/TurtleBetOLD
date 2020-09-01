@@ -22,6 +22,7 @@ import com.jetbet.bean.MarketCatalogueBean;
 import com.jetbet.bean.MatchBean;
 import com.jetbet.bean.PartnershipBean;
 import com.jetbet.bean.PlaceBetsBean;
+import com.jetbet.bean.RunnersBean;
 import com.jetbet.bean.SeriesBean;
 import com.jetbet.bean.SportsBean;
 import com.jetbet.bean.UserBean;
@@ -54,6 +55,7 @@ import com.jetbet.repository.MarketCatalogueRepository;
 import com.jetbet.repository.MatchRepository;
 import com.jetbet.repository.PartnershipRepository;
 import com.jetbet.repository.PlaceBetsRepository;
+import com.jetbet.repository.RunnersRepository;
 import com.jetbet.repository.SeriesRepository;
 import com.jetbet.repository.SportsRepository;
 import com.jetbet.repository.UserRepository;
@@ -91,6 +93,9 @@ public class BetfairDao {
 
 	@Autowired
 	private UserRepository userRepository;
+	
+	@Autowired
+	RunnersRepository runnersRepository;
 
 	@Autowired
 	JdbcTemplate jdbcTemplate;
@@ -341,7 +346,7 @@ public class BetfairDao {
 		return matchBeanResponseList;
 	}
 	
-	public boolean updateRunnerData(String userName, String matchId, String marketType, String transactionId) {
+	public void updateRunnerData(String userName, String matchId, String marketType, String transactionId) {
 		try {
 			MarketFilter marketFilter;
 			marketFilter = new MarketFilter();
@@ -361,11 +366,31 @@ public class BetfairDao {
 			runnerData = rescriptOperations.updateRunnerData(marketFilter, marketProjection,
 					MarketSort.FIRST_TO_START, maxResults, appKey, ssToken);
 
-			log.info("runnerData::  "+runnerData);
+			
+			
+			RunnersBean rB = new RunnersBean();
+			rB.setMatchId(matchId);
+			if(runnerData.size()==2) {
+				rB.setTeama_id(runnerData.get(0).getSelectionId());
+				rB.setTeama_name(runnerData.get(0).getRunnerName());
+				rB.setTeamb_id(runnerData.get(1).getSelectionId());
+				rB.setTeamb_name(runnerData.get(1).getRunnerName());
+			}else if(runnerData.size()==3) {
+				rB.setTeama_id(runnerData.get(0).getSelectionId());
+				rB.setTeama_name(runnerData.get(0).getRunnerName());
+				rB.setTeamb_id(runnerData.get(1).getSelectionId());
+				rB.setTeamb_name(runnerData.get(1).getRunnerName());
+				rB.setTeamc_id(runnerData.get(2).getSelectionId());
+				rB.setTeamc_name(runnerData.get(2).getRunnerName());
+			}
+			
+			log.info("runnerData::  "+rB);
+			runnersRepository.saveAndFlush(rB);
+			
 		} catch (APINGException apiExc) {
 			log.info(apiExc.toString());
 		}
-		return true;
+		
 	}
 
 	@Transactional
