@@ -94,7 +94,7 @@ public class BetfairDao {
 
 	@Autowired
 	private UserRepository userRepository;
-	
+
 	@Autowired
 	RunnersRepository runnersRepository;
 
@@ -346,7 +346,7 @@ public class BetfairDao {
 		}
 		return matchBeanResponseList;
 	}
-	
+
 	public void updateRunnerData(String userName, String matchId, String marketType, String transactionId) {
 		try {
 			MarketFilter marketFilter;
@@ -364,23 +364,22 @@ public class BetfairDao {
 			marketProjection.add(MarketProjection.MARKET_START_TIME);
 			marketProjection.add(MarketProjection.RUNNER_DESCRIPTION);
 
-			runnerData = rescriptOperations.updateRunnerData(marketFilter, marketProjection,
-					MarketSort.FIRST_TO_START, maxResults, appKey, ssToken);
+			runnerData = rescriptOperations.updateRunnerData(marketFilter, marketProjection, MarketSort.FIRST_TO_START,
+					maxResults, appKey, ssToken);
 
-			if(runnerData.size()>0) {
+			if (runnerData.size() > 0) {
 				RunnersBean rB = new RunnersBean();
 				rB.setMatchId(matchId);
-				
-				if(runnerData.size()==1) {
+
+				if (runnerData.size() == 1) {
 					rB.setTeama_id(runnerData.get(0).getSelectionId());
 					rB.setTeama_name(runnerData.get(0).getRunnerName());
-				}
-				else if(runnerData.size()==2) {
+				} else if (runnerData.size() == 2) {
 					rB.setTeama_id(runnerData.get(0).getSelectionId());
 					rB.setTeama_name(runnerData.get(0).getRunnerName());
 					rB.setTeamb_id(runnerData.get(1).getSelectionId());
 					rB.setTeamb_name(runnerData.get(1).getRunnerName());
-				}else if(runnerData.size()==3) {
+				} else if (runnerData.size() == 3) {
 					rB.setTeama_id(runnerData.get(0).getSelectionId());
 					rB.setTeama_name(runnerData.get(0).getRunnerName());
 					rB.setTeamb_id(runnerData.get(1).getSelectionId());
@@ -388,17 +387,15 @@ public class BetfairDao {
 					rB.setTeamc_id(runnerData.get(2).getSelectionId());
 					rB.setTeamc_name(runnerData.get(2).getRunnerName());
 				}
-				
-				log.info("runnerData::  "+rB);
+
+				log.info("runnerData::  " + rB);
 				runnersRepository.saveAndFlush(rB);
 			}
-			
-			
-			
+
 		} catch (APINGException apiExc) {
 			log.info(apiExc.toString());
 		}
-		
+
 	}
 
 	@Transactional
@@ -743,13 +740,13 @@ public class BetfairDao {
 				}
 				log.info("seriesMatchFancyResList: " + seriesMatchFancyResList);
 			}
-			 
+
 		} catch (APINGException e) {
 			e.printStackTrace();
 		}
 		return seriesMatchFancyResList;
 	}
-	
+
 	@Transactional
 	public List<MatchAndFancyDetailDto> getMatchOddsAndFancy(String sportsId, String matchid, String appKey,
 			String ssoid, String userName, String transactionId) {
@@ -758,21 +755,18 @@ public class BetfairDao {
 
 		MarketFilter marketFilter;
 
-		
-
 		List<MatchAndFancyDetailDto> matchAndFancyDetailList = new ArrayList<MatchAndFancyDetailDto>();
 		try {
 			String maxResults = "100";
 
-			
 			MatchBean matchDet = matchRepository.findFirst1ByMatchIdAndIsActive(matchid, "Y");
 
 			String matchId = matchDet.getMatchId();
 			String matchName = matchDet.getMatchName();
 			Date matchDate = matchDet.getMatchOpenDate();
 
-			List<MatchAndFancyDetailDto> marketTypeList= new ArrayList<MatchAndFancyDetailDto>();
-			
+			List<MatchAndFancyDetailDto> marketTypeList = new ArrayList<MatchAndFancyDetailDto>();
+
 //			List<FancyBean> marketTypeList = fancyRepository.findBySportIdAndFancyIdMatchIdAndIsActive(sportsId,
 //					matchId, "Y");
 //			this.sportName = sportName;
@@ -780,11 +774,11 @@ public class BetfairDao {
 //			this.seriesName = seriesName;
 //			this.marketType = marketType;
 //			this.marketCount = marketCount;
-			marketTypeList = jdbcTemplate.query(QueryListConstant.GET_FANCY_LIST_BY_MATCH_AND_SPORTS, new Object[] { sportsId,matchId,sportsId,matchId },
-					(rs, rowNum) -> new MatchAndFancyDetailDto(rs.getString("SPORTS_NAME"),
-							 rs.getString("SERIES_ID"), rs.getString("SERIES_NAME"), rs.getString("MARKET_TYPE"),
-							rs.getInt("MARKET_COUNT")));
-
+			marketTypeList = jdbcTemplate.query(QueryListConstant.GET_FANCY_LIST_BY_MATCH_AND_SPORTS,
+					new Object[] { sportsId, matchId, sportsId, matchId },
+					(rs, rowNum) -> new MatchAndFancyDetailDto(rs.getString("SPORTS_NAME"), rs.getString("SERIES_ID"),
+							rs.getString("SERIES_NAME"), rs.getString("MARKET_TYPE"), rs.getInt("MARKET_COUNT")));
+			log.info("marketTypeList:: " + marketTypeList);
 			for (int i = 0; i < marketTypeList.size(); i++) {
 				List<MarketBook> mBooks = new ArrayList<MarketBook>();
 				MatchAndFancyDetailDto matchAndFancyDetailDto = new MatchAndFancyDetailDto();
@@ -1398,7 +1392,5 @@ public class BetfairDao {
 		}
 		return marketCatalogueResult;
 	}
-
-	
 
 }
