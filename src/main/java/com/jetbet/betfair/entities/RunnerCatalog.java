@@ -16,7 +16,6 @@ import lombok.ToString;
 @NoArgsConstructor
 @ToString
 public class RunnerCatalog {
-
 	private Long selectionId;
 	private String runnerName;
 	private Double handicap;

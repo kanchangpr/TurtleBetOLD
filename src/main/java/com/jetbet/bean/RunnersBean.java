@@ -33,6 +33,9 @@ public class RunnersBean {
 	@Column(name = "match_id")
 	private String matchId;
 	
+	@Column(name = "market_id")
+	private String marketId;
+	
 	@Column(name = "teama_id")
 	private long teama_id;
 	

@@ -270,6 +270,35 @@ public class ApiNgRescriptOperations extends ApiNgOperations {
 		return runnerList;
 	}
 	
+	/*
+	 public MarketCatalogue updateRunnerData(MarketFilter filter, Set<MarketProjection> marketProjection,
+			MarketSort sort, String maxResult, String appKey, String ssoId) throws APINGException {
+		Map<String, Object> params = new HashMap<String, Object>();
+		List<RunnerCatalog> runnerList = new ArrayList<RunnerCatalog>();
+		MarketCatalogue response=new MarketCatalogue();
+		params.put(LOCALE, locale);
+		params.put(FILTER, filter);
+		params.put(SORT, sort);
+		params.put(MAX_RESULT, maxResult);
+		params.put(MARKET_PROJECTION, marketProjection);
+		String result = getInstance().makeRequest(ApiNgOperation.LISTMARKETCATALOGUE.getOperationName(), params, appKey,
+				ssoId);
+		// log.info("MarketCatalogue: " + result);
+		if (ApiNGDemo.isDebug())
+			System.out.println("\nResponse: " + result);
+
+		List<MarketCatalogue> container = JsonConverter.convertFromJson(result, new TypeToken<List<MarketCatalogue>>() {
+		}.getType());
+
+		if (container.size()>0 && container.get(0).getRunners().size() > 0) {
+			//container.get(0).setMarketId(marketId);
+			response = container.get(0);
+		}
+
+		return response;
+	}
+	 * */
+	
 	@Override
 	public List<MarketBook> getMatchOdds(MarketFilter filter, Set<MarketProjection> marketProjection,
 			MarketSort sort, String maxResult, String appKey, String ssoId) throws APINGException {

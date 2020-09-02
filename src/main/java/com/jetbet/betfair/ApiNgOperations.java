@@ -62,6 +62,11 @@ public abstract class ApiNgOperations {
     public abstract List<RunnerCatalog> updateRunnerData(MarketFilter filter, Set<MarketProjection> marketProjection,
             MarketSort sort, String maxResult, String appKey, String ssoId) throws APINGException;
     
+    /*
+      public abstract MarketCatalogue updateRunnerData(MarketFilter filter, Set<MarketProjection> marketProjection,
+            MarketSort sort, String maxResult, String appKey, String ssoId) throws APINGException;
+     * */
+    
     public abstract List<MarketBook> getMatchOdds(MarketFilter filter, Set<MarketProjection> marketProjection,
             MarketSort sort, String maxResult, String appKey, String ssoId) throws APINGException;
 //

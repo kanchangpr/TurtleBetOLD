@@ -1205,12 +1205,12 @@ public class UserDao {
 		return seriesMatchFancyResList;
 	}
 
-	public List<PlaceBetsBean> openPlacedBets(String userId, String transactionId) {
+	public List<PlaceBetsBean> openPlacedBets(String userId,String sportsId, String transactionId) {
 		log.info("[" + transactionId + "]****************INSIDE userHome CLASS UserDao****************");
 		final String BET_RESULT = "OPEN";
 		List<PlaceBetsBean> placeBetsList = new ArrayList<PlaceBetsBean>();
 
-		placeBetsList = placeBetsRepository.findByUserIdAndBetResultOrderByIdDesc(userId.toUpperCase(), BET_RESULT);
+		placeBetsList = placeBetsRepository.findByUserIdAndSportsIdAndBetResultOrderByIdDesc(userId.toUpperCase(),sportsId, BET_RESULT);
 
 		return placeBetsList;
 	}

@@ -185,9 +185,9 @@ public class UserServiceImpl implements UserService{
 	}
 
 	@Override
-	public List<PlaceBetsBean> openPlacedBets(String userId, String transactionId) {
+	public List<PlaceBetsBean> openPlacedBets(String userId,String sportsId, String transactionId) {
 		log.info("["+transactionId+"]*************************INSIDE userHome CLASS UserServiceImpl*************************");
-		return userDao.openPlacedBets( userId,transactionId);
+		return userDao.openPlacedBets( userId,sportsId,transactionId);
 	}
 
 

@@ -397,6 +397,63 @@ public class BetfairDao {
 		}
 
 	}
+	
+	/*
+	 public void updateRunnerData(String userName, String matchId, String marketType, String transactionId) {
+		try {
+			MarketFilter marketFilter;
+			marketFilter = new MarketFilter();
+			Set<String> typesCode = new HashSet<String>();
+			typesCode.add(marketType);
+			Set<String> eventIds = new HashSet<String>();
+			eventIds.add(matchId);
+			String maxResults = "100";
+			List<RunnerCatalog> runnerData;
+			MarketCatalogue mCatalogue=new MarketCatalogue();
+			marketFilter = new MarketFilter();
+			marketFilter.setEventIds(eventIds);
+			marketFilter.setMarketTypeCodes(typesCode);
+			Set<MarketProjection> marketProjection = new HashSet<MarketProjection>();
+			marketProjection.add(MarketProjection.MARKET_START_TIME);
+			marketProjection.add(MarketProjection.RUNNER_DESCRIPTION);
+
+			mCatalogue = rescriptOperations.updateRunnerData(marketFilter, marketProjection, MarketSort.FIRST_TO_START,
+					maxResults, appKey, ssToken);
+			if (mCatalogue != null) {
+				runnerData = mCatalogue.getRunners();
+				if (runnerData.size() > 0) {
+					RunnersBean rB = new RunnersBean();
+					rB.setMatchId(matchId);
+					rB.setMarketId(mCatalogue.getMarketId());
+
+					if (runnerData.size() == 1) {
+						rB.setTeama_id(runnerData.get(0).getSelectionId());
+						rB.setTeama_name(runnerData.get(0).getRunnerName());
+					} else if (runnerData.size() == 2) {
+						rB.setTeama_id(runnerData.get(0).getSelectionId());
+						rB.setTeama_name(runnerData.get(0).getRunnerName());
+						rB.setTeamb_id(runnerData.get(1).getSelectionId());
+						rB.setTeamb_name(runnerData.get(1).getRunnerName());
+					} else if (runnerData.size() == 3) {
+						rB.setTeama_id(runnerData.get(0).getSelectionId());
+						rB.setTeama_name(runnerData.get(0).getRunnerName());
+						rB.setTeamb_id(runnerData.get(1).getSelectionId());
+						rB.setTeamb_name(runnerData.get(1).getRunnerName());
+						rB.setTeamc_id(runnerData.get(2).getSelectionId());
+						rB.setTeamc_name(runnerData.get(2).getRunnerName());
+					}
+
+					log.info("runnerData::  " + rB);
+					runnersRepository.saveAndFlush(rB);
+				}
+			}
+		} catch (APINGException apiExc) {
+			log.info(apiExc.toString());
+		}
+
+	}
+
+	 * */
 
 	@Transactional
 	public List<FancyBean> getListOfOdds(String appKey, String ssoid, String userName, String transactionId) {
