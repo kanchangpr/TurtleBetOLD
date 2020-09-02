@@ -30,4 +30,14 @@ public class MatchAndFancyDetailDto {
 	private Date matchDate;
 	private List<MarketCatalogue> marketCatalogueRes;
 	private List<MarketBook> marketBook;
+	public MatchAndFancyDetailDto(String sportName, String seriesId, String seriesName,
+			String marketType, int marketCount) {
+		super();
+		
+		this.sportName = sportName;
+		this.seriesId = seriesId;
+		this.seriesName = seriesName;
+		this.marketType = marketType;
+		this.marketCount = marketCount;
+	}
 }

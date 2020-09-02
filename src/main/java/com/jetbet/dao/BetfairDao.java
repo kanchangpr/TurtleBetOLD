@@ -46,6 +46,7 @@ import com.jetbet.betfair.exceptions.APINGException;
 import com.jetbet.dto.DashboardMatchListDto;
 import com.jetbet.dto.FancyIdDto;
 import com.jetbet.dto.MatchAndFancyDetailDto;
+import com.jetbet.dto.MatchDashboardDto;
 import com.jetbet.dto.RunnerPriceAndSize;
 import com.jetbet.dto.SeriesMatchFancyResponseDto;
 import com.jetbet.dto.SessionDetails;
@@ -770,13 +771,24 @@ public class BetfairDao {
 			String matchName = matchDet.getMatchName();
 			Date matchDate = matchDet.getMatchOpenDate();
 
-			List<FancyBean> marketTypeList = fancyRepository.findBySportIdAndFancyIdMatchIdAndIsActive(sportsId,
-					matchId, "Y");
+			List<MatchAndFancyDetailDto> marketTypeList= new ArrayList<MatchAndFancyDetailDto>();
+			
+//			List<FancyBean> marketTypeList = fancyRepository.findBySportIdAndFancyIdMatchIdAndIsActive(sportsId,
+//					matchId, "Y");
+//			this.sportName = sportName;
+//			this.seriesId = seriesId;
+//			this.seriesName = seriesName;
+//			this.marketType = marketType;
+//			this.marketCount = marketCount;
+			marketTypeList = jdbcTemplate.query(QueryListConstant.GET_FANCY_LIST_BY_MATCH_AND_SPORTS, new Object[] { sportsId,matchId,sportsId,matchId },
+					(rs, rowNum) -> new MatchAndFancyDetailDto(rs.getString("SPORTS_NAME"),
+							 rs.getString("SERIES_ID"), rs.getString("SERIES_NAME"), rs.getString("MARKET_TYPE"),
+							rs.getInt("MARKET_COUNT")));
 
 			for (int i = 0; i < marketTypeList.size(); i++) {
 				List<MarketBook> mBooks = new ArrayList<MarketBook>();
 				MatchAndFancyDetailDto matchAndFancyDetailDto = new MatchAndFancyDetailDto();
-				String marketType = marketTypeList.get(i).getFancyId().getMarketType();
+				String marketType = marketTypeList.get(i).getMarketType();
 				int marketCount = marketTypeList.get(i).getMarketCount();
 
 				log.info("sportsID: " + sportsId);
@@ -785,11 +797,16 @@ public class BetfairDao {
 				log.info("matchDate: " + matchDate);
 				log.info("marketType:: " + marketType);
 
+				matchAndFancyDetailDto.setSportId(sportsId);
+				matchAndFancyDetailDto.setSportName(marketTypeList.get(i).getSportName());
+				matchAndFancyDetailDto.setSeriesId(marketTypeList.get(i).getSeriesId());
+				matchAndFancyDetailDto.setSeriesName(marketTypeList.get(i).getSeriesName());
 				matchAndFancyDetailDto.setMatchId(matchId);
 				matchAndFancyDetailDto.setMatchName(matchName);
 				matchAndFancyDetailDto.setMatchDate(matchDate);
 				matchAndFancyDetailDto.setMarketType(marketType);
 				matchAndFancyDetailDto.setMarketCount(marketCount);
+				matchAndFancyDetailDto.setMatchDate(matchDate);
 
 				Set<String> typesCode = new HashSet<String>();
 				typesCode.add(marketType);
