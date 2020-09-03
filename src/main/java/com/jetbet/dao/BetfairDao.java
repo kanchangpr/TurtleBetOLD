@@ -183,6 +183,7 @@ public class BetfairDao {
 					seriesBean.setSeriesMarketCount(res.getMarketCount());
 					seriesBean.setSeriesCompRegion(res.getCompetitionRegion());
 					seriesBean.setSeriesCreatedBy(userName);
+					seriesBean.setIsActive("Y");
 					seriesBeanList.add(seriesBean);
 				});
 
@@ -231,6 +232,7 @@ public class BetfairDao {
 					seriesBean.setSeriesName(res.getCompetition().getName());
 					seriesBean.setSeriesMarketCount(res.getMarketCount());
 					seriesBean.setSeriesCompRegion(res.getCompetitionRegion());
+					seriesBean.setIsActive("Y");
 					seriesBean.setSeriesCreatedBy(userName);
 					seriesBeanList.add(seriesBean);
 				});
@@ -302,6 +304,7 @@ public class BetfairDao {
 							matchBean.setMatchMarketCount(res.getMarketCount());
 							matchBean.setSportId(eventTypeIdString);
 							matchBean.setInPlay(ResourceConstants.IN_PLAY);
+							matchBean.setIsActive("Y");
 							matchBean.setSeriesId(seriesId);
 							matchBean.setMatchCreatedBy(userName);
 							matchBeanList.add(matchBean);
@@ -384,6 +387,7 @@ public class BetfairDao {
 					matchBean.setMatchMarketCount(res.getMarketCount());
 					matchBean.setSportId(sportsId);
 					matchBean.setInPlay(ResourceConstants.IN_PLAY);
+					matchBean.setIsActive("Y");
 					matchBean.setSeriesId(seriesId);
 					matchBean.setMatchCreatedBy(userName);
 					matchBeanList.add(matchBean);
