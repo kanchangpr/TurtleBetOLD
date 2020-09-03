@@ -563,7 +563,7 @@ public class BetfairDao {
 				response.stream().forEach(res -> {
 					FancyBean fancyBean = new FancyBean();
 					FancyIdDto fancyId = new FancyIdDto();
-					if (matchBean.getInPlay().equalsIgnoreCase(ResourceConstants.IN_PLAY)) {
+					if (matchBean.getInPlay().equalsIgnoreCase(ResourceConstants.IN_PLAY) && !StringUtils.isEmpty(matchBean.getInPlay())) {
 						fancyBean.setIsActive("Y");
 					}
 					fancyId.setMarketType(res.getMarketType());
@@ -624,7 +624,7 @@ public class BetfairDao {
 				response.stream().forEach(res -> {
 					FancyBean fancyBean = new FancyBean();
 					FancyIdDto fancyId = new FancyIdDto();
-					if (matchBean.getInPlay().equalsIgnoreCase(ResourceConstants.IN_PLAY)) {
+					if (matchBean.getInPlay().equalsIgnoreCase(ResourceConstants.IN_PLAY) && !StringUtils.isEmpty(matchBean.getInPlay())) {
 						fancyBean.setIsActive("Y");
 					}
 					fancyId.setMarketType(res.getMarketType());
@@ -680,7 +680,7 @@ public class BetfairDao {
 				response.stream().forEach(res -> {
 					FancyBean fancyBean = new FancyBean();
 					FancyIdDto fancyId = new FancyIdDto();
-					if (matchBean.getInPlay().equalsIgnoreCase(ResourceConstants.IN_PLAY)) {
+					if (matchBean.getInPlay().equalsIgnoreCase(ResourceConstants.IN_PLAY) && !StringUtils.isEmpty(matchBean.getInPlay())) {
 						fancyBean.setIsActive("Y");
 					}
 					fancyId.setMarketType(res.getMarketType());
