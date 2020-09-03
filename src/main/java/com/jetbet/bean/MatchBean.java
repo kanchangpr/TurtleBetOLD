@@ -55,6 +55,9 @@ public class MatchBean {
 	@Column(name = "sports_id")
 	private String sportId;
 	
+	@Column(name = "in_play")
+	private String inPlay;
+	
 	@Column(name = "is_active" , updatable=false)
 	private String isActive="N";
 	

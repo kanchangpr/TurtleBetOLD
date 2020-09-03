@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.transaction.Transactional;
+import javax.validation.constraints.Pattern.Flag;
 
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.validator.constraints.Length;
@@ -37,6 +38,7 @@ import com.jetbet.betfair.entities.MarketFancyResult;
 import com.jetbet.betfair.entities.MarketFilter;
 import com.jetbet.betfair.entities.PriceProjection;
 import com.jetbet.betfair.entities.RunnerCatalog;
+import com.jetbet.betfair.enums.MarketBettingType;
 import com.jetbet.betfair.enums.MarketProjection;
 import com.jetbet.betfair.enums.MarketSort;
 import com.jetbet.betfair.enums.MatchProjection;
@@ -160,6 +162,13 @@ public class BetfairDao {
 				Set<String> eventTypeIdSet = new HashSet<String>();
 				eventTypeIdSet.add(eventTypeIdString);
 				marketFilter.setEventTypeIds(eventTypeIdSet);
+				
+				
+				Set<MarketBettingType> marketBettingType = new HashSet<MarketBettingType>();
+				marketBettingType.add(MarketBettingType.ODDS);
+				marketFilter.setMarketBettingTypes(marketBettingType);
+				marketFilter.setTurnInPlayEnabled(true);
+				
 
 				// log.info("[" + transactionId + "] (getlistOfComp) Get all
 				// Competition(Series)...\n");
@@ -206,6 +215,10 @@ public class BetfairDao {
 				Set<String> eventTypeIdSet = new HashSet<String>();
 				eventTypeIdSet.add(eventTypeIdString);
 				marketFilter.setEventTypeIds(eventTypeIdSet);
+				Set<MarketBettingType> marketBettingType = new HashSet<MarketBettingType>();
+				marketBettingType.add(MarketBettingType.ODDS);
+				marketFilter.setMarketBettingTypes(marketBettingType);
+				marketFilter.setTurnInPlayEnabled(true);
 
 				// log.info("[" + transactionId + "] (getlistOfComp) Get all
 				// Competition(Series)...\n");
@@ -252,6 +265,10 @@ public class BetfairDao {
 				Set<String> eventTypeIdSet = new HashSet<String>();
 				eventTypeIdSet.add(eventTypeIdString);
 				marketFilter.setEventTypeIds(eventTypeIdSet);
+				Set<MarketBettingType> marketBettingType = new HashSet<MarketBettingType>();
+				marketBettingType.add(MarketBettingType.ODDS);
+				marketFilter.setMarketBettingTypes(marketBettingType);
+				marketFilter.setTurnInPlayEnabled(true);
 
 				List<SeriesBean> seriesBeanList = seriesRepository
 						.findBySportIdAndIsActiveOrderBySportId(eventTypeIdString, "Y");
@@ -269,23 +286,50 @@ public class BetfairDao {
 					// log.info("[" + transactionId + "] ***********Fecting Matches of " +
 					// sportsBean.getSportsName()
 					// + " : " + seriesBean.getSeriesName() + " *********");
-					List<EventResult> response = rescriptOperations.listEvents(marketFilter, applicationKey,
-							sessionToken);
+					{
+						marketFilter.setInPlayOnly(true);
+						List<EventResult> response = rescriptOperations.listEvents(marketFilter, applicationKey,
+								sessionToken);
 
-					response.stream().forEach(res -> {
-						MatchBean matchBean = new MatchBean();
-						matchBean.setMatchId(res.getEvent().getId());
-						matchBean.setMatchName(res.getEvent().getName());
-						matchBean.setMatchCountryCode(res.getEvent().getCountryCode());
-						matchBean.setMatchTimezone(res.getEvent().getTimezone());
-						matchBean.setMatchVenue(res.getEvent().getVenue());
-						matchBean.setMatchOpenDate(res.getEvent().getOpenDate());
-						matchBean.setMatchMarketCount(res.getMarketCount());
-						matchBean.setSportId(eventTypeIdString);
-						matchBean.setSeriesId(seriesId);
-						matchBean.setMatchCreatedBy(userName);
-						matchBeanList.add(matchBean);
-					});
+						response.stream().forEach(res -> {
+							MatchBean matchBean = new MatchBean();
+							matchBean.setMatchId(res.getEvent().getId());
+							matchBean.setMatchName(res.getEvent().getName());
+							matchBean.setMatchCountryCode(res.getEvent().getCountryCode());
+							matchBean.setMatchTimezone(res.getEvent().getTimezone());
+							matchBean.setMatchVenue(res.getEvent().getVenue());
+							matchBean.setMatchOpenDate(res.getEvent().getOpenDate());
+							matchBean.setMatchMarketCount(res.getMarketCount());
+							matchBean.setSportId(eventTypeIdString);
+							matchBean.setInPlay(ResourceConstants.IN_PLAY);
+							matchBean.setSeriesId(seriesId);
+							matchBean.setMatchCreatedBy(userName);
+							matchBeanList.add(matchBean);
+						});
+					}
+					{
+
+						marketFilter.setInPlayOnly(false);
+						List<EventResult> response = rescriptOperations.listEvents(marketFilter, applicationKey,
+								sessionToken);
+
+						response.stream().forEach(res -> {
+							MatchBean matchBean = new MatchBean();
+							matchBean.setMatchId(res.getEvent().getId());
+							matchBean.setMatchName(res.getEvent().getName());
+							matchBean.setMatchCountryCode(res.getEvent().getCountryCode());
+							matchBean.setMatchTimezone(res.getEvent().getTimezone());
+							matchBean.setMatchVenue(res.getEvent().getVenue());
+							matchBean.setMatchOpenDate(res.getEvent().getOpenDate());
+							matchBean.setMatchMarketCount(res.getMarketCount());
+							matchBean.setSportId(eventTypeIdString);
+							matchBean.setSeriesId(seriesId);
+							matchBean.setMatchCreatedBy(userName);
+							matchBeanList.add(matchBean);
+						});
+
+					}
+
 				}
 			}
 			matchBeanResponseList = storeListOfMatchDB(matchBeanList, transactionId);
@@ -320,7 +364,13 @@ public class BetfairDao {
 				Set<String> seriesIdSet = new HashSet<String>();
 				seriesIdSet.add(seriesIds);
 				marketFilter.setCompetitionIds(seriesIdSet);
+				Set<MarketBettingType> marketBettingType = new HashSet<MarketBettingType>();
+				marketBettingType.add(MarketBettingType.ODDS);
+				marketFilter.setMarketBettingTypes(marketBettingType);
+				marketFilter.setTurnInPlayEnabled(true);
 
+				{
+				marketFilter.setInPlayOnly(true);
 				List<EventResult> response = rescriptOperations.listEvents(marketFilter, appKey, ssToken);
 
 				response.stream().forEach(res -> {
@@ -333,10 +383,31 @@ public class BetfairDao {
 					matchBean.setMatchOpenDate(res.getEvent().getOpenDate());
 					matchBean.setMatchMarketCount(res.getMarketCount());
 					matchBean.setSportId(sportsId);
+					matchBean.setInPlay(ResourceConstants.IN_PLAY);
 					matchBean.setSeriesId(seriesId);
 					matchBean.setMatchCreatedBy(userName);
 					matchBeanList.add(matchBean);
 				});
+				}
+				{
+					marketFilter.setInPlayOnly(false);
+					List<EventResult> response = rescriptOperations.listEvents(marketFilter, appKey, ssToken);
+
+					response.stream().forEach(res -> {
+						MatchBean matchBean = new MatchBean();
+						matchBean.setMatchId(res.getEvent().getId());
+						matchBean.setMatchName(res.getEvent().getName());
+						matchBean.setMatchCountryCode(res.getEvent().getCountryCode());
+						matchBean.setMatchTimezone(res.getEvent().getTimezone());
+						matchBean.setMatchVenue(res.getEvent().getVenue());
+						matchBean.setMatchOpenDate(res.getEvent().getOpenDate());
+						matchBean.setMatchMarketCount(res.getMarketCount());
+						matchBean.setSportId(sportsId);
+						matchBean.setSeriesId(seriesId);
+						matchBean.setMatchCreatedBy(userName);
+						matchBeanList.add(matchBean);
+					});
+					}
 			}
 
 			matchBeanResponseList = storeListOfMatchDB(matchBeanList, transactionId);
@@ -476,13 +547,21 @@ public class BetfairDao {
 				Set<String> matchIdSet = new HashSet<String>();
 				matchIdSet.add(matchId);
 				marketFilter.setEventIds(matchIdSet);
+				Set<MarketBettingType> marketBettingType = new HashSet<MarketBettingType>();
+				marketBettingType.add(MarketBettingType.ODDS);
+				marketFilter.setMarketBettingTypes(marketBettingType);
+				marketFilter.setTurnInPlayEnabled(true);
+				//marketFilter.setInPlayOnly(true);
 
 				List<MarketFancyResult> response = rescriptOperations.listFancy(marketFilter, applicationKey,
 						sessionToken);
-
+				
 				response.stream().forEach(res -> {
 					FancyBean fancyBean = new FancyBean();
 					FancyIdDto fancyId = new FancyIdDto();
+					if (matchBean.getInPlay().equalsIgnoreCase(ResourceConstants.IN_PLAY)) {
+						fancyBean.setIsActive("Y");
+					}
 					fancyId.setMarketType(res.getMarketType());
 					fancyId.setMatchId(matchId);
 					fancyBean.setFancyId(fancyId);
@@ -530,12 +609,20 @@ public class BetfairDao {
 				Set<String> matchIdSet = new HashSet<String>();
 				matchIdSet.add(matchIds);
 				marketFilter.setEventIds(matchIdSet);
+				
+				Set<MarketBettingType> marketBettingType = new HashSet<MarketBettingType>();
+				marketBettingType.add(MarketBettingType.ODDS);
+				marketFilter.setMarketBettingTypes(marketBettingType);
+				marketFilter.setTurnInPlayEnabled(true);
 
 				List<MarketFancyResult> response = rescriptOperations.listFancy(marketFilter, appKey, ssToken);
 
 				response.stream().forEach(res -> {
 					FancyBean fancyBean = new FancyBean();
 					FancyIdDto fancyId = new FancyIdDto();
+					if (matchBean.getInPlay().equalsIgnoreCase(ResourceConstants.IN_PLAY)) {
+						fancyBean.setIsActive("Y");
+					}
 					fancyId.setMarketType(res.getMarketType());
 					fancyId.setMatchId(matchIds);
 					fancyBean.setFancyId(fancyId);
@@ -579,12 +666,19 @@ public class BetfairDao {
 				Set<String> matchIdSet = new HashSet<String>();
 				matchIdSet.add(matchIds);
 				marketFilter.setEventIds(matchIdSet);
+				Set<MarketBettingType> marketBettingType = new HashSet<MarketBettingType>();
+				marketBettingType.add(MarketBettingType.ODDS);
+				marketFilter.setMarketBettingTypes(marketBettingType);
+				marketFilter.setTurnInPlayEnabled(true);
 
 				List<MarketFancyResult> response = rescriptOperations.listFancy(marketFilter, appKey, ssToken);
 
 				response.stream().forEach(res -> {
 					FancyBean fancyBean = new FancyBean();
 					FancyIdDto fancyId = new FancyIdDto();
+					if (matchBean.getInPlay().equalsIgnoreCase(ResourceConstants.IN_PLAY)) {
+						fancyBean.setIsActive("Y");
+					}
 					fancyId.setMarketType(res.getMarketType());
 					fancyId.setMatchId(matchIds);
 					fancyBean.setFancyId(fancyId);

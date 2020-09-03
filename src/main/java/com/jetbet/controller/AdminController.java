@@ -81,12 +81,14 @@ public class AdminController {
 	}
 
 	@RequestMapping(value = ResourceConstants.LIST_OF_FANCY, method = RequestMethod.GET)
-	public ResponseEntity<List<FancyBean>> fancyList(@RequestParam(value = "matchId", required = false) String matchId,
+	public ResponseEntity<List<FancyBean>> fancyList(
+			@RequestParam(value = "sportsId", required = false) String sportsId,
+			@RequestParam(value = "matchId", required = false) String matchId,
 			@RequestParam(value = "fancyName", required = false) String fancyName) {
 		String transactionId = "TB" + UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
 		log.info("[" + transactionId
 				+ "]*************************INSIDE getListOfEventType METHOD GET*************************");
-		List<FancyBean> response = adminService.fancyList(matchId, fancyName, transactionId);
+		List<FancyBean> response = adminService.fancyList(sportsId,matchId, fancyName, transactionId);
 		return new ResponseEntity<List<FancyBean>>(response, HttpStatus.OK);
 	}
 
