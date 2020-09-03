@@ -28,6 +28,7 @@ public class MatchAndFancyDetailDto {
 	private String marketType;
 	private int marketCount;
 	private Date matchDate;
+	private String status;
 	private List<MarketCatalogue> marketCatalogueRes;
 	private List<MarketBook> marketBook;
 	public MatchAndFancyDetailDto(String sportName, String seriesId, String seriesName,

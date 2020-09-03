@@ -887,6 +887,7 @@ public class BetfairDao {
 
 					String matchIdString = matchList.get(j).getMatchId();
 					String matchNameString = matchList.get(j).getMatchName();
+					String matchStatus=matchList.get(j).getInPlay();
 					Date matchOpenDate = matchList.get(j).getMatchOpenDate();
 					// log.info("Match ID for Fancy Details: " + matchIdString);
 					List<FancyBean> marketTypeList = fancyRepository
@@ -907,6 +908,7 @@ public class BetfairDao {
 
 						matchAndFancyDetailDto.setMatchId(matchId);
 						matchAndFancyDetailDto.setMatchName(matchName);
+						matchAndFancyDetailDto.setStatus(matchStatus);
 						matchAndFancyDetailDto.setMatchDate(matchDate);
 						matchAndFancyDetailDto.setMarketType(marketType);
 						matchAndFancyDetailDto.setMarketCount(marketCount);
