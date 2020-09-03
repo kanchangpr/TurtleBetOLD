@@ -985,6 +985,40 @@ public class UserDao {
 				if (stake >= minimumStake) {
 					if ((odds >= runnerPrize && isLay.equalsIgnoreCase("Y")) || (odds <= runnerPrize && isback.equalsIgnoreCase("Y"))) {
 						if (liability <= chips) {
+							PartnershipBean psDetails = partnershipRepository.findByUserId(userId);
+
+							int adminPer = psDetails.getAdminStake();
+							int smPer = psDetails.getSupermasterStake();
+							int masterPer = psDetails.getMastrerStake();
+							double commision=0.0;
+
+							double total=0.0;
+							double pl=0.0;
+							double masterPl=0.0;
+							double smPl=0.0;
+							double adminPl=0.0;
+							if(isback.equalsIgnoreCase("Y") && marketType.equalsIgnoreCase("MATCH_ODDS")) {
+								total = Double.parseDouble(df.format((odds * stake) - stake));
+								commision = calcuateCommision(total, userDetail.getOddsCommission());
+								pl = Double.parseDouble(df.format(total - commision));
+								//pl=total;
+								masterPl = calcuateCommision(pl, masterPer);
+								smPl = calcuateCommision(pl, adminPer);
+								adminPl = calcuateCommision(pl, smPer);
+							}else if(isLay.equalsIgnoreCase("Y") && marketType.equalsIgnoreCase("MATCH_ODDS")) {
+								total=liability;
+								pl=-total;
+								masterPl = -calcuateCommision(total, masterPer);
+								smPl = -calcuateCommision(total, adminPer);
+								adminPl = -calcuateCommision(total, smPer);
+							}
+							
+							placeBetsBean.setUserPl(pl);
+							placeBetsBean.setMasterPl(masterPl);
+							placeBetsBean.setSmPl(smPl);
+							placeBetsBean.setAdminPl(adminPl);
+							
+							
 							PlaceBetsBean placeBetsResBean = placeBetsRepository.saveAndFlush(placeBetsBean);
 							if (placeBetsResBean.getUserId().equalsIgnoreCase(userId)) {
 
@@ -1010,9 +1044,9 @@ public class UserDao {
 								log.info("[" + transactionId + "] chipsBean:: " + chipsBean);
 
 								if (marketName.equalsIgnoreCase(MATCH_ODDS)) {
-									Thread.sleep(betDelay * 1000);
+									Thread.sleep(betDelay-1 * 1000);
 								} else {
-									Thread.sleep(sessionDelay * 1000);
+									Thread.sleep(sessionDelay-1 * 1000);
 								}
 								userResponseDto.setStatus(ResourceConstants.SUCCESS);
 								userResponseDto.setErrorMsg(ResourceConstants.BET_PLACED + placeBetsResBean.getId());
@@ -1051,6 +1085,10 @@ public class UserDao {
 		return userResponseDto;
 	}
 
+	public double calcuateCommision(double price, double percentage) {
+		double amount = Double.parseDouble(df.format(Double.parseDouble(df.format(percentage * price)) / 100));
+		return amount;
+	}
 	public List<Object> userReport(String type, String userId, String fromDate, String toDate, String searchParam,
 			String transactionId) {
 		log.info("[" + transactionId + "]****************INSIDE userReport CLASS UserDao****************");
@@ -1084,6 +1122,7 @@ public class UserDao {
 								rs.getDouble("stake"), rs.getDouble("liability"), rs.getDouble("profit"),
 								rs.getDouble("loss"), rs.getDouble("net_amount"), rs.getDouble("commision"),
 								rs.getDouble("admin_stakes"), rs.getDouble("sm_stakes"), rs.getDouble("master_stakes"),
+								rs.getDouble("user_pl"), rs.getDouble("master_pl"), rs.getDouble("sm_pl"), rs.getDouble("admin_pl"),
 								rs.getString("admin_settle"), rs.getString("sm_settle"), rs.getString("master_settle"),
 								rs.getString("isback"), rs.getString("islay"), rs.getInt("psid"),
 								rs.getString("remarks"), rs.getString("bet_status"), rs.getString("bet_result"),
@@ -1143,6 +1182,7 @@ public class UserDao {
 								rs.getDouble("stake"), rs.getDouble("liability"), rs.getDouble("profit"),
 								rs.getDouble("loss"), rs.getDouble("net_amount"), rs.getDouble("commision"),
 								rs.getDouble("admin_stakes"), rs.getDouble("sm_stakes"), rs.getDouble("master_stakes"),
+								rs.getDouble("user_pl"), rs.getDouble("master_pl"), rs.getDouble("sm_pl"), rs.getDouble("admin_pl"),
 								rs.getString("admin_settle"), rs.getString("sm_settle"), rs.getString("master_settle"),
 								rs.getString("isback"), rs.getString("islay"), rs.getInt("psid"),
 								rs.getString("remarks"), rs.getString("bet_status"), rs.getString("bet_result"),
