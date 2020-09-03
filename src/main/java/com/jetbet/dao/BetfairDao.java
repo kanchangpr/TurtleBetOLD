@@ -892,7 +892,6 @@ public class BetfairDao {
 					// log.info("Match ID for Fancy Details: " + matchIdString);
 					List<FancyBean> marketTypeList = fancyRepository
 							.findByFancyIdMarketTypeAndFancyIdMatchIdAndIsActive("MATCH_ODDS", matchIdString, "Y");
-
 					for (int i = 0; i < marketTypeList.size(); i++) {
 						MatchAndFancyDetailDto matchAndFancyDetailDto = new MatchAndFancyDetailDto();
 						String matchId = matchIdString;
