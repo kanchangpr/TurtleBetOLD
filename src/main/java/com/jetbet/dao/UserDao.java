@@ -1044,9 +1044,9 @@ public class UserDao {
 								log.info("[" + transactionId + "] chipsBean:: " + chipsBean);
 
 								if (marketName.equalsIgnoreCase(MATCH_ODDS)) {
-									Thread.sleep(betDelay-1 * 1000);
+									Thread.sleep((betDelay>0 ? betDelay-1 : betDelay)  * 1000);
 								} else {
-									Thread.sleep(sessionDelay-1 * 1000);
+									Thread.sleep((sessionDelay>0 ? sessionDelay-1 : sessionDelay) * 1000);
 								}
 								userResponseDto.setStatus(ResourceConstants.SUCCESS);
 								userResponseDto.setErrorMsg(ResourceConstants.BET_PLACED + placeBetsResBean.getId());
