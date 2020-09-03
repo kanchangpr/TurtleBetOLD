@@ -327,6 +327,7 @@ public class BetfairDao {
 							matchBean.setMatchMarketCount(res.getMarketCount());
 							matchBean.setSportId(eventTypeIdString);
 							matchBean.setSeriesId(seriesId);
+							matchBean.setInPlay(ResourceConstants.NOT_IN_PLAY);
 							matchBean.setMatchCreatedBy(userName);
 							matchBeanList.add(matchBean);
 						});
@@ -407,6 +408,7 @@ public class BetfairDao {
 						matchBean.setMatchOpenDate(res.getEvent().getOpenDate());
 						matchBean.setMatchMarketCount(res.getMarketCount());
 						matchBean.setSportId(sportsId);
+						matchBean.setInPlay(ResourceConstants.NOT_IN_PLAY);
 						matchBean.setSeriesId(seriesId);
 						matchBean.setMatchCreatedBy(userName);
 						matchBeanList.add(matchBean);
@@ -547,6 +549,9 @@ public class BetfairDao {
 				// log.info("[" + transactionId + "] ***********INSIDE Match LOOP*********");
 
 				String matchId = matchBean.getMatchId();
+				String matchName = matchBean.getMatchName();
+				String sportsId = matchBean.getSportId();
+				String seriesId = matchBean.getSeriesId();
 				// log.info("[" + transactionId + "]matchId: " + matchId);
 				Set<String> matchIdSet = new HashSet<String>();
 				matchIdSet.add(matchId);
@@ -559,30 +564,41 @@ public class BetfairDao {
 
 				List<MarketFancyResult> response = rescriptOperations.listFancy(marketFilter, applicationKey,
 						sessionToken);
-				
-				response.stream().forEach(res -> {
-					FancyBean fancyBean = new FancyBean();
-					FancyIdDto fancyId = new FancyIdDto();
-					if (matchBean.getInPlay().equalsIgnoreCase(ResourceConstants.IN_PLAY) && !StringUtils.isEmpty(matchBean.getInPlay())) {
+				if(matchBean.getInPlay().equalsIgnoreCase(ResourceConstants.IN_PLAY) && !StringUtils.isEmpty(matchBean.getInPlay())) {
+					response.stream().forEach(res -> {
+						FancyBean fancyBean = new FancyBean();
+						FancyIdDto fancyId = new FancyIdDto();
+						fancyId.setMarketType(res.getMarketType());
+						fancyId.setMatchId(matchId);
+						fancyBean.setFancyId(fancyId);
+						fancyBean.setSportId(sportsId);
+						fancyBean.setSeriesId(seriesId);
+						fancyBean.setMatchName(matchName);
+						fancyBean.setMarketCount(res.getMarketCount());
+						fancyBean.setFancyCreatedBy(userName);
 						fancyBean.setIsActive("Y");
-					}
-					fancyId.setMarketType(res.getMarketType());
-					fancyId.setMatchId(matchId);
-					fancyBean.setFancyId(fancyId);
-					// fancyBean.getFancyId().setMarketType(res.getMarketType());
-					// fancyBean.setMarketType(res.getMarketType());
-					fancyBean.setMarketCount(res.getMarketCount());
-					// fancyBean.getFancyId().setMatchId(matchId);
-					// fancyBean.setMatchId(matchId);
-					fancyBean.setFancyCreatedBy(userName);
-					fancyBeanList.add(fancyBean);
-				});
+						fancyBeanList.add(fancyBean);
+					});
+				}else {
+					response.stream().forEach(res -> {
+						FancyBean fancyBean = new FancyBean();
+						FancyIdDto fancyId = new FancyIdDto();
+						fancyId.setMarketType(res.getMarketType());
+						fancyId.setMatchId(matchId);
+						fancyBean.setFancyId(fancyId);
+						fancyBean.setSportId(sportsId);
+						fancyBean.setSeriesId(seriesId);
+						fancyBean.setMatchName(matchName);
+						fancyBean.setMarketCount(res.getMarketCount());
+						fancyBean.setFancyCreatedBy(userName);
+						fancyBeanList.add(fancyBean);
+					});
+				}
+				
 			}
 			// log.info("fancyBeanList:: " + fancyBeanList);
 
 			fancyBeanResponseList = storeListOfFancyDB(fancyBeanList, transactionId);
-			// log.info("[" + transactionId + "] response after storeListOfFancyDB: " +
-			// fancyBeanResponseList);
 
 		} catch (APINGException apiExc) {
 			log.info("[" + transactionId + "] " + apiExc.toString());
@@ -621,22 +637,36 @@ public class BetfairDao {
 
 				List<MarketFancyResult> response = rescriptOperations.listFancy(marketFilter, appKey, ssToken);
 
-				response.stream().forEach(res -> {
-					FancyBean fancyBean = new FancyBean();
-					FancyIdDto fancyId = new FancyIdDto();
-					if (matchBean.getInPlay().equalsIgnoreCase(ResourceConstants.IN_PLAY) && !StringUtils.isEmpty(matchBean.getInPlay())) {
+				if(matchBean.getInPlay().equalsIgnoreCase(ResourceConstants.IN_PLAY) && !StringUtils.isEmpty(matchBean.getInPlay())) {
+					response.stream().forEach(res -> {
+						FancyBean fancyBean = new FancyBean();
+						FancyIdDto fancyId = new FancyIdDto();
+						fancyId.setMarketType(res.getMarketType());
+						fancyId.setMatchId(matchIds);
+						fancyBean.setFancyId(fancyId);
+						fancyBean.setSportId(sportsId);
+						fancyBean.setSeriesId(seriesId);
+						fancyBean.setMatchName(matchName);
+						fancyBean.setMarketCount(res.getMarketCount());
+						fancyBean.setFancyCreatedBy(userName);
 						fancyBean.setIsActive("Y");
-					}
-					fancyId.setMarketType(res.getMarketType());
-					fancyId.setMatchId(matchIds);
-					fancyBean.setFancyId(fancyId);
-					fancyBean.setSportId(sportsId);
-					fancyBean.setSeriesId(seriesId);
-					fancyBean.setMatchName(matchName);
-					fancyBean.setMarketCount(res.getMarketCount());
-					fancyBean.setFancyCreatedBy(userName);
-					fancyBeanList.add(fancyBean);
-				});
+						fancyBeanList.add(fancyBean);
+					});
+				}else {
+					response.stream().forEach(res -> {
+						FancyBean fancyBean = new FancyBean();
+						FancyIdDto fancyId = new FancyIdDto();
+						fancyId.setMarketType(res.getMarketType());
+						fancyId.setMatchId(matchIds);
+						fancyBean.setFancyId(fancyId);
+						fancyBean.setSportId(sportsId);
+						fancyBean.setSeriesId(seriesId);
+						fancyBean.setMatchName(matchName);
+						fancyBean.setMarketCount(res.getMarketCount());
+						fancyBean.setFancyCreatedBy(userName);
+						fancyBeanList.add(fancyBean);
+					});
+				}
 			}
 
 			fancyBeanResponseList = storeListOfFancyDB(fancyBeanList, transactionId);
@@ -677,22 +707,36 @@ public class BetfairDao {
 
 				List<MarketFancyResult> response = rescriptOperations.listFancy(marketFilter, appKey, ssToken);
 
-				response.stream().forEach(res -> {
-					FancyBean fancyBean = new FancyBean();
-					FancyIdDto fancyId = new FancyIdDto();
-					if (matchBean.getInPlay().equalsIgnoreCase(ResourceConstants.IN_PLAY) && !StringUtils.isEmpty(matchBean.getInPlay())) {
+				if(matchBean.getInPlay().equalsIgnoreCase(ResourceConstants.IN_PLAY) && !StringUtils.isEmpty(matchBean.getInPlay())) {
+					response.stream().forEach(res -> {
+						FancyBean fancyBean = new FancyBean();
+						FancyIdDto fancyId = new FancyIdDto();
+						fancyId.setMarketType(res.getMarketType());
+						fancyId.setMatchId(matchIds);
+						fancyBean.setFancyId(fancyId);
+						fancyBean.setSportId(sportsId);
+						fancyBean.setSeriesId(seriesId);
+						fancyBean.setMatchName(matchName);
+						fancyBean.setMarketCount(res.getMarketCount());
+						fancyBean.setFancyCreatedBy(userName);
 						fancyBean.setIsActive("Y");
-					}
-					fancyId.setMarketType(res.getMarketType());
-					fancyId.setMatchId(matchIds);
-					fancyBean.setFancyId(fancyId);
-					fancyBean.setSportId(sportsId);
-					fancyBean.setSeriesId(seriesId);
-					fancyBean.setMatchName(matchName);
-					fancyBean.setMarketCount(res.getMarketCount());
-					fancyBean.setFancyCreatedBy(userName);
-					fancyBeanList.add(fancyBean);
-				});
+						fancyBeanList.add(fancyBean);
+					});
+				}else {
+					response.stream().forEach(res -> {
+						FancyBean fancyBean = new FancyBean();
+						FancyIdDto fancyId = new FancyIdDto();
+						fancyId.setMarketType(res.getMarketType());
+						fancyId.setMatchId(matchIds);
+						fancyBean.setFancyId(fancyId);
+						fancyBean.setSportId(sportsId);
+						fancyBean.setSeriesId(seriesId);
+						fancyBean.setMatchName(matchName);
+						fancyBean.setMarketCount(res.getMarketCount());
+						fancyBean.setFancyCreatedBy(userName);
+						fancyBeanList.add(fancyBean);
+					});
+				}
 			}
 
 			fancyBeanResponseList = storeListOfFancyDB(fancyBeanList, transactionId);

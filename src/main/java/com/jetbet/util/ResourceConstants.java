@@ -173,7 +173,8 @@ public class ResourceConstants {
 	public static final String BACK  ="BACK";
 	public static final String LAY  ="LAY";
 	
-	public static final String IN_PLAY  ="IN Play";
+	public static final String IN_PLAY  ="In Play";
+	public static final String NOT_IN_PLAY  ="NOT_IN_PLAY";
 	
 	public static String checkNulString(String aString) {
 		return StringUtils.isBlank(aString) ? "" : aString;
