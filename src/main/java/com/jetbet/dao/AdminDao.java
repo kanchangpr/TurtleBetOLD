@@ -177,9 +177,9 @@ public class AdminDao {
 										sportsControlReq.getOperationId() });
 						bfDao.updateListOfOddsForSeries(ResourceConstants.USER_NAME, sportsControlReq.getOperationId(),
 								transactionId);
-						jdbcTemplate.update(QueryListConstant.SERIES_CONTROL_FOR_FANCY_PAGE,
-								new Object[] { sportsControlReq.getIsActive(), sportsControlReq.getUserName(),
-										sportsControlReq.getOperationId() });
+//						jdbcTemplate.update(QueryListConstant.SERIES_CONTROL_FOR_FANCY_PAGE,
+//								new Object[] { sportsControlReq.getIsActive(), sportsControlReq.getUserName(),
+//										sportsControlReq.getOperationId() });
 					}else {
 						jdbcTemplate.update(QueryListConstant.SERIES_CONTROL_FOR_SERIES_PAGE,
 								new Object[] { sportsControlReq.getIsActive(), sportsControlReq.getUserName(),

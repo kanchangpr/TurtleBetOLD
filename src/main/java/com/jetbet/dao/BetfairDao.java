@@ -1050,18 +1050,19 @@ public class BetfairDao {
 	@Transactional
 	private List<SeriesBean> storeListOfCompDB(List<SeriesBean> seriesBeanList, String transactionId) {
 		List<SeriesBean> responseBeanList = new ArrayList<SeriesBean>();
-		for (SeriesBean seriesBean : seriesBeanList) {
+		responseBeanList=seriesRepository.saveAll(seriesBeanList);
+//		for (SeriesBean seriesBean : seriesBeanList) {
 			// String seriesId = seriesBean.getSeriesId();
 			// long getRowCount = seriesRepository.countBySeriesId(seriesId);
 			// if (getRowCount == 0) {
-			SeriesBean responseBean = new SeriesBean();
+//			SeriesBean responseBean = new SeriesBean();
 			// log.info("[" + transactionId + "] inside if seriesId: " + seriesId);
-			responseBean = seriesRepository.saveAndFlush(seriesBean);
-			responseBeanList.add(responseBean);
+//			responseBean = seriesRepository.saveAndFlush(seriesBean);
+//			responseBeanList.add(responseBean);
 			// } else {
 			// log.info("[" + transactionId + "] inside Else seriesId: " + seriesId);
 			// }
-		}
+//		}
 		// log.info("responseBeanList:: " + responseBeanList);
 		return responseBeanList;
 	}
@@ -1069,18 +1070,19 @@ public class BetfairDao {
 	@Transactional
 	private List<MatchBean> storeListOfMatchDB(List<MatchBean> matchBeanList, String transactionId) {
 		List<MatchBean> responseBeanList = new ArrayList<MatchBean>();
-		for (MatchBean matchBean : matchBeanList) {
+		responseBeanList=matchRepository.saveAll(matchBeanList);
+//		for (MatchBean matchBean : matchBeanList) {
 			// String matchId = matchBean.getMatchId();
 			// long getRowCount = matchRepository.countByMatchId(matchId);
 			// if (getRowCount == 0) {
-			MatchBean responseBean = new MatchBean();
+//			MatchBean responseBean = new MatchBean();
 			// log.info("[" + transactionId + "] inside if matchId: " + matchId);
-			responseBean = matchRepository.saveAndFlush(matchBean);
-			responseBeanList.add(responseBean);
+//			responseBean = matchRepository.saveAndFlush(matchBean);
+//			responseBeanList.add(responseBean);
 			// } else {
 			// log.info("[" + transactionId + "] inside Else matchId: " + matchId);
 			// }
-		}
+//		}
 		// log.info("responseBeanList:: " + responseBeanList);
 		return responseBeanList;
 	}
@@ -1091,7 +1093,8 @@ public class BetfairDao {
 		// + "]##############################Inside
 		// storeListOfFancyDB#############################");
 		List<FancyBean> responseBeanList = new ArrayList<FancyBean>();
-		for (FancyBean fancyBean : fancyBeanList) {
+		responseBeanList=fancyRepository.saveAll(fancyBeanList);
+//		for (FancyBean fancyBean : fancyBeanList) {
 			// log.info("marketType & Match ID " + fancyBean.getMarketType() + " : " +
 			// fancyBean.getMatchId());
 			// long getRowCount =
@@ -1101,14 +1104,14 @@ public class BetfairDao {
 			// log.info("[" + transactionId + "] inside if marketType & Match ID " +
 			// fancyBean.getMarketType() + " : "
 			// + fancyBean.getMatchId());
-			responseBeanList.add(fancyRepository.save(fancyBean));
+//			responseBeanList.add(fancyRepository.save(fancyBean));
 			// } else {
 			// log.info("[" + transactionId + "] inside Else marketType & Match ID " +
 			// fancyBean.getMarketType()
 			// + " : " + fancyBean.getMatchId());
 			// }
-		}
-		log.info("responseBeanList:: " + responseBeanList);
+//		}
+//		log.info("responseBeanList:: " + responseBeanList);
 		return responseBeanList;
 	}
 
