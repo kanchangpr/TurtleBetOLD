@@ -1096,7 +1096,7 @@ public class BetfairDao {
 		responseBeanList=fancyRepository.saveAll(fancyBeanList);
 		
 		for (FancyBean fancyBean : fancyBeanList) {
-			if(fancyBean.getMatchName().equalsIgnoreCase("MATCH_ODDS")) {
+			if(fancyBean.getFancyId().getMarketType().equalsIgnoreCase("MATCH_ODDS")) {
 				updateRunnerData(ResourceConstants.USER_NAME, fancyBean.getFancyId().getMatchId(), fancyBean.getFancyId().getMarketType(), transactionId);
 			}
 			
