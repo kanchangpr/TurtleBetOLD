@@ -40,4 +40,6 @@ public interface AdminService {
 
 	 List<MatchDashboardDto> matchDashboard(String userId, String transactionId);
 
+	List<MatchDashboardDto> getCurrentOddsPosition(String userId, String matchId, String transactionId);
+
 }

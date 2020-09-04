@@ -1358,9 +1358,12 @@ public class BetfairDao {
 			
 			
 			double userPl=0.0;
+			double userLiab=0.0;
 			
 			userPl=Double.parseDouble(df.format(userDetail.getPrifitLoss()+netAmount));
 			userDetail.setPrifitLoss(userPl);
+			userLiab=Double.parseDouble(df.format(userDetail.getLiability()+liability));
+			userDetail.setLiability(userLiab);
 			
 			userRepository.saveAndFlush(userDetail);
 

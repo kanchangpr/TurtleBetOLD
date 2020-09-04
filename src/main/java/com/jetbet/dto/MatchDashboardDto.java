@@ -16,6 +16,7 @@ import lombok.Setter;
 public class MatchDashboardDto {
 
 	String sportsId;
+	String userId;
 	//String sportsName;
 	String matchId;
 	String matchName;
@@ -29,4 +30,21 @@ public class MatchDashboardDto {
 	double teamBStake;
 	double teamCStake;
 	Date matchDate;
+	public MatchDashboardDto(String sportsId, String matchId, String matchName, String teamAName, String teamBName,
+			String teamCName, double teamAStake, double teamBStake, double teamCStake, Date matchDate) {
+		super();
+		this.sportsId = sportsId;
+		this.matchId = matchId;
+		this.matchName = matchName;
+		this.teamAName = teamAName;
+		this.teamBName = teamBName;
+		this.teamCName = teamCName;
+		this.teamAStake = teamAStake;
+		this.teamBStake = teamBStake;
+		this.teamCStake = teamCStake;
+		this.matchDate = matchDate;
+	}
+	
+	
+	
 }

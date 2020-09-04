@@ -625,4 +625,28 @@ public class AdminDao {
 		return matchDashboardList;
 	}
 
+	public List<MatchDashboardDto> getCurrentOddsPosition(String userId, String matchId, String transactionId) {
+		List<MatchDashboardDto> matchDashboardList=new ArrayList<MatchDashboardDto>();
+		UserBean userDet= userRepository.findByUserId(userId);
+		String userRole= userDet.getUserRole();
+		String sqlString=null;
+		
+		if(userRole.equalsIgnoreCase(ResourceConstants.MASTER)) {
+			sqlString=QueryListConstant.CURRENT_ODDS_POSITION_FOR_MASTER;
+		}else if(userRole.equalsIgnoreCase(ResourceConstants.SUPERMASTER)){
+			sqlString=QueryListConstant.CURRENT_ODDS_POSITION_FOR_SM;
+		}else if(userRole.equalsIgnoreCase(ResourceConstants.ADMIN)){
+			sqlString=QueryListConstant.CURRENT_ODDS_POSITION_FOR_ADMIN;
+		}
+		
+		matchDashboardList = jdbcTemplate.query(sqlString, new Object[] { userId,matchId },
+				(rs, rowNum) -> new MatchDashboardDto(rs.getString("USER_ID"),rs.getString("SPORTS_ID"), rs.getString("match_id"),
+						 rs.getString("MATCH_NAME"), rs.getString("teama_name"), rs.getString("teamb_name"),
+						rs.getString("teamc_name"), rs.getDouble("teama_stake"), rs.getDouble("teamb_stake"),
+						rs.getDouble("teamc_stake"),
+						rs.getDate("match_open_date")));
+		
+		return matchDashboardList;
+	}
+
 }

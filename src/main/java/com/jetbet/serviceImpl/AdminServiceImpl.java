@@ -89,4 +89,10 @@ public class AdminServiceImpl implements AdminService{
 		return adminDao.matchDashboard(userId,transactionId);
 	}
 
+	@Override
+	public List<MatchDashboardDto> getCurrentOddsPosition(String userId, String matchId, String transactionId) {
+		log.info("["+transactionId+"]*************************INSIDE getCurrentOddsPosition CLASS AdminServiceImpl*************************");
+		return adminDao.getCurrentOddsPosition(userId,matchId,transactionId);
+	}
+
 }

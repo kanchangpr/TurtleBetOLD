@@ -145,5 +145,16 @@ public class AdminController {
 		List<MatchDashboardDto> response = adminService.matchDashboard(userId.toUpperCase(),transactionId);
 		return new ResponseEntity<List<MatchDashboardDto>>(response, HttpStatus.OK);
 	}
+	
+	@RequestMapping(value = ResourceConstants.CURRENT_ODDS_POSITION, method = RequestMethod.GET)
+	public ResponseEntity<List<MatchDashboardDto>> getCurrentOddsPosition(
+			@RequestParam(value = "userId", required = true) String userId,
+			@RequestParam(value = "matchId", required = true) String matchId) {
+		String transactionId = "TB" + UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
+		log.info("[" + transactionId
+				+ "]*************************INSIDE settlement METHOD GET*************************");
+		List<MatchDashboardDto> response = adminService.getCurrentOddsPosition(userId.toUpperCase(),matchId,transactionId);
+		return new ResponseEntity<List<MatchDashboardDto>>(response, HttpStatus.OK);
+	}
 
 }
