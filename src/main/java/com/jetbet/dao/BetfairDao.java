@@ -1094,7 +1094,12 @@ public class BetfairDao {
 		// storeListOfFancyDB#############################");
 		List<FancyBean> responseBeanList = new ArrayList<FancyBean>();
 		responseBeanList=fancyRepository.saveAll(fancyBeanList);
-//		for (FancyBean fancyBean : fancyBeanList) {
+		
+		for (FancyBean fancyBean : fancyBeanList) {
+			if(fancyBean.getMatchName().equalsIgnoreCase("MATCH_ODDS")) {
+				updateRunnerData(ResourceConstants.USER_NAME, fancyBean.getFancyId().getMatchId(), fancyBean.getFancyId().getMarketType(), transactionId);
+			}
+			
 			// log.info("marketType & Match ID " + fancyBean.getMarketType() + " : " +
 			// fancyBean.getMatchId());
 			// long getRowCount =
@@ -1110,7 +1115,7 @@ public class BetfairDao {
 			// fancyBean.getMarketType()
 			// + " : " + fancyBean.getMatchId());
 			// }
-//		}
+		}
 //		log.info("responseBeanList:: " + responseBeanList);
 		return responseBeanList;
 	}
