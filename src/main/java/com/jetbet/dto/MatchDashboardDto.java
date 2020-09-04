@@ -14,9 +14,9 @@ import lombok.Setter;
 @Getter
 @Setter
 public class MatchDashboardDto {
-
-	String sportsId;
 	String userId;
+	String sportsId;
+	
 	//String sportsName;
 	String matchId;
 	String matchName;
