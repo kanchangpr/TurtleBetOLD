@@ -1355,6 +1355,14 @@ public class BetfairDao {
 			placeBetsBean.setBetSettlement("PENDING");
 
 			placeBetsRepository.saveAndFlush(placeBetsBean);
+			
+			
+			double userPl=0.0;
+			
+			userPl=Double.parseDouble(df.format(userDetail.getPrifitLoss()+netAmount));
+			userDetail.setPrifitLoss(userPl);
+			
+			userRepository.saveAndFlush(userDetail);
 
 //			final String NA="NA";
 //			final String N="N";
