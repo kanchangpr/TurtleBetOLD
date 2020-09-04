@@ -329,6 +329,12 @@ public class AdminDao {
 	@Transactional
 	public List<FancyBean> fancyList(String sportsId, String matchId, String fancyName, String transactionId) {
 		log.info("[" + transactionId + "]**************INSIDE fancyList CLASS UserDao******************");
+		
+		Map<String, String> sportsMap=new HashMap<String, String>();
+		sportsMap.put("1", "Soccer");
+		sportsMap.put("2", "Tennis");
+		sportsMap.put("4", "Cricket");
+		
 		List<FancyBean> responseBeanList = new ArrayList<FancyBean>();
 		String getUserRolesSql = null;
 
@@ -347,8 +353,8 @@ public class AdminDao {
 
 		responseBeanList = jdbcTemplate.query(getUserRolesSql,
 				(rs, rowNum) -> new FancyBean(new FancyIdDto(rs.getString("market_type"), rs.getString("match_id")),
-						rs.getInt("market_count"), rs.getString("match_Name"), rs.getString("series_id"),
-						rs.getString("sports_id"), rs.getString("is_active"), rs.getString("fancy_created_by"),
+						rs.getInt("market_count"), rs.getString("match_Name"), rs.getString("SERIES_NAME"),
+						sportsMap.get(rs.getString("sports_id")), rs.getString("is_active"), rs.getString("fancy_created_by"),
 						rs.getDate("fancy_created_date")));
 		log.info("[" + transactionId + "] responseBeanList:  " + responseBeanList);
 		return responseBeanList;
