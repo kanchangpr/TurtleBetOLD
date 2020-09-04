@@ -1366,6 +1366,35 @@ public class BetfairDao {
 			userDetail.setLiability(userLiab);
 			
 			userRepository.saveAndFlush(userDetail);
+			
+			
+			UserBean masterDetail=userRepository.findByUserId(userParentMap.get("MASTER"));
+			double masterPl=0.0;
+			
+			masterPl=Double.parseDouble(df.format(masterDetail.getPrifitLoss()+masterStakes));
+			masterDetail.setPrifitLoss(masterPl);
+			
+			userRepository.saveAndFlush(masterDetail);
+			
+			UserBean smDetail=userRepository.findByUserId(userParentMap.get("SUPERMASTER"));
+			double smPl=0.0;
+			
+			smPl=Double.parseDouble(df.format(smDetail.getPrifitLoss()+smStakes));
+			smDetail.setPrifitLoss(smPl);
+			
+			userRepository.saveAndFlush(smDetail);
+			
+			UserBean adminDetail=userRepository.findByUserId(userParentMap.get("ADMIN"));
+			double adminPl=0.0;
+			
+			adminPl=Double.parseDouble(df.format(adminDetail.getPrifitLoss()+adminStakes));
+			adminDetail.setPrifitLoss(adminPl);
+			
+			userRepository.saveAndFlush(adminDetail);
+			
+			
+			
+			
 
 //			final String NA="NA";
 //			final String N="N";
