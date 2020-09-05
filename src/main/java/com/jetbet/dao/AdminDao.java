@@ -669,7 +669,7 @@ public class AdminDao {
 			sqlString=QueryListConstant.CURRENT_FANCY_POSITION_FOR_ADMIN;
 		}
 		
-		fancyPosition = jdbcTemplate.query(sqlString, new Object[] { userId,matchId,marketType },
+		fancyPosition = jdbcTemplate.query(sqlString, new Object[] { marketType,matchId,userId.toUpperCase() },
 				(rs, rowNum) -> new PlaceBetsBean(rs.getString("USER_ID"),rs.getString("MATCH_ID"),rs.getString("RUNNER_NAME"),rs.getDouble("MASTER_STAKES")));
 		
 		return fancyPosition;
