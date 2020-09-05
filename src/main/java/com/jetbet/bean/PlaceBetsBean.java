@@ -30,6 +30,16 @@ import lombok.ToString;
 @Table(name = "JB_BET_DETAILS")
 public class PlaceBetsBean {
 	
+	
+	
+	public PlaceBetsBean(String userId, String matchId, String runnerName, double masterStakes) {
+		super();
+		this.userId = userId;
+		this.matchId = matchId;
+		this.runnerName = runnerName;
+		this.masterStakes = masterStakes;
+	}
+
 	public PlaceBetsBean(Long id,String userId, String matchId, String matchName, String marketId, String marketName,
 			Long selectionId, String runnerName, Date betPlaceDate, double odds, double stake, double liability,
 			String isback, String isLay) {

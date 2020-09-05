@@ -23,12 +23,14 @@ import com.jetbet.controller.BetfairController;
 import com.jetbet.dto.BetSettlementDto;
 import com.jetbet.dto.FancyControl;
 import com.jetbet.dto.FancyIdDto;
+import com.jetbet.dto.FancyReponseDto;
 import com.jetbet.dto.MatchDashboardDto;
 import com.jetbet.dto.SportsControl;
 import com.jetbet.dto.UserResponseDto;
 import com.jetbet.dto.UserRoleDto;
 import com.jetbet.repository.FancyRepository;
 import com.jetbet.repository.MatchRepository;
+import com.jetbet.repository.PlaceBetsRepository;
 import com.jetbet.repository.RunnersRepository;
 import com.jetbet.repository.SeriesRepository;
 import com.jetbet.repository.SportsRepository;
@@ -62,6 +64,9 @@ public class AdminDao {
 	
 	@Autowired
 	RunnersRepository runnersRepository;
+	
+	@Autowired
+	PlaceBetsRepository placeBetsRepository;
 
 	@Autowired
 	BetfairDao bfDao;
@@ -647,6 +652,35 @@ public class AdminDao {
 						rs.getDate("match_open_date")));
 		
 		return matchDashboardList;
+	}
+
+	public List<PlaceBetsBean> getFancyPosition(String userId, String matchId, String marketType,
+			String transactionId) {
+		List<PlaceBetsBean> fancyPosition=new ArrayList<PlaceBetsBean>();
+		UserBean userDet= userRepository.findByUserId(userId);
+		String userRole= userDet.getUserRole();
+		String sqlString=null;
+		
+		if(userRole.equalsIgnoreCase(ResourceConstants.MASTER)) {
+			sqlString=QueryListConstant.CURRENT_FANCY_POSITION_FOR_MASTER;
+		}else if(userRole.equalsIgnoreCase(ResourceConstants.SUPERMASTER)){
+			sqlString=QueryListConstant.CURRENT_FANCY_POSITION_FOR_SM;
+		}else if(userRole.equalsIgnoreCase(ResourceConstants.ADMIN)){
+			sqlString=QueryListConstant.CURRENT_FANCY_POSITION_FOR_ADMIN;
+		}
+		
+		fancyPosition = jdbcTemplate.query(sqlString, new Object[] { userId,matchId,marketType },
+				(rs, rowNum) -> new PlaceBetsBean(rs.getString("USER_ID"),rs.getString("MATCH_ID"),rs.getString("RUNNER_NAME"),rs.getDouble("MASTER_STAKES")));
+		
+		return fancyPosition;
+	}
+
+	public List<FancyReponseDto> getFancyList(String userId, String matchId, String transactionId) {
+		List<FancyReponseDto> fancyList=new ArrayList<FancyReponseDto>();
+		
+		fancyList=placeBetsRepository.findByMarketTypeNotAndMatchId("MATCH_ODDS", matchId);
+		
+		return fancyList;
 	}
 
 }

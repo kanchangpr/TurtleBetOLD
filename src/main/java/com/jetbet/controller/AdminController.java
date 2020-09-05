@@ -1,6 +1,7 @@
 package com.jetbet.controller;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import javax.validation.Valid;
@@ -22,6 +23,7 @@ import com.jetbet.bean.SeriesBean;
 import com.jetbet.bean.SportsBean;
 import com.jetbet.dto.BetSettlementDto;
 import com.jetbet.dto.FancyControl;
+import com.jetbet.dto.FancyReponseDto;
 import com.jetbet.dto.MatchDashboardDto;
 import com.jetbet.dto.SportsControl;
 import com.jetbet.dto.UserResponseDto;
@@ -155,6 +157,30 @@ public class AdminController {
 				+ "]*************************INSIDE settlement METHOD GET*************************");
 		List<MatchDashboardDto> response = adminService.getCurrentOddsPosition(userId.toUpperCase(),matchId,transactionId);
 		return new ResponseEntity<List<MatchDashboardDto>>(response, HttpStatus.OK);
+	}
+	
+	
+	@RequestMapping(value = ResourceConstants.FANCY_LIST, method = RequestMethod.GET)
+	public ResponseEntity<List<FancyReponseDto>> getFancyList(
+			@RequestParam(value = "userId", required = true) String userId,
+			@RequestParam(value = "matchId", required = true) String matchId) {
+		String transactionId = "TB" + UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
+		log.info("[" + transactionId
+				+ "]*************************INSIDE settlement METHOD GET*************************");
+		List<FancyReponseDto> response = adminService.getFancyList(userId.toUpperCase(),matchId,transactionId);
+		return new ResponseEntity<List<FancyReponseDto>>(response, HttpStatus.OK);
+	}
+	
+	@RequestMapping(value = ResourceConstants.FANCY_POTISION, method = RequestMethod.GET)
+	public ResponseEntity<List<PlaceBetsBean>> getFancyPosition(
+			@RequestParam(value = "userId", required = true) String userId,
+			@RequestParam(value = "matchId", required = true) String matchId,
+			@RequestParam(value = "marketType", required = true) String marketType) {
+		String transactionId = "TB" + UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
+		log.info("[" + transactionId
+				+ "]*************************INSIDE settlement METHOD GET*************************");
+		List<PlaceBetsBean> response = adminService.getFancyPosition(userId.toUpperCase(),matchId,marketType,transactionId);
+		return new ResponseEntity<List<PlaceBetsBean>>(response, HttpStatus.OK);
 	}
 
 }

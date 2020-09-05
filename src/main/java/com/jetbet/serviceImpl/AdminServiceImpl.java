@@ -1,6 +1,7 @@
 package com.jetbet.serviceImpl;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.validation.Valid;
 
@@ -15,6 +16,7 @@ import com.jetbet.bean.SportsBean;
 import com.jetbet.dao.AdminDao;
 import com.jetbet.dto.BetSettlementDto;
 import com.jetbet.dto.FancyControl;
+import com.jetbet.dto.FancyReponseDto;
 import com.jetbet.dto.MatchDashboardDto;
 import com.jetbet.dto.SportsControl;
 import com.jetbet.dto.UserResponseDto;
@@ -93,6 +95,19 @@ public class AdminServiceImpl implements AdminService{
 	public List<MatchDashboardDto> getCurrentOddsPosition(String userId, String matchId, String transactionId) {
 		log.info("["+transactionId+"]*************************INSIDE getCurrentOddsPosition CLASS AdminServiceImpl*************************");
 		return adminDao.getCurrentOddsPosition(userId,matchId,transactionId);
+	}
+
+	@Override
+	public List<FancyReponseDto> getFancyList(String userId, String matchId, String transactionId) {
+		log.info("["+transactionId+"]*************************INSIDE getFancyList CLASS AdminServiceImpl*************************");
+		return adminDao.getFancyList(userId,matchId,transactionId);
+	}
+
+	@Override
+	public List<PlaceBetsBean> getFancyPosition(String userId, String matchId, String marketType,
+			String transactionId) {
+		log.info("["+transactionId+"]*************************INSIDE getFancyPosition CLASS AdminServiceImpl*************************");
+		return adminDao.getFancyPosition(userId,matchId,marketType,transactionId);
 	}
 
 }

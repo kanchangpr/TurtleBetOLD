@@ -1,6 +1,7 @@
 package com.jetbet.service;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.validation.Valid;
 
@@ -13,6 +14,7 @@ import com.jetbet.bean.SeriesBean;
 import com.jetbet.bean.SportsBean;
 import com.jetbet.dto.BetSettlementDto;
 import com.jetbet.dto.FancyControl;
+import com.jetbet.dto.FancyReponseDto;
 import com.jetbet.dto.MatchDashboardDto;
 import com.jetbet.dto.SportsControl;
 import com.jetbet.dto.UserResponseDto;
@@ -41,5 +43,9 @@ public interface AdminService {
 	 List<MatchDashboardDto> matchDashboard(String userId, String transactionId);
 
 	List<MatchDashboardDto> getCurrentOddsPosition(String userId, String matchId, String transactionId);
+
+	List<FancyReponseDto> getFancyList(String userId, String matchId, String transactionId);
+
+	List<PlaceBetsBean> getFancyPosition(String userId, String matchId, String marketType, String transactionId);
 
 }
