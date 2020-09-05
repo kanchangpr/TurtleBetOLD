@@ -675,10 +675,11 @@ public class AdminDao {
 		return fancyPosition;
 	}
 
-	public List<FancyReponseDto> getFancyList(String userId, String matchId, String transactionId) {
-		List<FancyReponseDto> fancyList=new ArrayList<FancyReponseDto>();
+	public List<String> getFancyList(String userId, String matchId, String transactionId) {
+		List<String> fancyList=new ArrayList<String>();
 		
-		fancyList=placeBetsRepository.findByMarketTypeNotAndMatchId("MATCH_ODDS", matchId);
+		fancyList=jdbcTemplate.query(QueryListConstant.FANCY_LIST_FANCY_POSITION, new Object[] { matchId },
+				(rs, rowNum) -> new String(rs.getString("MARKET_TYPE")));
 		
 		return fancyList;
 	}

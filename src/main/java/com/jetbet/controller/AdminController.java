@@ -161,14 +161,14 @@ public class AdminController {
 	
 	
 	@RequestMapping(value = ResourceConstants.FANCY_LIST, method = RequestMethod.GET)
-	public ResponseEntity<List<FancyReponseDto>> getFancyList(
+	public ResponseEntity<List<String>> getFancyList(
 			@RequestParam(value = "userId", required = true) String userId,
 			@RequestParam(value = "matchId", required = true) String matchId) {
 		String transactionId = "TB" + UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
 		log.info("[" + transactionId
 				+ "]*************************INSIDE settlement METHOD GET*************************");
-		List<FancyReponseDto> response = adminService.getFancyList(userId.toUpperCase(),matchId,transactionId);
-		return new ResponseEntity<List<FancyReponseDto>>(response, HttpStatus.OK);
+		List<String> response = adminService.getFancyList(userId.toUpperCase(),matchId,transactionId);
+		return new ResponseEntity<List<String>>(response, HttpStatus.OK);
 	}
 	
 	@RequestMapping(value = ResourceConstants.FANCY_POTISION, method = RequestMethod.GET)

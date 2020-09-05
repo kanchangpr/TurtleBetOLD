@@ -44,7 +44,7 @@ public interface AdminService {
 
 	List<MatchDashboardDto> getCurrentOddsPosition(String userId, String matchId, String transactionId);
 
-	List<FancyReponseDto> getFancyList(String userId, String matchId, String transactionId);
+	List<String> getFancyList(String userId, String matchId, String transactionId);
 
 	List<PlaceBetsBean> getFancyPosition(String userId, String matchId, String marketType, String transactionId);
 

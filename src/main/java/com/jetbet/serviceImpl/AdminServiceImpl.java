@@ -98,7 +98,7 @@ public class AdminServiceImpl implements AdminService{
 	}
 
 	@Override
-	public List<FancyReponseDto> getFancyList(String userId, String matchId, String transactionId) {
+	public List<String> getFancyList(String userId, String matchId, String transactionId) {
 		log.info("["+transactionId+"]*************************INSIDE getFancyList CLASS AdminServiceImpl*************************");
 		return adminDao.getFancyList(userId,matchId,transactionId);
 	}

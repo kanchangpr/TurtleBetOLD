@@ -24,5 +24,5 @@ public interface PlaceBetsRepository extends JpaRepository<PlaceBetsBean, Long>{
 	
 	List<PlaceBetsBean> findByUserIdInAndBetSettlementOrderByUserIdDesc(List<String> userId,String betSettlement);
 	
-	List<FancyReponseDto> findByMarketTypeNotAndMatchId(String marketType1,String matchId);
+	//List<FancyReponseDto> findByMarketTypeNotAndMatchId(String marketType1,String matchId);
 }
