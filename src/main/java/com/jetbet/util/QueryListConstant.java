@@ -1,7 +1,5 @@
 package com.jetbet.util;
 
-import com.sun.org.glassfish.external.statistics.Statistic;
-
 public class QueryListConstant {
 	public static final String UPDATE_FROM_USER_ACC_CHIPS_SQL="UPDATE JETBET.JB_USER_DETAILS SET avail_limit= ?,AVAIL_BALANCE=?, LASTUPDATEDDATE=CURRENT_TIMESTAMP, LASTUPDATEBY=? WHERE USER_ID= ?";
 
