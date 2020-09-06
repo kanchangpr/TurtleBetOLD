@@ -7,6 +7,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+
 import com.google.gson.reflect.TypeToken;
 import com.jetbet.betfair.entities.CompetitionResult;
 import com.jetbet.betfair.entities.EventResult;
@@ -29,12 +32,17 @@ import com.jetbet.betfair.enums.PriceData;
 import com.jetbet.betfair.exceptions.APINGException;
 import com.jetbet.betfair.util.JsonConverter;
 import com.jetbet.dto.BetfailLoginRequestDto;
+import com.jetbet.dto.MatchAndFancyDetailDto;
 import com.jetbet.dto.SessionDetails;
+import com.jetbet.util.QueryListConstant;
 
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class ApiNgRescriptOperations extends ApiNgOperations {
+	
+	@Autowired
+	JdbcTemplate jdbcTemplate;
 
 	private static ApiNgRescriptOperations instance = null;
 
@@ -301,7 +309,7 @@ public class ApiNgRescriptOperations extends ApiNgOperations {
 	
 	@Override
 	public List<MarketBook> getMatchOdds(MarketFilter filter, Set<MarketProjection> marketProjection,
-			MarketSort sort, String maxResult, String appKey, String ssoId) throws APINGException {
+			MarketSort sort, String maxResult, String appKey, String ssoId, String userName) throws APINGException {
 	Map<String, Object> params = new HashMap<String, Object>();
 		
 		params.put(LOCALE, locale);
@@ -349,6 +357,21 @@ public class ApiNgRescriptOperations extends ApiNgOperations {
 				for (int j = 0; j < mBook.getRunners().size(); j++) {
 					if(mBook.getRunners().get(j).getEx().getAvailableToBack().size()>0 || mBook.getRunners().get(j).getEx().getAvailableToLay().size()>0) {
 						mBook.getRunners().get(j).setRunnerName(runnerNameMap.get(mBook.getRunners().get(j).getSelectionId()));
+						
+						List<Double> userPlDouble=jdbcTemplate.query(QueryListConstant.GET_USER_PL_BY_SELECTION_ID,
+								new Object[] { mBook.getMarketId(), mBook.getRunners().get(j).getSelectionId(), userName },
+								(rs, rowNum) -> new Double(rs.getDouble("USER_PL")));
+						double userPl=0.0;
+						if(userPlDouble.size()>0) {
+							userPl=userPlDouble.get(0);
+						}else {
+							userPl=0.0;
+						}
+						
+						log.info("###########################userPlDouble###############################");
+						log.info("userPlDouble:: "+userPl);
+						mBook.getRunners().get(j).setUserPl(userPl);
+						
 						runnerList.add(mBook.getRunners().get(j));
 					}
 					

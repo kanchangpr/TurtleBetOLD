@@ -925,7 +925,7 @@ public class BetfairDao {
 						marketProjection.add(MarketProjection.RUNNER_DESCRIPTION);
 
 						mBooks = rescriptOperations.getMatchOdds(marketFilter, marketProjection,
-								MarketSort.FIRST_TO_START, maxResults, applicationKey, sessionToken);
+								MarketSort.FIRST_TO_START, maxResults, applicationKey, sessionToken,userName);
 						if (mBooks.size() > 0) {
 							matchAndFancyDetailDto.setMarketBook(mBooks);
 							matchAndFancyDetailList.add(matchAndFancyDetailDto);
@@ -967,13 +967,6 @@ public class BetfairDao {
 
 			List<MatchAndFancyDetailDto> marketTypeList = new ArrayList<MatchAndFancyDetailDto>();
 
-//			List<FancyBean> marketTypeList = fancyRepository.findBySportIdAndFancyIdMatchIdAndIsActive(sportsId,
-//					matchId, "Y");
-//			this.sportName = sportName;
-//			this.seriesId = seriesId;
-//			this.seriesName = seriesName;
-//			this.marketType = marketType;
-//			this.marketCount = marketCount;
 			marketTypeList = jdbcTemplate.query(QueryListConstant.GET_FANCY_LIST_BY_MATCH_AND_SPORTS,
 					new Object[] { sportsId, matchId, sportsId, matchId },
 					(rs, rowNum) -> new MatchAndFancyDetailDto(rs.getString("SPORTS_NAME"), rs.getString("SERIES_ID"),
@@ -1015,7 +1008,7 @@ public class BetfairDao {
 				marketProjection.add(MarketProjection.RUNNER_DESCRIPTION);
 
 				mBooks = rescriptOperations.getMatchOdds(marketFilter, marketProjection, MarketSort.FIRST_TO_START,
-						maxResults, applicationKey, sessionToken);
+						maxResults, applicationKey, sessionToken,userName);
 				if (mBooks.size() > 0) {
 					matchAndFancyDetailDto.setMarketBook(mBooks);
 					matchAndFancyDetailList.add(matchAndFancyDetailDto);

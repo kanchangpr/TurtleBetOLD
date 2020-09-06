@@ -171,12 +171,13 @@ public class BetfairController {
 	
 	@RequestMapping(value=ResourceConstants.MATCH_ODDS_AND_FANCY, method=RequestMethod.GET)
 	public List<MatchAndFancyDetailDto> getMatchOddsAndFancy(@RequestParam(value="sportsId" ,required=false) String sportsId,
-			@RequestParam(value="matchId" ,required=false) String matchId) {
+			@RequestParam(value="matchId" ,required=false) String matchId,
+			@RequestParam(value="userName" ,required=false) String userName) {
 		String transactionId = "TB"+UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
 		log.info("["+transactionId+"]*************************INSIDE USER ROLE METHOD GET*************************");
 		log.info("applicationKey:: "+applicationKey);
 		log.info("sessionToken:: "+sessionToken);
-		String userName=ResourceConstants.USER_NAME;
+		//String userName=ResourceConstants.USER_NAME;
 		
 		return betfairService.getMatchOddsAndFancy(sportsId,matchId,applicationKey,sessionToken,userName,transactionId);
 	}

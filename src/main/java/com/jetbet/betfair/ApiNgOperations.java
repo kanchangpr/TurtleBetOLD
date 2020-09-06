@@ -68,7 +68,7 @@ public abstract class ApiNgOperations {
      * */
     
     public abstract List<MarketBook> getMatchOdds(MarketFilter filter, Set<MarketProjection> marketProjection,
-            MarketSort sort, String maxResult, String appKey, String ssoId) throws APINGException;
+            MarketSort sort, String maxResult, String appKey, String ssoId, String userName) throws APINGException;
 //
 //	public abstract PlaceExecutionReport placeOrders(String marketId, List<PlaceInstruction> instructions, String customerRef , String appKey, String ssoId) throws APINGException;
 //
