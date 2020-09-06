@@ -1271,6 +1271,11 @@ public class BetfairDao {
 
 		placeBetsList = placeBetsRepository.findByBetResultInAndBetSettlementOrderByUserId(betResultList,
 				betSettlement);
+		
+		jdbcTemplate.update(QueryListConstant.INACTIVE_MATCH_AFTER_RESULT);
+
+		jdbcTemplate.update(QueryListConstant.INACTIVE_FANCY_AFTER_RESULT);
+		
 
 //		log.info("calculateProfitLoss:: "+placeBetsList);
 //		boolean masterInsertFlag=true;
@@ -1392,215 +1397,13 @@ public class BetfairDao {
 			
 			userRepository.saveAndFlush(adminDetail);
 			
-			
-			
-			
-
-//			final String NA="NA";
-//			final String N="N";
-//			final double ZERO_DOUBLE=0;
-//			final long ZERO_LONG=0;
-//			final int ZERO_INT=0;
-//			
-//			PlaceBetsBean betBeanForMaster = new PlaceBetsBean();
-//			
-//			betBeanForMaster.setSportsId(NA);
-//			betBeanForMaster.setSportsName(NA);
-//			betBeanForMaster.setSeriesId(NA);
-//			betBeanForMaster.setSeriesName(NA);
-//			betBeanForMaster.setMatchId(NA);
-//			betBeanForMaster.setMatchName(NA);
-//			betBeanForMaster.setMarketId(NA);
-//			betBeanForMaster.setMarketName(NA);
-//			betBeanForMaster.setSelectionId(ZERO_LONG);
-//			betBeanForMaster.setRunnerName(NA);
-//			betBeanForMaster.setOdds(ZERO_DOUBLE);
-//			betBeanForMaster.setStake(ZERO_DOUBLE);
-//			betBeanForMaster.setLiability(ZERO_DOUBLE);
-//			betBeanForMaster.setIsback(N);
-//			betBeanForMaster.setIsLay(N);
-//			betBeanForMaster.setPsId(ZERO_INT);
-//			betBeanForMaster.setCreatedBy(ResourceConstants.USER_NAME);
-//			betBeanForMaster.setBetStatus(NA);
-//			betBeanForMaster.setBetResult(NA);
-//			
-//			PlaceBetsBean betBeanForSM = new PlaceBetsBean();
-//			
-//			betBeanForSM.setSportsId(NA);
-//			betBeanForSM.setSportsName(NA);
-//			betBeanForSM.setSeriesId(NA);
-//			betBeanForSM.setSeriesName(NA);
-//			betBeanForSM.setMatchId(NA);
-//			betBeanForSM.setMatchName(NA);
-//			betBeanForSM.setMarketId(NA);
-//			betBeanForSM.setMarketName(NA);
-//			betBeanForSM.setSelectionId(ZERO_LONG);
-//			betBeanForSM.setRunnerName(NA);
-//			betBeanForSM.setOdds(ZERO_DOUBLE);
-//			betBeanForSM.setStake(ZERO_DOUBLE);
-//			betBeanForSM.setLiability(ZERO_DOUBLE);
-//			betBeanForSM.setIsback(N);
-//			betBeanForSM.setIsLay(N);
-//			betBeanForSM.setPsId(ZERO_INT);
-//			betBeanForSM.setCreatedBy(ResourceConstants.USER_NAME);
-//			betBeanForSM.setBetStatus(NA);
-//			betBeanForSM.setBetResult(NA);
-//			
-//			PlaceBetsBean betBeanForAdmin = new PlaceBetsBean();
-//			
-//			betBeanForAdmin.setSportsId(NA);
-//			betBeanForAdmin.setSportsName(NA);
-//			betBeanForAdmin.setSeriesId(NA);
-//			betBeanForAdmin.setSeriesName(NA);
-//			betBeanForAdmin.setMatchId(NA);
-//			betBeanForAdmin.setMatchName(NA);
-//			betBeanForAdmin.setMarketId(NA);
-//			betBeanForAdmin.setMarketName(NA);
-//			betBeanForAdmin.setSelectionId(ZERO_LONG);
-//			betBeanForAdmin.setRunnerName(NA);
-//			betBeanForAdmin.setOdds(ZERO_DOUBLE);
-//			betBeanForAdmin.setStake(ZERO_DOUBLE);
-//			betBeanForAdmin.setLiability(ZERO_DOUBLE);
-//			betBeanForAdmin.setIsback(N);
-//			betBeanForAdmin.setIsLay(N);
-//			betBeanForAdmin.setPsId(ZERO_INT);
-//			betBeanForAdmin.setCreatedBy(ResourceConstants.USER_NAME);
-//			betBeanForAdmin.setBetStatus(NA);
-//			betBeanForAdmin.setBetResult(NA);
-//			
-//			String admin=userParentMap.get("ADMIN");
-//			String sm=userParentMap.get("SUPERMASTER");
-//			String master=userParentMap.get("MASTER");
-//			placeBetsBean.setBetSettlement("PENDING");
-
-//			String prevUser;
-//			String currUser = placeBetsList.get(i).getUserId();
-//			if(i==0) {
-//				prevUser=currUser;
-//			}else {
-//				prevUser=placeBetsList.get(i-1).getUserId();
-//			}
-//			
-
-//			if(!prevUser.equalsIgnoreCase(currUser)){
-//				masterInsertFlag=true;
-//				smInsertFlag=true;
-//				adminInsertFlag=true;
-//			}
-//			log.info("index:: "+i);
-//			log.info("prevUser:: "+prevUser);
-//			log.info("currUser:: "+currUser);
-//			
-//			Long masterPLExistCount = placeBetsRepository.countByUserIdAndBetSettlementOrderById(master, betSettlement);
-//			Long smPLExistCount = placeBetsRepository.countByUserIdAndBetSettlementOrderById(sm, betSettlement);
-//			Long adminPLExistCount = placeBetsRepository.countByUserIdAndBetSettlementOrderById(admin, betSettlement);
-//			
-//			log.info("masterPLExistCount:: "+masterPLExistCount);
-//			log.info("smPLExistCount:: "+smPLExistCount);
-//			log.info("adminPLExistCount:: "+adminPLExistCount);
-//			
-//			if(masterPLExistCount>0 ) {
-//				log.info("inside master update:: ");
-//				//update
-//				jdbcTemplate.update(QueryListConstant.UPDATE_PARENT_PROFIT_LOSS,
-//						new Object[] { masterStakes, 0,smStakes,adminStakes, userId });
-//			}else if(masterPLExistCount<=0 ){
-//				log.info("inside master insert:: ");
-//				//insert
-////				masterInsertFlag=false;
-//				betBeanForMaster.setLoginId(master);
-//				betBeanForMaster.setUserId(master);
-//				betBeanForMaster.setParent(sm);
-//				betBeanForMaster.setNetAmount(masterStakes);
-//				betBeanForMaster.setAdminStakes(adminStakes);
-//				betBeanForMaster.setSmStakes(smStakes);
-//				placeBetsRepository.saveAndFlush(betBeanForMaster);
-//			}
-//			if(smPLExistCount>0 ) {
-//				log.info("inside sm update:: ");
-//				//update
-//				jdbcTemplate.update(QueryListConstant.UPDATE_PARENT_PROFIT_LOSS,
-//						new Object[] { smStakes, 0,0,adminStakes, master });
-//			}else if(smPLExistCount<=0 ) {
-//				log.info("inside sm insert:: ");
-//				//insert
-////				smInsertFlag=false;
-//				betBeanForSM.setLoginId(sm);
-//				betBeanForSM.setUserId(sm);
-//				betBeanForSM.setParent(admin);
-//				betBeanForSM.setNetAmount(smStakes);
-//				betBeanForSM.setAdminStakes(adminStakes);
-//				placeBetsRepository.saveAndFlush(betBeanForSM);
-//			}
-//			if(adminPLExistCount>0) {
-//				log.info("inside admin update:: ");
-//				//update
-//				jdbcTemplate.update(QueryListConstant.UPDATE_PARENT_PROFIT_LOSS,
-//						new Object[] { adminStakes, 0,0,0, sm });
-//			}else if(adminPLExistCount<=0 ) {
-//				log.info("inside admin insert:: ");
-////				//insert
-////				adminInsertFlag=false;
-//				betBeanForAdmin.setLoginId(admin);
-//				betBeanForAdmin.setUserId(admin);
-//				betBeanForAdmin.setParent("1");
-//				betBeanForAdmin.setNetAmount(adminStakes);
-//				placeBetsRepository.saveAndFlush(betBeanForAdmin);
-//			}
-//			
-//			
-//			
-//			jdbcTemplate.update(QueryListConstant.UPDATE_AVAIL_BAL_AND_PROFIT_LOSS,
-//					new Object[] { netAmount,netAmount, netAmount, userId });
-//			
-//			jdbcTemplate.update(QueryListConstant.UPDATE_AVAIL_BAL_AND_PROFIT_LOSS,
-//					new Object[] { masterStakes,masterStakes, masterStakes, master });
-//			
-//			jdbcTemplate.update(QueryListConstant.UPDATE_AVAIL_BAL_AND_PROFIT_LOSS,
-//					new Object[] { smStakes,smStakes, smStakes, sm });
-//			
-//			jdbcTemplate.update(QueryListConstant.UPDATE_AVAIL_BAL_AND_PROFIT_LOSS,
-//					new Object[] { adminStakes,adminStakes, adminStakes, admin });
-//			
-
-//			double availBalUser = 0.0;
-//			double availBalMaster = 0.0;
-//			double availBalSM = 0.0;
-//			double availBalAdmin = 0.0;
-			// User
-			/*
-			 * profitLossUser=profitLossUser+netAmount; if(availBalUser+netAmount<0) {
-			 * availBalUser=0.0; }else { availBalUser=availBalUser+netAmount; }
-			 * 
-			 * 
-			 * // Master profitLossMaster=profitLossAdmin+masterStakes;
-			 * if(availBalMaster+masterStakes<0) { availBalMaster=0.0; }else {
-			 * availBalMaster=availBalMaster+masterStakes; }
-			 * 
-			 * 
-			 * // Super Master profitLossSM=smStakes; if(availBalSM+smStakes<0) {
-			 * availBalSM=0.0; }else { availBalSM=availBalSM+smStakes; }
-			 * 
-			 * 
-			 * // Admin profitLossAdmin=adminStakes; if(availBalAdmin+adminStakes<0) {
-			 * availBalAdmin=0.0; }else { availBalAdmin=availBalAdmin+adminStakes; }
-			 */
-			/*
-			 * double availBalUser=userDetail.getAvailBalance();
-			 * 
-			 * UserBean masterDetail = userRepository.findByUserId(master); double
-			 * availBalMaster=masterDetail.getAvailBalance();
-			 * 
-			 * UserBean smDetail = userRepository.findByUserId(sm); double
-			 * availBalSM=smDetail.getAvailBalance();
-			 * 
-			 * UserBean adminDetail = userRepository.findByUserId(admin); double
-			 * availBalAdmin=adminDetail.getAvailBalance();
-			 */
+		
 
 		}
 
 	}
+	
+	
 
 	public double calcuateCommision(double price, double percentage) {
 //		log.info("price:: "+price);

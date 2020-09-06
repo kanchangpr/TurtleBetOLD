@@ -645,11 +645,9 @@ public class AdminDao {
 		}
 		
 		matchDashboardList = jdbcTemplate.query(sqlString, new Object[] { userId,matchId },
-				(rs, rowNum) -> new MatchDashboardDto(rs.getString("USER_ID"),rs.getString("SPORTS_ID"), rs.getString("match_id"),
-						 rs.getString("MATCH_NAME"), rs.getString("teama_name"), rs.getString("teamb_name"),
+				(rs, rowNum) -> new MatchDashboardDto(rs.getString("USER_ID"), rs.getString("teama_name"), rs.getString("teamb_name"),
 						rs.getString("teamc_name"), rs.getDouble("teama_stake"), rs.getDouble("teamb_stake"),
-						rs.getDouble("teamc_stake"),
-						rs.getDate("match_open_date")));
+						rs.getDouble("teamc_stake")));
 		
 		return matchDashboardList;
 	}

@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Data
-@AllArgsConstructor
+//@AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
@@ -44,7 +44,16 @@ public class MatchDashboardDto {
 		this.teamCStake = teamCStake;
 		this.matchDate = matchDate;
 	}
-	
-	
+	public MatchDashboardDto(String userId, String teamAName, String teamBName, String teamCName, double teamAStake,
+			double teamBStake, double teamCStake) {
+		super();
+		this.userId = userId;
+		this.teamAName = teamAName;
+		this.teamBName = teamBName;
+		this.teamCName = teamCName;
+		this.teamAStake = teamAStake;
+		this.teamBStake = teamBStake;
+		this.teamCStake = teamCStake;
+	}
 	
 }
