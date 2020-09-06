@@ -1256,7 +1256,7 @@ public class BetfairDao {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		calculateProfitLoss();
+		//calculateProfitLoss();
 	}
 
 	public void calculateProfitLoss() {
