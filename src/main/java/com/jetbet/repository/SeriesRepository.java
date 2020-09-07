@@ -4,11 +4,14 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import com.jetbet.bean.MatchBean;
 import com.jetbet.bean.SeriesBean;
 
 public interface SeriesRepository extends JpaRepository<SeriesBean, String>{
 	
 	List<SeriesBean> findByIsActiveOrderBySportId(String isActive);
+	
+	SeriesBean findFirst1BySeriesId(String seriesId);
 	
 	long countBySeriesId (String seriesId);
 	

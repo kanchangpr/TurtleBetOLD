@@ -10,10 +10,8 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.transaction.Transactional;
-import javax.validation.constraints.Pattern.Flag;
 
 import org.apache.commons.lang3.StringUtils;
-import org.hibernate.validator.constraints.Length;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -48,7 +46,6 @@ import com.jetbet.betfair.exceptions.APINGException;
 import com.jetbet.dto.DashboardMatchListDto;
 import com.jetbet.dto.FancyIdDto;
 import com.jetbet.dto.MatchAndFancyDetailDto;
-import com.jetbet.dto.MatchDashboardDto;
 import com.jetbet.dto.RunnerPriceAndSize;
 import com.jetbet.dto.SeriesMatchFancyResponseDto;
 import com.jetbet.dto.SessionDetails;
@@ -64,9 +61,7 @@ import com.jetbet.repository.SportsRepository;
 import com.jetbet.repository.UserRepository;
 import com.jetbet.util.QueryListConstant;
 import com.jetbet.util.ResourceConstants;
-import com.sun.istack.FinalArrayList;
 
-import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -122,8 +117,6 @@ public class BetfairDao {
 		try {
 			MarketFilter marketFilter;
 			marketFilter = new MarketFilter();
-			// log.info("[" + transactionId + "] (listEventTypes) Get all Event
-			// Types...\n");
 			response = rescriptOperations.listEventTypes(marketFilter, applicationKey, sessionToken);
 			response.stream().forEach(res -> {
 				SportsBean sportsBean = new SportsBean();
@@ -135,10 +128,7 @@ public class BetfairDao {
 			});
 			sportsBeanResponseList = storeListOfEventTypesInDB(sportsBeanList, transactionId);
 		} catch (APINGException apiExc) {
-			// log.info("[" + transactionId + "] " + apiExc.toString());
 		}
-		// log.info("[" + transactionId + "] sportsBeanResponseList:: " +
-		// sportsBeanResponseList);
 		return sportsBeanResponseList;
 	}
 
@@ -154,11 +144,8 @@ public class BetfairDao {
 
 			List<SportsBean> sportsBeansList = sportsRepository.findByIsActiveOrderBySportsName("Y");
 			for (SportsBean sportsBean : sportsBeansList) {
-				// log.info("[" + transactionId + "] ****************INSIDE OUTER
-				// FOR*********");
 
 				String eventTypeIdString = sportsBean.getSportsTypeId();
-				// log.info("eventTypeIdString: " + eventTypeIdString);
 				Set<String> eventTypeIdSet = new HashSet<String>();
 				eventTypeIdSet.add(eventTypeIdString);
 				marketFilter.setEventTypeIds(eventTypeIdSet);
@@ -170,30 +157,51 @@ public class BetfairDao {
 				marketFilter.setTurnInPlayEnabled(true);
 				
 
-				// log.info("[" + transactionId + "] (getlistOfComp) Get all
-				// Competition(Series)...\n");
-				List<CompetitionResult> response = rescriptOperations.listComp(marketFilter, applicationKey,
-						sessionToken);
+				{
+					marketFilter.setInPlayOnly(true);
+					List<CompetitionResult> response = rescriptOperations.listComp(marketFilter, applicationKey,
+							sessionToken);
 
-				response.stream().forEach(res -> {
-					SeriesBean seriesBean = new SeriesBean();
-					seriesBean.setSportId(eventTypeIdString);
-					seriesBean.setSeriesId(res.getCompetition().getId());
-					seriesBean.setSeriesName(res.getCompetition().getName());
-					seriesBean.setSeriesMarketCount(res.getMarketCount());
-					seriesBean.setSeriesCompRegion(res.getCompetitionRegion());
-					seriesBean.setSeriesCreatedBy(userName);
-					seriesBean.setIsActive("Y");
-					seriesBeanList.add(seriesBean);
-				});
+					response.stream().forEach(res -> {
+						SeriesBean seriesBean = new SeriesBean();
+						seriesBean.setSportId(eventTypeIdString);
+						seriesBean.setSeriesId(res.getCompetition().getId());
+						seriesBean.setSeriesName(res.getCompetition().getName());
+						seriesBean.setSeriesMarketCount(res.getMarketCount());
+						seriesBean.setSeriesCompRegion(res.getCompetitionRegion());
+						seriesBean.setSeriesCreatedBy(userName);
+						seriesBean.setIsActive("Y");
+						seriesBeanList.add(seriesBean);
+					});
+				}
+				{
+					marketFilter.setInPlayOnly(false);
+					List<CompetitionResult> response = rescriptOperations.listComp(marketFilter, applicationKey,
+							sessionToken);
 
+					response.stream().forEach(res -> {
+						SeriesBean seriesBean = new SeriesBean();
+						seriesBean.setSportId(eventTypeIdString);
+						seriesBean.setSeriesId(res.getCompetition().getId());
+						seriesBean.setSeriesName(res.getCompetition().getName());
+						seriesBean.setSeriesMarketCount(res.getMarketCount());
+						seriesBean.setSeriesCompRegion(res.getCompetitionRegion());
+						seriesBean.setSeriesCreatedBy(userName);
+						SeriesBean seriesDetails=seriesRepository.findFirst1BySeriesId(res.getCompetition().getId());
+						if(seriesDetails.getIsActive().equalsIgnoreCase("Y")) {
+							seriesBean.setIsActive("Y");
+						}else {
+							seriesBean.setIsActive("N");
+						}
+						seriesBeanList.add(seriesBean);
+					});
+				}
+				
 			}
 			seriesBeanResponseList = storeListOfCompDB(seriesBeanList, transactionId);
 		} catch (APINGException apiExc) {
 			log.info(apiExc.toString());
 		}
-		// log.info("[" + transactionId + "] seriesBeanResponseList:: " +
-		// seriesBeanResponseList);
 		return seriesBeanResponseList;
 	}
 
@@ -208,11 +216,8 @@ public class BetfairDao {
 			List<SportsBean> sportsBeansList = sportsRepository.findBySportsTypeIdAndIsActiveOrderBySportsName(sportId,
 					"Y");
 			for (SportsBean sportsBean : sportsBeansList) {
-				// log.info("[" + transactionId + "] ****************INSIDE OUTER
-				// FOR*********");
 
 				String eventTypeIdString = sportsBean.getSportsTypeId();
-				// log.info("eventTypeIdString: " + eventTypeIdString);
 				Set<String> eventTypeIdSet = new HashSet<String>();
 				eventTypeIdSet.add(eventTypeIdString);
 				marketFilter.setEventTypeIds(eventTypeIdSet);
@@ -221,29 +226,53 @@ public class BetfairDao {
 				marketFilter.setMarketBettingTypes(marketBettingType);
 				marketFilter.setTurnInPlayEnabled(true);
 
-				// log.info("[" + transactionId + "] (getlistOfComp) Get all
-				// Competition(Series)...\n");
-				List<CompetitionResult> response = rescriptOperations.listComp(marketFilter, appKey, ssToken);
+				{
+					marketFilter.setInPlayOnly(true);
+					List<CompetitionResult> response = rescriptOperations.listComp(marketFilter, appKey, ssToken);
 
-				response.stream().forEach(res -> {
-					SeriesBean seriesBean = new SeriesBean();
-					seriesBean.setSportId(eventTypeIdString);
-					seriesBean.setSeriesId(res.getCompetition().getId());
-					seriesBean.setSeriesName(res.getCompetition().getName());
-					seriesBean.setSeriesMarketCount(res.getMarketCount());
-					seriesBean.setSeriesCompRegion(res.getCompetitionRegion());
-					seriesBean.setIsActive("Y");
-					seriesBean.setSeriesCreatedBy(userName);
-					seriesBeanList.add(seriesBean);
-				});
+					response.stream().forEach(res -> {
+						SeriesBean seriesBean = new SeriesBean();
+						seriesBean.setSportId(eventTypeIdString);
+						seriesBean.setSeriesId(res.getCompetition().getId());
+						seriesBean.setSeriesName(res.getCompetition().getName());
+						seriesBean.setSeriesMarketCount(res.getMarketCount());
+						seriesBean.setSeriesCompRegion(res.getCompetitionRegion());
+						seriesBean.setIsActive("Y");
+						seriesBean.setInPlay(ResourceConstants.IN_PLAY);
+						seriesBean.setSeriesCreatedBy(userName);
+						seriesBeanList.add(seriesBean);
+					});
+				}
+				{
+					marketFilter.setInPlayOnly(false);
+					List<CompetitionResult> response = rescriptOperations.listComp(marketFilter, appKey, ssToken);
+
+					response.stream().forEach(res -> {
+						SeriesBean seriesBean = new SeriesBean();
+						seriesBean.setSportId(eventTypeIdString);
+						seriesBean.setSeriesId(res.getCompetition().getId());
+						seriesBean.setSeriesName(res.getCompetition().getName());
+						seriesBean.setSeriesMarketCount(res.getMarketCount());
+						seriesBean.setSeriesCompRegion(res.getCompetitionRegion());
+						
+						SeriesBean seriesDetails=seriesRepository.findFirst1BySeriesId(res.getCompetition().getId());
+						if(seriesDetails.getIsActive().equalsIgnoreCase("Y")) {
+							seriesBean.setIsActive("Y");
+						}else {
+							seriesBean.setIsActive("N");
+						}
+						seriesBean.setInPlay(ResourceConstants.NOT_IN_PLAY);
+						seriesBean.setSeriesCreatedBy(userName);
+						seriesBeanList.add(seriesBean);
+					});
+				}
+				
 
 			}
 			seriesBeanResponseList = storeListOfCompDB(seriesBeanList, transactionId);
 		} catch (APINGException apiExc) {
 			log.info(apiExc.toString());
 		}
-		// log.info("[" + transactionId + "] seriesBeanResponseList:: " +
-		// seriesBeanResponseList);
 		return seriesBeanResponseList;
 	}
 
@@ -259,10 +288,8 @@ public class BetfairDao {
 		try {
 			List<SportsBean> sportsBeansList = sportsRepository.findByIsActiveOrderBySportsName("Y");
 			for (SportsBean sportsBean : sportsBeansList) {
-				// log.info("[" + transactionId + "] ***********INSIDE SPORTS LOOP*********");
 
 				String eventTypeIdString = sportsBean.getSportsTypeId();
-				// log.info("eventTypeIdString: " + eventTypeIdString);
 
 				Set<String> eventTypeIdSet = new HashSet<String>();
 				eventTypeIdSet.add(eventTypeIdString);
@@ -276,18 +303,12 @@ public class BetfairDao {
 						.findBySportIdAndIsActiveOrderBySportId(eventTypeIdString, "Y");
 
 				for (SeriesBean seriesBean : seriesBeanList) {
-					// log.info("[" + transactionId + "] ***********INSIDE SERIES LOOP*********");
 
 					String seriesId = seriesBean.getSeriesId();
-					// log.info("[" + transactionId + "] seriesId: " + seriesId + " of Sports Id: "
-					// + eventTypeIdString);
 					Set<String> seriesIdSet = new HashSet<String>();
 					seriesIdSet.add(seriesId);
 					marketFilter.setCompetitionIds(seriesIdSet);
 
-					// log.info("[" + transactionId + "] ***********Fecting Matches of " +
-					// sportsBean.getSportsName()
-					// + " : " + seriesBean.getSeriesName() + " *********");
 					{
 						marketFilter.setInPlayOnly(true);
 						List<EventResult> response = rescriptOperations.listEvents(marketFilter, applicationKey,
@@ -346,12 +367,9 @@ public class BetfairDao {
 			}
 			matchBeanResponseList = storeListOfMatchDB(matchBeanList, transactionId);
 
-			// log.info("[" + transactionId + "] response: " + matchBeanResponseList);
 		} catch (APINGException apiExc) {
 			log.info(apiExc.toString());
 		}
-		// log.info("[" + transactionId + "] matchBeanResponseList:: " +
-		// matchBeanResponseList);
 		return matchBeanResponseList;
 	}
 

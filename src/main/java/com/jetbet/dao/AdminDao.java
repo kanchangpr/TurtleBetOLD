@@ -267,7 +267,7 @@ public class AdminDao {
 			responseBeanList = jdbcTemplate.query(getUserRolesSql,
 					(rs, rowNum) -> new SeriesBean(rs.getString("series_id"), rs.getString("series_name"),
 							rs.getInt("series_market_count"), rs.getString("series_competition_region"),
-							rs.getString("SPORTS_NAME"), rs.getString("is_active"), rs.getString("series_created_by"),
+							rs.getString("SPORTS_NAME"), rs.getString("is_active"),rs.getString("in_play"), rs.getString("series_created_by"),
 							rs.getDate("series_created_date"), rs.getString("series_updated_by"),
 							rs.getDate("series_updated_date")));
 		} else {
@@ -275,7 +275,7 @@ public class AdminDao {
 			responseBeanList = jdbcTemplate.query(getUserRolesSql, new Object[] { sportsId },
 					(rs, rowNum) -> new SeriesBean(rs.getString("series_id"), rs.getString("series_name"),
 							rs.getInt("series_market_count"), rs.getString("series_competition_region"),
-							rs.getString("SPORTS_NAME"), rs.getString("is_active"), rs.getString("series_created_by"),
+							rs.getString("SPORTS_NAME"), rs.getString("is_active"),rs.getString("in_play"),  rs.getString("series_created_by"),
 							rs.getDate("series_created_date"), rs.getString("series_updated_by"),
 							rs.getDate("series_updated_date")));
 		}

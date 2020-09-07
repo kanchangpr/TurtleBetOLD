@@ -46,6 +46,9 @@ public class SeriesBean {
 	@Column(name = "is_active" , updatable=true)
 	private String isActive="N";
 	
+	@Column(name = "in_play" , updatable=true)
+	private String inPlay;
+	
 	@Column(name = "series_created_by" , updatable=false)
 	private String seriesCreatedBy;
 	
