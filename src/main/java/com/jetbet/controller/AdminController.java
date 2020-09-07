@@ -182,5 +182,18 @@ public class AdminController {
 		List<PlaceBetsBean> response = adminService.getFancyPosition(userId.toUpperCase(),matchId,marketType,transactionId);
 		return new ResponseEntity<List<PlaceBetsBean>>(response, HttpStatus.OK);
 	}
+	
+	@RequestMapping(value = ResourceConstants.USER_PROFIT_LOSS, method = RequestMethod.GET)
+	public ResponseEntity<List<PlaceBetsBean>> getUserPl(
+			@RequestParam(value = "marketId", required = true) String marketId,
+			@RequestParam(value = "selectionId", required = true) String selectionId,
+			@RequestParam(value = "userName", required = true) String userName) {
+		String transactionId = "TB" + UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
+		log.info("[" + transactionId
+				+ "]*************************INSIDE settlement METHOD GET*************************");
+		String userId=userName.toUpperCase();
+		List<PlaceBetsBean> response = adminService.getUserPl(marketId,selectionId,userId,transactionId);
+		return new ResponseEntity<List<PlaceBetsBean>>(response, HttpStatus.OK);
+	}
 
 }

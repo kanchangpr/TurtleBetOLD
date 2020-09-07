@@ -2,13 +2,14 @@ package com.jetbet.controller;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.annotation.Async;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,29 +17,30 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.jetbet.bean.FancyBean;
-import com.jetbet.bean.MarketCatalogueBean;
-import com.jetbet.bean.MatchBean;
 import com.jetbet.bean.PlaceBetsBean;
-import com.jetbet.bean.SeriesBean;
 import com.jetbet.bean.SportsBean;
 import com.jetbet.betfair.entities.MarketCatalogue;
+import com.jetbet.dao.BetfairDao;
 import com.jetbet.dto.DashboardMatchListDto;
 import com.jetbet.dto.MatchAndFancyDetailDto;
 import com.jetbet.dto.RunnerPriceAndSize;
 import com.jetbet.dto.SeriesMatchFancyResponseDto;
 import com.jetbet.dto.SessionDetails;
+import com.jetbet.dto.UserRoleDto;
 import com.jetbet.service.BetfairService;
+import com.jetbet.util.QueryListConstant;
 import com.jetbet.util.ResourceConstants;
 
 import lombok.extern.slf4j.Slf4j;
-import reactor.core.publisher.Flux;
 
 @CrossOrigin(origins = "*")
 @Slf4j
 @RestController
 @RequestMapping(value="/TurtleBets")
 public class BetfairController {
+	
+	@Autowired
+	JdbcTemplate jdbcTemplate;
 	
 	public static String applicationKey;
 	public static String sessionToken;
@@ -71,7 +73,7 @@ public class BetfairController {
 	
 	@RequestMapping(value=ResourceConstants.LIST_OF_SERIES, method=RequestMethod.GET)
 	//public ResponseEntity<List<SeriesBean>> getListOfSeries() {
-	@Scheduled(fixedDelay = 360000, initialDelay = 15000)
+	//@Scheduled(fixedDelay = 360000, initialDelay = 15000)
 	public void getListOfSeries() {
 //		String applicationKey="5tsF8QHfEw3n4Kp8";
 //		String sessionToken="PsszL+gNaXw+s7+MiHF7vk8HfFrz+oNeZaxO8l+GZGU=";
@@ -265,7 +267,7 @@ public class BetfairController {
 	
 	
 	//@RequestMapping(value=ResourceConstants.DECLARE_RESULT, method=RequestMethod.GET)
-	@Scheduled(fixedDelay = 300000, initialDelay = 10000)
+	//@Scheduled(fixedDelay = 300000, initialDelay = 10000)
 	public void declareResult() {
 		log.info("applicationKey:: "+applicationKey);
 		log.info("sessionToken:: "+sessionToken);
@@ -279,7 +281,7 @@ public class BetfairController {
 	}
 	
 	//@RequestMapping(value = ResourceConstants.CALCULATE_SETTLEMENT, method = RequestMethod.GET)
-	@Scheduled(fixedDelay = 300000, initialDelay = 180000)
+	//@Scheduled(fixedDelay = 300000, initialDelay = 180000)
 	public void calculateProfitLoss() {
 		log.info("applicationKey:: "+applicationKey);
 		log.info("sessionToken:: "+sessionToken);
@@ -287,4 +289,5 @@ public class BetfairController {
 		log.info("[" + transactionId + "]*************INSIDE userHome METHOD POST**************");
 		betfairService.calculateProfitLoss();
 	}
+	
 }

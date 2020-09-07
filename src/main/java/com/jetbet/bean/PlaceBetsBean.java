@@ -41,7 +41,7 @@ public class PlaceBetsBean {
 	}
 	
 	public PlaceBetsBean(Double userPl) {
-		super();
+		
 		this.userPl = userPl;
 	}
 

@@ -48,4 +48,6 @@ public interface AdminService {
 
 	List<PlaceBetsBean> getFancyPosition(String userId, String matchId, String marketType, String transactionId);
 
+	List<PlaceBetsBean> getUserPl(String marketId, String selectionId, String userId, String transactionId);
+
 }

@@ -110,4 +110,10 @@ public class AdminServiceImpl implements AdminService{
 		return adminDao.getFancyPosition(userId,matchId,marketType,transactionId);
 	}
 
+	@Override
+	public List<PlaceBetsBean> getUserPl(String marketId, String selectionId, String userId, String transactionId) {
+		log.info("["+transactionId+"]*************************INSIDE getUserPl CLASS AdminServiceImpl*************************");
+		return adminDao.getUserPl(marketId,selectionId,userId,transactionId);
+	}
+
 }

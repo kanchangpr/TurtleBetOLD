@@ -58,6 +58,7 @@ public class ResourceConstants {
 	public static final String CURRENT_ODDS_POSITION="currentOddsPosition";
 	public static final String FANCY_LIST="fancyList";
 	public static final String FANCY_POTISION="fancyPosition";
+	public static final String USER_PROFIT_LOSS="userPL";
 	
 	
 	public static final String ADMIN="admin";

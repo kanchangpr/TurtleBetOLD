@@ -690,4 +690,17 @@ public class AdminDao {
 		return fancyList;
 	}
 
+	public List<PlaceBetsBean> getUserPl(String marketId, String selectionId, String userId, String transactionId) {
+		log.info("marketId:: "+marketId);
+		log.info("selectionId:: "+selectionId);
+		log.info("userName:: "+userId);
+		List<PlaceBetsBean> userPl = new ArrayList<PlaceBetsBean>();
+		
+		userPl = jdbcTemplate.query(QueryListConstant.GET_USER_PL_BY_SELECTION_ID, new Object[] {  marketId,selectionId, userId },
+				(rs, rowNum) -> new PlaceBetsBean(rs.getDouble("USER_PL")));
+		
+		log.info("userPl:: "+userPl);
+		return userPl;
+	}
+
 }

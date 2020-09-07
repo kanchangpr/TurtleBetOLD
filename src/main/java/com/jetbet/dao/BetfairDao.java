@@ -1004,61 +1004,63 @@ public class BetfairDao {
 			String maxResults = "100";
 
 			MatchBean matchDet = matchRepository.findFirst1ByMatchIdAndIsActive(matchid, "Y");
+if(matchDet!=null) {
+	String matchId = matchDet.getMatchId();
+	String matchName = matchDet.getMatchName();
+	Date matchDate = matchDet.getMatchOpenDate();
 
-			String matchId = matchDet.getMatchId();
-			String matchName = matchDet.getMatchName();
-			Date matchDate = matchDet.getMatchOpenDate();
+	List<MatchAndFancyDetailDto> marketTypeList = new ArrayList<MatchAndFancyDetailDto>();
 
-			List<MatchAndFancyDetailDto> marketTypeList = new ArrayList<MatchAndFancyDetailDto>();
+	marketTypeList = jdbcTemplate.query(QueryListConstant.GET_FANCY_LIST_BY_MATCH_AND_SPORTS,
+			new Object[] { sportsId, matchId, sportsId, matchId },
+			(rs, rowNum) -> new MatchAndFancyDetailDto(rs.getString("SPORTS_NAME"), rs.getString("SERIES_ID"),
+					rs.getString("SERIES_NAME"), rs.getString("MARKET_TYPE"), rs.getInt("MARKET_COUNT")));
+	log.info("marketTypeList:: " + marketTypeList);
+	for (int i = 0; i < marketTypeList.size(); i++) {
+		List<MarketBook> mBooks = new ArrayList<MarketBook>();
+		MatchAndFancyDetailDto matchAndFancyDetailDto = new MatchAndFancyDetailDto();
+		String marketType = marketTypeList.get(i).getMarketType();
+		int marketCount = marketTypeList.get(i).getMarketCount();
 
-			marketTypeList = jdbcTemplate.query(QueryListConstant.GET_FANCY_LIST_BY_MATCH_AND_SPORTS,
-					new Object[] { sportsId, matchId, sportsId, matchId },
-					(rs, rowNum) -> new MatchAndFancyDetailDto(rs.getString("SPORTS_NAME"), rs.getString("SERIES_ID"),
-							rs.getString("SERIES_NAME"), rs.getString("MARKET_TYPE"), rs.getInt("MARKET_COUNT")));
-			log.info("marketTypeList:: " + marketTypeList);
-			for (int i = 0; i < marketTypeList.size(); i++) {
-				List<MarketBook> mBooks = new ArrayList<MarketBook>();
-				MatchAndFancyDetailDto matchAndFancyDetailDto = new MatchAndFancyDetailDto();
-				String marketType = marketTypeList.get(i).getMarketType();
-				int marketCount = marketTypeList.get(i).getMarketCount();
+		log.info("sportsID: " + sportsId);
+		log.info("matchId: " + matchId);
+		log.info("matchName:: " + matchName);
+		log.info("matchDate: " + matchDate);
+		log.info("marketType:: " + marketType);
 
-				log.info("sportsID: " + sportsId);
-				log.info("matchId: " + matchId);
-				log.info("matchName:: " + matchName);
-				log.info("matchDate: " + matchDate);
-				log.info("marketType:: " + marketType);
+		matchAndFancyDetailDto.setSportId(sportsId);
+		matchAndFancyDetailDto.setSportName(marketTypeList.get(i).getSportName());
+		matchAndFancyDetailDto.setSeriesId(marketTypeList.get(i).getSeriesId());
+		matchAndFancyDetailDto.setSeriesName(marketTypeList.get(i).getSeriesName());
+		matchAndFancyDetailDto.setMatchId(matchId);
+		matchAndFancyDetailDto.setMatchName(matchName);
+		matchAndFancyDetailDto.setMatchDate(matchDate);
+		matchAndFancyDetailDto.setMarketType(marketType);
+		matchAndFancyDetailDto.setMarketCount(marketCount);
+		matchAndFancyDetailDto.setMatchDate(matchDate);
 
-				matchAndFancyDetailDto.setSportId(sportsId);
-				matchAndFancyDetailDto.setSportName(marketTypeList.get(i).getSportName());
-				matchAndFancyDetailDto.setSeriesId(marketTypeList.get(i).getSeriesId());
-				matchAndFancyDetailDto.setSeriesName(marketTypeList.get(i).getSeriesName());
-				matchAndFancyDetailDto.setMatchId(matchId);
-				matchAndFancyDetailDto.setMatchName(matchName);
-				matchAndFancyDetailDto.setMatchDate(matchDate);
-				matchAndFancyDetailDto.setMarketType(marketType);
-				matchAndFancyDetailDto.setMarketCount(marketCount);
-				matchAndFancyDetailDto.setMatchDate(matchDate);
+		Set<String> typesCode = new HashSet<String>();
+		typesCode.add(marketType);
+		Set<String> eventIds = new HashSet<String>();
+		eventIds.add(matchId);
 
-				Set<String> typesCode = new HashSet<String>();
-				typesCode.add(marketType);
-				Set<String> eventIds = new HashSet<String>();
-				eventIds.add(matchId);
+		marketFilter = new MarketFilter();
+		marketFilter.setEventIds(eventIds);
+		marketFilter.setMarketTypeCodes(typesCode);
+		Set<MarketProjection> marketProjection = new HashSet<MarketProjection>();
+		marketProjection.add(MarketProjection.MARKET_START_TIME);
+		marketProjection.add(MarketProjection.RUNNER_DESCRIPTION);
 
-				marketFilter = new MarketFilter();
-				marketFilter.setEventIds(eventIds);
-				marketFilter.setMarketTypeCodes(typesCode);
-				Set<MarketProjection> marketProjection = new HashSet<MarketProjection>();
-				marketProjection.add(MarketProjection.MARKET_START_TIME);
-				marketProjection.add(MarketProjection.RUNNER_DESCRIPTION);
-
-				mBooks = rescriptOperations.getMatchOdds(marketFilter, marketProjection, MarketSort.FIRST_TO_START,
-						maxResults, applicationKey, sessionToken,userName);
-				if (mBooks.size() > 0) {
-					matchAndFancyDetailDto.setMarketBook(mBooks);
-					matchAndFancyDetailList.add(matchAndFancyDetailDto);
-				}
-				log.info("marketType:: " + matchAndFancyDetailDto);
-			}
+		mBooks = rescriptOperations.getMatchOdds(marketFilter, marketProjection, MarketSort.FIRST_TO_START,
+				maxResults, applicationKey, sessionToken,userName);
+		if (mBooks.size() > 0) {
+			matchAndFancyDetailDto.setMarketBook(mBooks);
+			matchAndFancyDetailList.add(matchAndFancyDetailDto);
+		}
+		log.info("marketType:: " + matchAndFancyDetailDto);
+	}
+}
+			
 		} catch (APINGException e) {
 			e.printStackTrace();
 		}
@@ -1480,5 +1482,6 @@ public class BetfairDao {
 		}
 		return marketCatalogueResult;
 	}
+
 
 }

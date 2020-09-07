@@ -8,10 +8,11 @@ import java.util.Map;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Service;
 
 import com.google.gson.reflect.TypeToken;
 import com.jetbet.bean.PlaceBetsBean;
+import com.jetbet.bean.UserBean;
 import com.jetbet.betfair.entities.CompetitionResult;
 import com.jetbet.betfair.entities.EventResult;
 import com.jetbet.betfair.entities.EventTypeResult;
@@ -32,18 +33,20 @@ import com.jetbet.betfair.enums.OrderProjection;
 import com.jetbet.betfair.enums.PriceData;
 import com.jetbet.betfair.exceptions.APINGException;
 import com.jetbet.betfair.util.JsonConverter;
+import com.jetbet.controller.BetfairController;
 import com.jetbet.dto.BetfailLoginRequestDto;
 import com.jetbet.dto.SessionDetails;
-import com.jetbet.util.QueryListConstant;
+import com.jetbet.repository.UserRepository;
 
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
+@Service
 public class ApiNgRescriptOperations extends ApiNgOperations {
 	
 	@Autowired
-	JdbcTemplate jdbcTemplate;
-
+	private UserRepository userRepository;
+	
 	private static ApiNgRescriptOperations instance = null;
 
 	private ApiNgRescriptOperations() {
@@ -359,43 +362,15 @@ public class ApiNgRescriptOperations extends ApiNgOperations {
 							|| mBook.getRunners().get(j).getEx().getAvailableToLay().size() > 0) {
 						mBook.getRunners().get(j)
 								.setRunnerName(runnerNameMap.get(mBook.getRunners().get(j).getSelectionId()));
-						log.info("GET_USER_PL_BY_SELECTION_ID: " + QueryListConstant.COUNT_USER_PL_BY_SELECTION_ID);
-
-						log.info("MarketId: " + mBook.getMarketId());
-						log.info("selectionId" + mBook.getRunners().get(j).getSelectionId());
-						log.info("userName: " + userName);
-						double userPl = 0.0;
-						int rowCount = jdbcTemplate.queryForObject(QueryListConstant.COUNT_USER_PL_BY_SELECTION_ID,
-								new Object[] { mBook.getMarketId(), mBook.getRunners().get(j).getSelectionId(),
-										userName },Integer.class);
-						log.info("rowCount: " + rowCount);
-						if (rowCount > 0) {
-							List<PlaceBetsBean> userPlDouble = jdbcTemplate.query(
-									QueryListConstant.GET_USER_PL_BY_SELECTION_ID, new Object[] { mBook.getMarketId(),
-											mBook.getRunners().get(j).getSelectionId(), userName },
-									(rs, rowNum) -> new PlaceBetsBean(rs.getDouble("USER_PL")));
-
-							if (userPlDouble.size() > 0) {
-								userPl = userPlDouble.get(0).getUserPl();
-							} else {
-								userPl = 0.0;
-							}
-
-							log.info("###########################userPlDouble###############################");
-							log.info("userPlDouble:: " + userPl);
-						}
-
-						mBook.getRunners().get(j).setUserPl(userPl);
-
 						runnerList.add(mBook.getRunners().get(j));
 					}
 
 				}
 				mBook.setRunners(runnerList);
-				 if(mBook.getRunners().size()>0) {
-				 marketBookList.add(mBook);
-				 }
-				
+				if (mBook.getRunners().size() > 0) {
+					marketBookList.add(mBook);
+				}
+
 			}
 			//container.get(i).setMarketBook(marketBookList);
 			//container.get(i).setRunners(null);
