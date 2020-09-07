@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 
@@ -34,7 +33,6 @@ import com.jetbet.betfair.enums.PriceData;
 import com.jetbet.betfair.exceptions.APINGException;
 import com.jetbet.betfair.util.JsonConverter;
 import com.jetbet.dto.BetfailLoginRequestDto;
-import com.jetbet.dto.MatchAndFancyDetailDto;
 import com.jetbet.dto.SessionDetails;
 import com.jetbet.util.QueryListConstant;
 
@@ -355,28 +353,41 @@ public class ApiNgRescriptOperations extends ApiNgOperations {
 				MarketBook mBook=new MarketBook();
 				mBook=marketBook.get(k);
 				mBook.setMarketName(container.get(i).getMarketName());
-				List<Runner> runnerList= new ArrayList<Runner>();
+				List<Runner> runnerList = new ArrayList<Runner>();
 				for (int j = 0; j < mBook.getRunners().size(); j++) {
-					if(mBook.getRunners().get(j).getEx().getAvailableToBack().size()>0 || mBook.getRunners().get(j).getEx().getAvailableToLay().size()>0) {
-						mBook.getRunners().get(j).setRunnerName(runnerNameMap.get(mBook.getRunners().get(j).getSelectionId()));
-						log.info("GET_USER_PL_BY_SELECTION_ID: "+QueryListConstant.GET_USER_PL_BY_SELECTION_ID);
-						List<PlaceBetsBean> userPlDouble=jdbcTemplate.query(QueryListConstant.GET_USER_PL_BY_SELECTION_ID,
-								new Object[] { mBook.getMarketId(), mBook.getRunners().get(j).getSelectionId(), userName },
-								(rs, rowNum) -> new PlaceBetsBean(rs.getDouble("USER_PL") ));
-						double userPl=0.0;
-						if(userPlDouble.size()>0) {
-							userPl=userPlDouble.get(0).getUserPl();
-						}else {
-							userPl=0.0;
+					if (mBook.getRunners().get(j).getEx().getAvailableToBack().size() > 0
+							|| mBook.getRunners().get(j).getEx().getAvailableToLay().size() > 0) {
+						mBook.getRunners().get(j)
+								.setRunnerName(runnerNameMap.get(mBook.getRunners().get(j).getSelectionId()));
+						log.info("GET_USER_PL_BY_SELECTION_ID: " + QueryListConstant.GET_USER_PL_BY_SELECTION_ID);
+
+						double userPl = 0.0;
+						int rowCount = jdbcTemplate.queryForObject(QueryListConstant.COUNT_USER_PL_BY_SELECTION_ID,
+								new Object[] { mBook.getMarketId(), mBook.getRunners().get(j).getSelectionId(),
+										userName },
+								Integer.class);
+
+						if (rowCount > 0) {
+							List<PlaceBetsBean> userPlDouble = jdbcTemplate.query(
+									QueryListConstant.GET_USER_PL_BY_SELECTION_ID, new Object[] { mBook.getMarketId(),
+											mBook.getRunners().get(j).getSelectionId(), userName },
+									(rs, rowNum) -> new PlaceBetsBean(rs.getDouble("USER_PL")));
+
+							if (userPlDouble.size() > 0) {
+								userPl = userPlDouble.get(0).getUserPl();
+							} else {
+								userPl = 0.0;
+							}
+
+							log.info("###########################userPlDouble###############################");
+							log.info("userPlDouble:: " + userPl);
 						}
-						
-						log.info("###########################userPlDouble###############################");
-						log.info("userPlDouble:: "+userPl);
+
 						mBook.getRunners().get(j).setUserPl(userPl);
-						
+
 						runnerList.add(mBook.getRunners().get(j));
 					}
-					
+
 				}
 				mBook.setRunners(runnerList);
 				 if(mBook.getRunners().size()>0) {

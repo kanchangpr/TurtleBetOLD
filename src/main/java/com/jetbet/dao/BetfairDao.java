@@ -171,6 +171,7 @@ public class BetfairDao {
 						seriesBean.setSeriesCompRegion(res.getCompetitionRegion());
 						seriesBean.setSeriesCreatedBy(userName);
 						seriesBean.setIsActive("Y");
+						seriesBean.setInPlay(ResourceConstants.IN_PLAY);
 						seriesBeanList.add(seriesBean);
 					});
 				}
@@ -193,6 +194,7 @@ public class BetfairDao {
 						}else {
 							seriesBean.setIsActive("N");
 						}
+						seriesBean.setInPlay(ResourceConstants.NOT_IN_PLAY);
 						seriesBeanList.add(seriesBean);
 					});
 				}
