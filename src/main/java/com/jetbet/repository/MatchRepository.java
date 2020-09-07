@@ -11,6 +11,8 @@ public interface MatchRepository extends JpaRepository<MatchBean, String>{
 	
 	MatchBean findFirst1ByMatchIdAndIsActive(String matchId,String isActive);
 	
+	MatchBean findFirst1ByMatchId(String matchId);
+	
 	List<MatchBean> findByIsActive(String isActive);
 	
 	List<MatchBean> findBySportId(String sportId);

@@ -327,6 +327,14 @@ public class BetfairDao {
 							matchBean.setMatchMarketCount(res.getMarketCount());
 							matchBean.setSportId(eventTypeIdString);
 							matchBean.setSeriesId(seriesId);
+							
+							MatchBean matchDetails=matchRepository.findFirst1ByMatchId(res.getEvent().getId());
+							if(matchDetails.getIsActive().equalsIgnoreCase("Y")) {
+								matchBean.setIsActive("Y");
+							}else {
+								matchBean.setIsActive("N");
+							}
+							
 							matchBean.setInPlay(ResourceConstants.NOT_IN_PLAY);
 							matchBean.setMatchCreatedBy(userName);
 							matchBeanList.add(matchBean);
@@ -408,6 +416,14 @@ public class BetfairDao {
 						matchBean.setMatchOpenDate(res.getEvent().getOpenDate());
 						matchBean.setMatchMarketCount(res.getMarketCount());
 						matchBean.setSportId(sportsId);
+						
+						MatchBean matchDetails=matchRepository.findFirst1ByMatchId(res.getEvent().getId());
+						if(matchDetails.getIsActive().equalsIgnoreCase("Y")) {
+							matchBean.setIsActive("Y");
+						}else {
+							matchBean.setIsActive("N");
+						}
+						
 						matchBean.setInPlay(ResourceConstants.NOT_IN_PLAY);
 						matchBean.setSeriesId(seriesId);
 						matchBean.setMatchCreatedBy(userName);
@@ -564,7 +580,7 @@ public class BetfairDao {
 
 				List<MarketFancyResult> response = rescriptOperations.listFancy(marketFilter, applicationKey,
 						sessionToken);
-				if(matchBean.getInPlay().equalsIgnoreCase(ResourceConstants.IN_PLAY) && !StringUtils.isEmpty(matchBean.getInPlay())) {
+				if(matchBean.getIsActive().equalsIgnoreCase("Y") && !StringUtils.isEmpty(matchBean.getIsActive())) {
 					response.stream().forEach(res -> {
 						FancyBean fancyBean = new FancyBean();
 						FancyIdDto fancyId = new FancyIdDto();
@@ -637,7 +653,7 @@ public class BetfairDao {
 
 				List<MarketFancyResult> response = rescriptOperations.listFancy(marketFilter, appKey, ssToken);
 
-				if(matchBean.getInPlay().equalsIgnoreCase(ResourceConstants.IN_PLAY) && !StringUtils.isEmpty(matchBean.getInPlay())) {
+				if(matchBean.getIsActive().equalsIgnoreCase("Y") && !StringUtils.isEmpty(matchBean.getIsActive())) {
 					response.stream().forEach(res -> {
 						FancyBean fancyBean = new FancyBean();
 						FancyIdDto fancyId = new FancyIdDto();
@@ -707,7 +723,7 @@ public class BetfairDao {
 
 				List<MarketFancyResult> response = rescriptOperations.listFancy(marketFilter, appKey, ssToken);
 
-				if(matchBean.getInPlay().equalsIgnoreCase(ResourceConstants.IN_PLAY) && !StringUtils.isEmpty(matchBean.getInPlay())) {
+				if(matchBean.getIsActive().equalsIgnoreCase("Y") && !StringUtils.isEmpty(matchBean.getIsActive())) {
 					response.stream().forEach(res -> {
 						FancyBean fancyBean = new FancyBean();
 						FancyIdDto fancyId = new FancyIdDto();
