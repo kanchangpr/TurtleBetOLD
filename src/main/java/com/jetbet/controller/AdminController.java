@@ -113,6 +113,17 @@ public class AdminController {
 		List<PlaceBetsBean> response = adminService.openPlacedBetsBySports(matchId, sportsId, userId, transactionId);
 		return new ResponseEntity<List<PlaceBetsBean>>(response, HttpStatus.OK);
 	}
+	
+	@RequestMapping(value = ResourceConstants.OPEN_PLACE_BETS_COUNT, method = RequestMethod.GET)
+	public ResponseEntity<Long> openPlacedBetsBySportsCount(
+			@RequestParam(value = "matchId", required = true) String matchId,
+			@RequestParam(value = "sportsId", required = true) String sportsId,
+			@RequestParam(value = "userId", required = true) String userId) {
+		String transactionId = "TB" + UUID.randomUUID().toString().toUpperCase().replaceAll("-", "");
+		log.info("[" + transactionId + "]*************INSIDE userHome METHOD POST**************");
+		Long response = adminService.openPlacedBetsBySportsCount(matchId, sportsId, userId, transactionId);
+		return new ResponseEntity<Long>(response, HttpStatus.OK);
+	}
 
 	@RequestMapping(value = ResourceConstants.BET_SETTLEMENT, method = RequestMethod.GET)
 	public ResponseEntity<List<BetSettlementDto>> betSettlement(

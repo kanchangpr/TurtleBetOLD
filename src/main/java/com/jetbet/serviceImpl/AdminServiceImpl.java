@@ -116,4 +116,10 @@ public class AdminServiceImpl implements AdminService{
 		return adminDao.getUserPl(marketId,selectionId,userId,transactionId);
 	}
 
+	@Override
+	public Long openPlacedBetsBySportsCount(String matchId, String sportsId, String userId, String transactionId) {
+		log.info("["+transactionId+"]*************************INSIDE openPlacedBetsBySports CLASS AdminServiceImpl*************************");
+		return adminDao.openPlacedBetsBySportsCount(matchId,sportsId,userId,transactionId);
+	}
+
 }

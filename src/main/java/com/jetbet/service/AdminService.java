@@ -50,4 +50,6 @@ public interface AdminService {
 
 	List<PlaceBetsBean> getUserPl(String marketId, String selectionId, String userId, String transactionId);
 
+	Long openPlacedBetsBySportsCount(String matchId, String sportsId, String userId, String transactionId);
+
 }

@@ -73,7 +73,7 @@ public class BetfairController {
 	
 	@RequestMapping(value=ResourceConstants.LIST_OF_SERIES, method=RequestMethod.GET)
 	//public ResponseEntity<List<SeriesBean>> getListOfSeries() {
-	@Scheduled(fixedDelay = 360000, initialDelay = 15000)
+	//@Scheduled(fixedDelay = 360000, initialDelay = 15000)
 	public void getListOfSeries() {
 //		String applicationKey="5tsF8QHfEw3n4Kp8";
 //		String sessionToken="PsszL+gNaXw+s7+MiHF7vk8HfFrz+oNeZaxO8l+GZGU=";
@@ -267,7 +267,7 @@ public class BetfairController {
 	
 	
 	//@RequestMapping(value=ResourceConstants.DECLARE_RESULT, method=RequestMethod.GET)
-	@Scheduled(fixedDelay = 300000, initialDelay = 10000)
+//	@Scheduled(fixedDelay = 300000, initialDelay = 10000)
 	public void declareResult() {
 		log.info("applicationKey:: "+applicationKey);
 		log.info("sessionToken:: "+sessionToken);
@@ -281,7 +281,7 @@ public class BetfairController {
 	}
 	
 	//@RequestMapping(value = ResourceConstants.CALCULATE_SETTLEMENT, method = RequestMethod.GET)
-	@Scheduled(fixedDelay = 300000, initialDelay = 180000)
+	//@Scheduled(fixedDelay = 300000, initialDelay = 180000)
 	public void calculateProfitLoss() {
 		log.info("applicationKey:: "+applicationKey);
 		log.info("sessionToken:: "+sessionToken);
