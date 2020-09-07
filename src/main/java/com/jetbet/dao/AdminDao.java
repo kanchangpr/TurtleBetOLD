@@ -414,6 +414,14 @@ public class AdminDao {
 		return placeBetsList;
 	}
 
+	public int countOpenPlacedBetsBySports(String matchId, String sportsId, String userId,
+			String transactionId) {
+		int placeBetsCount = jdbcTemplate.queryForObject(QueryListConstant.COUNT_OPEN_BET_FOR_MASTERS,
+				new Object[] { userId.toUpperCase(), matchId, sportsId },Integer.class);
+		log.info("[" + transactionId + "] placeBetsCount:  " + placeBetsCount);
+		return placeBetsCount;
+	}
+	
 	public List<BetSettlementDto> betSettlement(String accountType, String userId, String transactionId) {
 		String sqlString = null;
 		UserBean userDetail = userRepository.findByUserId(userId.toUpperCase());
