@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import com.google.gson.reflect.TypeToken;
+import com.jetbet.bean.PlaceBetsBean;
 import com.jetbet.betfair.entities.CompetitionResult;
 import com.jetbet.betfair.entities.EventResult;
 import com.jetbet.betfair.entities.EventTypeResult;
@@ -359,12 +360,12 @@ public class ApiNgRescriptOperations extends ApiNgOperations {
 					if(mBook.getRunners().get(j).getEx().getAvailableToBack().size()>0 || mBook.getRunners().get(j).getEx().getAvailableToLay().size()>0) {
 						mBook.getRunners().get(j).setRunnerName(runnerNameMap.get(mBook.getRunners().get(j).getSelectionId()));
 						log.info("GET_USER_PL_BY_SELECTION_ID: "+QueryListConstant.GET_USER_PL_BY_SELECTION_ID);
-						List<Double> userPlDouble=jdbcTemplate.query(QueryListConstant.GET_USER_PL_BY_SELECTION_ID,
+						List<PlaceBetsBean> userPlDouble=jdbcTemplate.query(QueryListConstant.GET_USER_PL_BY_SELECTION_ID,
 								new Object[] { mBook.getMarketId(), mBook.getRunners().get(j).getSelectionId(), userName },
-								(rs, rowNum) -> new Double(rs.getString("USER_PL") == null ? 0:rs.getDouble("USER_PL") ));
+								(rs, rowNum) -> new PlaceBetsBean(rs.getDouble("USER_PL") ));
 						double userPl=0.0;
 						if(userPlDouble.size()>0) {
-							userPl=userPlDouble.get(0);
+							userPl=userPlDouble.get(0).getUserPl();
 						}else {
 							userPl=0.0;
 						}

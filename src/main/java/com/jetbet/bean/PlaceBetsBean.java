@@ -39,6 +39,11 @@ public class PlaceBetsBean {
 		this.runnerName = runnerName;
 		this.masterStakes = masterStakes;
 	}
+	
+	public PlaceBetsBean(Double userPl) {
+		super();
+		this.userPl = userPl;
+	}
 
 	public PlaceBetsBean(Long id,String userId, String matchId, String matchName, String marketId, String marketName,
 			Long selectionId, String runnerName, Date betPlaceDate, double odds, double stake, double liability,
