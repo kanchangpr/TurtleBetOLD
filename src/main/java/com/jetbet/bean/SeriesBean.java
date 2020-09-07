@@ -43,7 +43,7 @@ public class SeriesBean {
 	@Column(name = "sports_id")
 	private String sportId;
 	
-	@Column(name = "is_active" , updatable=false)
+	@Column(name = "is_active" , updatable=true)
 	private String isActive="N";
 	
 	@Column(name = "series_created_by" , updatable=false)

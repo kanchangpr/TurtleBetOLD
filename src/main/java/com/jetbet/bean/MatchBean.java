@@ -58,7 +58,7 @@ public class MatchBean {
 	@Column(name = "in_play" , updatable=true)
 	private String inPlay;
 	
-	@Column(name = "is_active" , updatable=false)
+	@Column(name = "is_active" , updatable=true)
 	private String isActive="N";
 	
 	@Column(name = "match_created_by" , updatable=false)
