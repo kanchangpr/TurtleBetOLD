@@ -358,7 +358,7 @@ public class ApiNgRescriptOperations extends ApiNgOperations {
 				for (int j = 0; j < mBook.getRunners().size(); j++) {
 					if(mBook.getRunners().get(j).getEx().getAvailableToBack().size()>0 || mBook.getRunners().get(j).getEx().getAvailableToLay().size()>0) {
 						mBook.getRunners().get(j).setRunnerName(runnerNameMap.get(mBook.getRunners().get(j).getSelectionId()));
-						
+						log.info("GET_USER_PL_BY_SELECTION_ID: "+QueryListConstant.GET_USER_PL_BY_SELECTION_ID);
 						List<Double> userPlDouble=jdbcTemplate.query(QueryListConstant.GET_USER_PL_BY_SELECTION_ID,
 								new Object[] { mBook.getMarketId(), mBook.getRunners().get(j).getSelectionId(), userName },
 								(rs, rowNum) -> new Double(rs.getString("USER_PL") == null ? 0:rs.getDouble("USER_PL") ));
