@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 
@@ -360,7 +361,7 @@ public class ApiNgRescriptOperations extends ApiNgOperations {
 						
 						List<Double> userPlDouble=jdbcTemplate.query(QueryListConstant.GET_USER_PL_BY_SELECTION_ID,
 								new Object[] { mBook.getMarketId(), mBook.getRunners().get(j).getSelectionId(), userName },
-								(rs, rowNum) -> new Double(rs.getDouble("USER_PL")));
+								(rs, rowNum) -> new Double(rs.getString("USER_PL") == null ? 0:rs.getDouble("USER_PL") ));
 						double userPl=0.0;
 						if(userPlDouble.size()>0) {
 							userPl=userPlDouble.get(0);
