@@ -188,6 +188,7 @@ public class BetfairDao {
 						seriesBean.setSeriesMarketCount(res.getMarketCount());
 						seriesBean.setSeriesCompRegion(res.getCompetitionRegion());
 						seriesBean.setSeriesCreatedBy(userName);
+						log.info("series Id:: "+res.getCompetition().getId());
 						SeriesBean seriesDetails=seriesRepository.findFirst1BySeriesId(res.getCompetition().getId());
 						if(seriesDetails.getIsActive().equalsIgnoreCase("Y")) {
 							seriesBean.setIsActive("Y");
@@ -256,7 +257,7 @@ public class BetfairDao {
 						seriesBean.setSeriesName(res.getCompetition().getName());
 						seriesBean.setSeriesMarketCount(res.getMarketCount());
 						seriesBean.setSeriesCompRegion(res.getCompetitionRegion());
-						
+						log.info("series Id:: "+res.getCompetition().getId());
 						SeriesBean seriesDetails=seriesRepository.findFirst1BySeriesId(res.getCompetition().getId());
 						if(seriesDetails.getIsActive().equalsIgnoreCase("Y")) {
 							seriesBean.setIsActive("Y");
