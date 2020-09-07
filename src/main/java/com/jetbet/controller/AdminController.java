@@ -195,7 +195,7 @@ public class AdminController {
 	}
 	
 	@RequestMapping(value = ResourceConstants.USER_PROFIT_LOSS, method = RequestMethod.GET)
-	public ResponseEntity<List<PlaceBetsBean>> getUserPl(
+	public ResponseEntity<Double> getUserPl(
 			@RequestParam(value = "marketId", required = true) String marketId,
 			@RequestParam(value = "selectionId", required = true) String selectionId,
 			@RequestParam(value = "userName", required = true) String userName) {
@@ -203,8 +203,8 @@ public class AdminController {
 		log.info("[" + transactionId
 				+ "]*************************INSIDE settlement METHOD GET*************************");
 		String userId=userName.toUpperCase();
-		List<PlaceBetsBean> response = adminService.getUserPl(marketId,selectionId,userId,transactionId);
-		return new ResponseEntity<List<PlaceBetsBean>>(response, HttpStatus.OK);
+		Double response = adminService.getUserPl(marketId,selectionId,userId,transactionId);
+		return new ResponseEntity<Double>(response, HttpStatus.OK);
 	}
 
 }

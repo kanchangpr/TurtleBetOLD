@@ -48,7 +48,7 @@ public interface AdminService {
 
 	List<PlaceBetsBean> getFancyPosition(String userId, String matchId, String marketType, String transactionId);
 
-	List<PlaceBetsBean> getUserPl(String marketId, String selectionId, String userId, String transactionId);
+	Double getUserPl(String marketId, String selectionId, String userId, String transactionId);
 
 	Long openPlacedBetsBySportsCount(String matchId, String sportsId, String userId, String transactionId);
 

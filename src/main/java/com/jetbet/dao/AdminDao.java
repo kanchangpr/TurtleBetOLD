@@ -684,7 +684,7 @@ public class AdminDao {
 		return fancyList;
 	}
 
-	public List<PlaceBetsBean> getUserPl(String marketId, String selectionId, String userId, String transactionId) {
+	public Double getUserPl(String marketId, String selectionId, String userId, String transactionId) {
 		log.info("marketId:: "+marketId);
 		log.info("selectionId:: "+selectionId);
 		log.info("userName:: "+userId);
@@ -694,7 +694,7 @@ public class AdminDao {
 				(rs, rowNum) -> new PlaceBetsBean(rs.getDouble("USER_PL")));
 		
 		log.info("userPl:: "+userPl);
-		return userPl;
+		return userPl.get(0).getUserPl();
 	}
 	
 	

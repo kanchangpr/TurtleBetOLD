@@ -111,7 +111,7 @@ public class AdminServiceImpl implements AdminService{
 	}
 
 	@Override
-	public List<PlaceBetsBean> getUserPl(String marketId, String selectionId, String userId, String transactionId) {
+	public Double getUserPl(String marketId, String selectionId, String userId, String transactionId) {
 		log.info("["+transactionId+"]*************************INSIDE getUserPl CLASS AdminServiceImpl*************************");
 		return adminDao.getUserPl(marketId,selectionId,userId,transactionId);
 	}
