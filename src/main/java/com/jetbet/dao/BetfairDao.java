@@ -188,12 +188,14 @@ public class BetfairDao {
 						seriesBean.setSeriesMarketCount(res.getMarketCount());
 						seriesBean.setSeriesCompRegion(res.getCompetitionRegion());
 						seriesBean.setSeriesCreatedBy(userName);
-						log.info("series Id:: "+res.getCompetition().getId());
-						SeriesBean seriesDetails=seriesRepository.findFirst1BySeriesId(res.getCompetition().getId());
-						if(seriesDetails.getIsActive().equalsIgnoreCase("Y")) {
-							seriesBean.setIsActive("Y");
-						}else {
-							seriesBean.setIsActive("N");
+						log.info("series Id:: " + res.getCompetition().getId());
+						SeriesBean seriesDetails = seriesRepository.findFirst1BySeriesId(res.getCompetition().getId());
+						if (seriesDetails != null) {
+							if (seriesDetails.getIsActive().equalsIgnoreCase("Y")) {
+								seriesBean.setIsActive("Y");
+							} else {
+								seriesBean.setIsActive("N");
+							}
 						}
 						seriesBean.setInPlay(ResourceConstants.NOT_IN_PLAY);
 						seriesBeanList.add(seriesBean);
@@ -259,10 +261,12 @@ public class BetfairDao {
 						seriesBean.setSeriesCompRegion(res.getCompetitionRegion());
 						log.info("series Id:: "+res.getCompetition().getId());
 						SeriesBean seriesDetails=seriesRepository.findFirst1BySeriesId(res.getCompetition().getId());
-						if(seriesDetails.getIsActive().equalsIgnoreCase("Y")) {
-							seriesBean.setIsActive("Y");
-						}else {
-							seriesBean.setIsActive("N");
+						if (seriesDetails != null) {
+							if(seriesDetails.getIsActive().equalsIgnoreCase("Y")) {
+								seriesBean.setIsActive("Y");
+							}else {
+								seriesBean.setIsActive("N");
+							}
 						}
 						seriesBean.setInPlay(ResourceConstants.NOT_IN_PLAY);
 						seriesBean.setSeriesCreatedBy(userName);
@@ -353,10 +357,12 @@ public class BetfairDao {
 							matchBean.setSeriesId(seriesId);
 							
 							MatchBean matchDetails=matchRepository.findFirst1ByMatchId(res.getEvent().getId());
-							if(matchDetails.getIsActive().equalsIgnoreCase("Y")) {
-								matchBean.setIsActive("Y");
-							}else {
-								matchBean.setIsActive("N");
+							if(matchDetails!=null) {
+								if(matchDetails.getIsActive().equalsIgnoreCase("Y")) {
+									matchBean.setIsActive("Y");
+								}else {
+									matchBean.setIsActive("N");
+								}
 							}
 							
 							matchBean.setInPlay(ResourceConstants.NOT_IN_PLAY);
@@ -439,12 +445,13 @@ public class BetfairDao {
 						matchBean.setSportId(sportsId);
 						
 						MatchBean matchDetails=matchRepository.findFirst1ByMatchId(res.getEvent().getId());
-						if(matchDetails.getIsActive().equalsIgnoreCase("Y")) {
-							matchBean.setIsActive("Y");
-						}else {
-							matchBean.setIsActive("N");
+						if(matchDetails!=null) {
+							if(matchDetails.getIsActive().equalsIgnoreCase("Y")) {
+								matchBean.setIsActive("Y");
+							}else {
+								matchBean.setIsActive("N");
+							}
 						}
-						
 						matchBean.setInPlay(ResourceConstants.NOT_IN_PLAY);
 						matchBean.setSeriesId(seriesId);
 						matchBean.setMatchCreatedBy(userName);
