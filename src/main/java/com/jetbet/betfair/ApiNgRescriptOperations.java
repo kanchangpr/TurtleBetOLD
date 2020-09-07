@@ -361,6 +361,9 @@ public class ApiNgRescriptOperations extends ApiNgOperations {
 								.setRunnerName(runnerNameMap.get(mBook.getRunners().get(j).getSelectionId()));
 						log.info("GET_USER_PL_BY_SELECTION_ID: " + QueryListConstant.COUNT_USER_PL_BY_SELECTION_ID);
 
+						log.info("MarketId: "+mBook.getMarketId());
+						log.info("selectionId"+mBook.getRunners().get(j).getSelectionId());
+						log.info("userName: "+userName);
 						double userPl = 0.0;
 						int rowCount = jdbcTemplate.queryForObject(QueryListConstant.COUNT_USER_PL_BY_SELECTION_ID,
 								new Object[] { mBook.getMarketId(), mBook.getRunners().get(j).getSelectionId(),
