@@ -694,7 +694,13 @@ public class AdminDao {
 				(rs, rowNum) -> new PlaceBetsBean(rs.getDouble("USER_PL")));
 		
 		log.info("userPl:: "+userPl);
-		return userPl.get(0).getUserPl();
+		double userProfitLoss=0.0;
+		
+		if(userPl.size()>0) {
+			userProfitLoss=userPl.get(0).getUserPl();
+		}
+		
+		return userProfitLoss;
 	}
 	
 	
