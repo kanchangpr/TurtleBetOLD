@@ -25,11 +25,13 @@ import lombok.Setter;
 @Table(name = "jb_runners_Details")
 public class RunnersBean {
 
-	@Id
+	
     @SequenceGenerator(name="jb_runners_Details_seq",sequenceName="jb_runners_Details_seq",allocationSize=1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE,generator="jb_runners_Details_seq")
 	private Long id;
 	
+    
+    @Id
 	@Column(name = "match_id")
 	private String matchId;
 	
