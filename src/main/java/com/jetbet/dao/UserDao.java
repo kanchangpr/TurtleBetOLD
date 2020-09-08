@@ -1003,30 +1003,30 @@ public class UserDao {
 								pl = Double.parseDouble(df.format(total - commision));
 								//pl=total;
 								masterPl = calcuateCommision(pl, masterPer);
-								smPl = calcuateCommision(pl, adminPer);
-								adminPl = calcuateCommision(pl, smPer);
+								smPl = calcuateCommision(pl, smPer);
+								adminPl = calcuateCommision(pl, adminPer);
 							}else if(isLay.equalsIgnoreCase("Y") && marketType.equalsIgnoreCase("MATCH_ODDS")) {
 								total=liability;
 								pl=-total;
 								masterPl = -calcuateCommision(total, masterPer);
-								smPl = -calcuateCommision(total, adminPer);
-								adminPl = -calcuateCommision(total, smPer);
+								smPl = -calcuateCommision(total, smPer);
+								adminPl = -calcuateCommision(total, adminPer);
 							}else if(isback.equalsIgnoreCase("Y") && !marketType.equalsIgnoreCase("MATCH_ODDS")) {
 								total = Double.parseDouble(df.format((odds * stake) - stake));
 								commision = calcuateCommision(total, userDetail.getSessionCommission());
 								pl = Double.parseDouble(df.format(total + commision));
 								//pl=total;
 								masterPl = calcuateCommision(pl, masterPer);
-								smPl = calcuateCommision(pl, adminPer);
-								adminPl = calcuateCommision(pl, smPer);
+								smPl = calcuateCommision(pl, smPer);
+								adminPl = calcuateCommision(pl, adminPer);
 							}else if(isLay.equalsIgnoreCase("Y") && !marketType.equalsIgnoreCase("MATCH_ODDS")) {
 								total=liability;
 								commision = calcuateCommision(total, userDetail.getSessionCommission());
 								double netPl=Double.parseDouble(df.format(total - commision));
 								pl = -netPl;
 								masterPl = -calcuateCommision(netPl, masterPer);
-								smPl = -calcuateCommision(netPl, adminPer);
-								adminPl = -calcuateCommision(netPl, smPer);
+								smPl = -calcuateCommision(netPl, smPer);
+								adminPl = -calcuateCommision(netPl, adminPer);
 							}
 							
 							placeBetsBean.setUserPl(pl);
