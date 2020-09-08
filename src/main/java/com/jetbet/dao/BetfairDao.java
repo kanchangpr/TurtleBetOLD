@@ -1311,9 +1311,7 @@ if(matchDet!=null) {
 		placeBetsList = placeBetsRepository.findByBetResultInAndBetSettlementOrderByUserId(betResultList,
 				betSettlement);
 		
-		jdbcTemplate.update(QueryListConstant.INACTIVE_MATCH_AFTER_RESULT);
-
-		jdbcTemplate.update(QueryListConstant.INACTIVE_FANCY_AFTER_RESULT);
+		
 		
 
 //		log.info("calculateProfitLoss:: "+placeBetsList);
@@ -1436,7 +1434,9 @@ if(matchDet!=null) {
 			
 			userRepository.saveAndFlush(adminDetail);
 			
-		
+			jdbcTemplate.update(QueryListConstant.INACTIVE_MATCH_AFTER_RESULT);
+
+			jdbcTemplate.update(QueryListConstant.INACTIVE_FANCY_AFTER_RESULT);
 
 		}
 

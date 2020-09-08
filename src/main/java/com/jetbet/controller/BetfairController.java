@@ -280,7 +280,7 @@ public class BetfairController {
 		betfairService.declareResult(applicationKey, sessionToken, userName, transactionId);
 	}
 	
-	//@RequestMapping(value = ResourceConstants.CALCULATE_SETTLEMENT, method = RequestMethod.GET)
+	@RequestMapping(value = ResourceConstants.CALCULATE_SETTLEMENT, method = RequestMethod.GET)
 	@Scheduled(fixedDelay = 300000, initialDelay = 180000)
 	public void calculateProfitLoss() {
 		log.info("applicationKey:: "+applicationKey);
